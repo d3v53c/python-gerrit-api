@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.exceptions import UnknownTag
-from gerrit.common import check
+from gerrit.utils.exceptions import UnknownTag
+from gerrit.utils.common import check
 
 
 class Tag:

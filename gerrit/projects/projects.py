@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.project import GerritProject
-from gerrit.common import check
+from gerrit.projects.project import GerritProject
+from gerrit.utils.common import check
 
 
 class GerritProjects:

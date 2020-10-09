@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.branches import Branches
-from gerrit.tags import Tags
-from gerrit.commit import Commit
-from gerrit.dashboards import Dashboards
-from gerrit.exceptions import UnknownProject
-from gerrit.common import check
+from gerrit.projects.branches import Branches
+from gerrit.projects.tags import Tags
+from gerrit.projects.commit import Commit
+from gerrit.projects.dashboards import Dashboards
+from gerrit.utils.exceptions import UnknownProject
+from gerrit.utils.common import check
 
 
 class GerritProject:

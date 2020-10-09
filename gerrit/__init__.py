@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 import json
-from gerrit.requester import Requester
-from gerrit.config import GerritConfig
-from gerrit.projects import GerritProjects
+from gerrit.utils.requester import Requester
+from gerrit.config.config import GerritConfig
+from gerrit.projects.projects import GerritProjects
 
 
 class GerritClient:

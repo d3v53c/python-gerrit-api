@@ -2,10 +2,10 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.branches import Branch
-from gerrit.tags import Tag
-from gerrit.exceptions import UnknownCommit
-from gerrit.common import check
+from gerrit.projects.branches import Branch
+from gerrit.projects.tags import Tag
+from gerrit.utils.exceptions import UnknownCommit
+from gerrit.utils.common import check
 
 
 class Commit:

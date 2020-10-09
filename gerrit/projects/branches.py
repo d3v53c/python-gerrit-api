@@ -2,8 +2,8 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.exceptions import UnknownBranch
-from gerrit.common import check
+from gerrit.utils.exceptions import UnknownBranch
+from gerrit.utils.common import check
 
 
 class Branch:

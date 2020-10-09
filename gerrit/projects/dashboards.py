@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.common import check
-from gerrit.exceptions import UnknownDashboard
+from gerrit.utils.common import check
+from gerrit.utils.exceptions import UnknownDashboard
 
 
 class Dashboard:
