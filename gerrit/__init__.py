@@ -5,6 +5,7 @@ import json
 from gerrit.utils.requester import Requester
 from gerrit.config.config import GerritConfig
 from gerrit.projects.projects import GerritProjects
+from gerrit.accounts.accounts import GerritAccounts
 
 
 class GerritClient:
@@ -95,3 +96,7 @@ class GerritClient:
     @property
     def projects(self):
         return GerritProjects(gerrit=self)
+
+    @property
+    def accounts(self):
+        return GerritAccounts(gerrit=self)
