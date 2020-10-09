@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+from urllib.parse import quote
 from gerrit.branches import Branch
 from gerrit.tags import Tag
 from gerrit.exceptions import UnknownCommit
@@ -59,7 +60,7 @@ class Commit:
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit_id, file)
+        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit_id, quote(file, safe=''))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
