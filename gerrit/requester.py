@@ -11,7 +11,7 @@ class Requester:
     """
     A class which carries out HTTP requests. You can replace this
     class with one of your own implementation if you require some other
-    way to access SonarQube.
+    way to access Gerrit.
     This default class can handle simple authentication only.
     """
 
@@ -84,7 +84,7 @@ class Requester:
         request_kwargs['cert'] = self.cert
 
         if data:
-            # It may seem odd, but some SonarQube operations require posting
+                # It may seem odd, but some Gerrit operations require posting
             # an empty string.
             request_kwargs['data'] = data
 
@@ -97,7 +97,7 @@ class Requester:
 
     def _update_url_scheme(self, url):
         """
-        Updates scheme of given url to the one used in SonarQube baseurl.
+        Updates scheme of given url to the one used in Gerrit baseurl.
         :param url:
         :return:
         """

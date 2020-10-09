@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.exceptions import UnknownTag
+from gerrit.common import check
 
 
 class Tag:
@@ -114,7 +115,8 @@ class Tags:
         for row in self._data:
             yield Tag(project=self.project, ref=row['ref'], gerrit=self.gerrit)
 
-    def create(self, name: str, TagInput: dict):
+    @check
+    def create(self, name: str, TagInput: dict) -> Tag:
         """
         Creates a new tag on the project.
 

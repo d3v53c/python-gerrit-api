@@ -4,7 +4,9 @@
 from gerrit.branches import Branches
 from gerrit.tags import Tags
 from gerrit.commit import Commit
+from gerrit.dashboards import Dashboards
 from gerrit.exceptions import UnknownProject
+from gerrit.common import check
 
 
 class GerritProject:
@@ -36,7 +38,7 @@ class GerritProject:
         return '%s(%s=%s)' % (self.__class__.__name__, 'id', self.id)
 
     @property
-    def description(self):
+    def description(self) -> str:
         """s
         Retrieves the description of a project.
 
@@ -47,7 +49,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_description(self, ProjectDescriptionInput: dict):
+    @check
+    def set_description(self, ProjectDescriptionInput: dict) -> str:
         """
         Sets the description of a project.
 
@@ -55,14 +58,16 @@ class GerritProject:
         :return:
         """
         endpoint = '/projects/%s/description' % self.id
-        self.gerrit.make_call('put', endpoint, **ProjectDescriptionInput)
+        response = self.gerrit.make_call('put', endpoint, **ProjectDescriptionInput)
+        result = self.gerrit.decode_response(response)
+        return result
 
     def delete_description(self):
         endpoint = '/projects/%s/description' % self.id
         self.gerrit.make_call('delete', endpoint)
 
     @property
-    def parent(self):
+    def parent(self) -> str:
         """
         Retrieves the name of a project’s parent project. For the All-Projects root project an empty string is returned.
 
@@ -73,7 +78,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_parent(self, ProjectParentInput: dict):
+    @check
+    def set_parent(self, ProjectParentInput: dict) -> str:
         """
         Sets the parent project for a project.
 
@@ -82,10 +88,12 @@ class GerritProject:
         :return:
         """
         endpoint = '/projects/%s/parent' % self.id
-        self.gerrit.make_call('put', endpoint, **ProjectParentInput)
+        response = self.gerrit.make_call('put', endpoint, **ProjectParentInput)
+        result = self.gerrit.decode_response(response)
+        return result
 
     @property
-    def HEAD(self):
+    def HEAD(self) -> str:
         """
         Retrieves for a project the name of the branch to which HEAD points.
 
@@ -96,7 +104,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_HEAD(self, HeadInput: dict):
+    @check
+    def set_HEAD(self, HeadInput: dict) -> str:
         """
         Sets HEAD for a project.
 
@@ -104,10 +113,12 @@ class GerritProject:
         :return:
         """
         endpoint = '/projects/%s/HEAD' % self.id
-        self.gerrit.make_call('put', endpoint, **HeadInput)
+        response = self.gerrit.make_call('put', endpoint, **HeadInput)
+        result = self.gerrit.decode_response(response)
+        return result
 
     @property
-    def config(self):
+    def config(self) -> dict:
         """
         Gets some configuration information about a project.
         Note that this config info is not simply the contents of project.config; it generally contains fields that may
@@ -120,7 +131,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_config(self, ConfigInput: dict):
+    @check
+    def set_config(self, ConfigInput: dict) -> dict:
         """
         Sets the configuration of a project.
 
@@ -128,9 +140,11 @@ class GerritProject:
         :return:
         """
         endpoint = '/projects/%s/config' % self.id
-        self.gerrit.make_call('put', endpoint, **ConfigInput)
+        response = self.gerrit.make_call('put', endpoint, **ConfigInput)
+        result = self.gerrit.decode_response(response)
+        return result
 
-    def get_statistics(self):
+    def get_statistics(self) -> dict:
         """
         Return statistics for the repository of a project.
 
@@ -141,7 +155,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def run_garbage_collection(self, GCInput: dict):
+    @check
+    def run_garbage_collection(self, GCInput: dict) -> str:
         """
         Run the Git garbage collection for the repository of a project.
 
@@ -153,7 +168,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def ban_commits(self, BanInput: dict):
+    @check
+    def ban_commits(self, BanInput: dict) -> dict:
         """
         Marks commits as banned for the project.
 
@@ -166,7 +182,7 @@ class GerritProject:
         return result
 
     @property
-    def access_rights(self):
+    def access_rights(self) -> dict:
         """
         Lists the access rights for a single project.
 
@@ -177,7 +193,8 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_access_rights(self, ProjectAccessInput: dict):
+    @check
+    def set_access_rights(self, ProjectAccessInput: dict) -> dict:
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
 
@@ -189,7 +206,7 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
-    def check_access(self, options: str):
+    def check_access(self, options: str) -> dict:
         """
         runs access checks for other users.
 
@@ -206,6 +223,7 @@ class GerritProject:
         result = self.gerrit.decode_response(response)
         return result
 
+    @check
     def index(self, IndexProjectInput: dict):
         """
         Adds or updates the current project (and children, if specified) in the secondary index.
@@ -229,7 +247,8 @@ class GerritProject:
         endpoint = '/projects/%s/index.changes' % self.id
         self.gerrit.make_call('post', endpoint)
 
-    def check_consistency(self, CheckProjectInput: dict):
+    @check
+    def check_consistency(self, CheckProjectInput: dict) -> dict:
         """
         Performs consistency checks on the project.
 
@@ -282,3 +301,11 @@ class GerritProject:
         :return:
         """
         return Commit(self.id, commit, self.gerrit)
+
+    @property
+    def dashboards(self) -> Dashboards:
+        """
+
+        :return:
+        """
+        return Dashboards(project=self.id, gerrit=self.gerrit)

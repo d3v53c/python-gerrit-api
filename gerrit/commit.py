@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.branch import Branch
+from gerrit.branches import Branch
 from gerrit.tags import Tag
 from gerrit.exceptions import UnknownCommit
+from gerrit.common import check
 
 
 class Commit:
@@ -37,7 +38,7 @@ class Commit:
     def __repr__(self):
         return '%s(%s=%s)' % (self.__class__.__name__, 'commit', self.commit)
 
-    def get_include_in(self):
+    def get_include_in(self) -> list:
         """
         Retrieves the branches and tags in which a change is included.
 
@@ -51,7 +52,7 @@ class Commit:
         return [Branch(self.project, 'refs/heads/'+branch, self.gerrit) for branch in branches] + \
                [Tag(self.project, 'refs/tags/'+tag, self.gerrit) for tag in tags]
 
-    def get_file_content(self, file: str):
+    def get_file_content(self, file: str) -> str:
         """
         Gets the content of a file from a certain commit.
 
@@ -63,7 +64,8 @@ class Commit:
         result = self.gerrit.decode_response(response)
         return result
 
-    def cherry_pick(self, CherryPickInput: dict):
+    @check
+    def cherry_pick(self, CherryPickInput: dict) -> dict:
         """
 
         :param CherryPickInput: the CherryPickInput entity
@@ -74,7 +76,7 @@ class Commit:
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_change_files(self):
+    def list_change_files(self) -> dict:
         """
         Lists the files that were modified, added or deleted in a commit.
 

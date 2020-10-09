@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.project import GerritProject
+from gerrit.common import check
 
 
 class GerritProjects:
@@ -20,7 +21,7 @@ class GerritProjects:
         for item in result.values():
             yield GerritProject(id=item.get('id'), gerrit=self.gerrit)
 
-    def search(self, query):
+    def search(self, query: str):
         """
         Queries projects visible to the caller. The query string must be provided by the query parameter.
         The start and limit parameters can be used to skip/limit results.
@@ -41,7 +42,7 @@ class GerritProjects:
         for item in result:
             yield GerritProject(id=item.get('id'), gerrit=self.gerrit)
 
-    def get(self, project_name):
+    def get(self, project_name: str) -> GerritProject:
         """
         Retrieves a project.
 
@@ -50,7 +51,8 @@ class GerritProjects:
         """
         return GerritProject(id=project_name, gerrit=self.gerrit)
 
-    def create(self, project_name, ProjectInput):
+    @check
+    def create(self, project_name: str, ProjectInput: dict) -> GerritProject:
         """
         Creates a new project.
 
