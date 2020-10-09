@@ -11,6 +11,7 @@ class Tag:
         self.ref = ref
         self.gerrit = gerrit
 
+        self.name = None
         self.object = None
         self.message = None
         self.revision = None
@@ -22,8 +23,8 @@ class Tag:
         return '%s(%s=%s)' % (self.__class__.__name__, 'ref', self.ref)
 
     def __load__(self):
-        self.tag = self.ref.replace('refs/tags/', '')
-        endpoint = '/projects/%s/tags/%s' % (self.project, self.tag)
+        self.name = self.ref.replace('refs/tags/', '')
+        endpoint = '/projects/%s/tags/%s' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
 

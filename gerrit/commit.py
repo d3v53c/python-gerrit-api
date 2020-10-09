@@ -10,7 +10,7 @@ from gerrit.common import check
 class Commit:
     def __init__(self, project, commit, gerrit):
         self.project = project
-        self.commit = commit
+        self.commit_id = commit
         self.gerrit = gerrit
 
         self.author = None
@@ -22,7 +22,7 @@ class Commit:
         self.__load__()
 
     def __load__(self):
-        endpoint = '/projects/%s/commits/%s' % (self.project, self.commit)
+        endpoint = '/projects/%s/commits/%s' % (self.project, self.commit_id)
         response = self.gerrit.make_call('get', endpoint)
 
         if response.status_code < 300:
@@ -33,10 +33,10 @@ class Commit:
             self.parents = result.get('parents')
             self.subject = result.get('subject')
         else:
-            raise UnknownCommit(self.commit)
+            raise UnknownCommit(self.commit_id)
 
     def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'commit', self.commit)
+        return '%s(%s=%s)' % (self.__class__.__name__, 'commit', self.commit_id)
 
     def get_include_in(self) -> list:
         """
@@ -44,7 +44,7 @@ class Commit:
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit)
+        endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit_id)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         branches = result.get('branches', [])
@@ -59,7 +59,7 @@ class Commit:
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit, file)
+        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit_id, file)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -71,7 +71,7 @@ class Commit:
         :param CherryPickInput: the CherryPickInput entity
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit)
+        endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit_id)
         response = self.gerrit.make_call('post', endpoint, **CherryPickInput)
         result = self.gerrit.decode_response(response)
         return result
@@ -82,7 +82,7 @@ class Commit:
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit)
+        endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit_id)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result

@@ -6,12 +6,14 @@ from gerrit.common import check
 
 
 class Branch:
+    branch_prefix = 'refs/heads/'
+
     def __init__(self, project, ref, gerrit):
         self.project = project
         self.ref = ref
         self.gerrit = gerrit
 
-        self.branch = None
+        self.name = None
         self.web_links = None
         self.revision = None
         self.can_delete = None
@@ -22,8 +24,8 @@ class Branch:
         return '%s(%s=%s)' % (self.__class__.__name__, 'ref', self.ref)
 
     def __load__(self):
-        self.branch = self.ref.replace('refs/heads/', '')
-        endpoint = '/projects/%s/branches/%s' % (self.project, self.branch)
+        self.name = self.ref.replace('refs/heads/', '')
+        endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
 
@@ -39,7 +41,7 @@ class Branch:
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.branch, file)
+        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.name, file)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -52,7 +54,7 @@ class Branch:
         :param MergeInput: the MergeInput entity
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.branch)
+        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint, **MergeInput)
         result = self.gerrit.decode_response(response)
         return result
@@ -63,13 +65,15 @@ class Branch:
 
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.branch)
+        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
 
 
 class Branches:
+    branch_prefix = 'refs/heads/'
+
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
@@ -135,7 +139,7 @@ class Branches:
         :param value:
         :return:
         """
-        return self.create(key.replace('refs/heads/', ''), value)
+        return self.create(key.replace(self.branch_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -144,7 +148,7 @@ class Branches:
         :param key:
         :return:
         """
-        return self.delete(key.replace('refs/heads/', ''))
+        return self.delete(key.replace(self.branch_prefix, ''))
 
     def __iter__(self):
         """
@@ -163,7 +167,7 @@ class Branches:
         :param BranchInput: the BranchInput entity
         :return:
         """
-        ref = 'refs/heads/' + name
+        ref = self.branch_prefix + name
         if ref in self.keys():
             return self[ref]
 

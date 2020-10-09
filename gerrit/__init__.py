@@ -75,7 +75,7 @@ class GerritClient:
         try:
             return json.loads(content)
         except ValueError:
-            raise
+            raise ValueError("Invalid json content: %s", content)
 
     def make_call(self, method, endpoint, **data):
         call = getattr(self.requester, method.lower())
