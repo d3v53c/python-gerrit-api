@@ -44,3 +44,9 @@ class UnknownCommit(KeyError, NotFound):
     """
     Gerrit does not recognize the commit requested.
     """
+
+
+class UnknownDashboard(KeyError, NotFound):
+    """
+    Gerrit does not recognize the dashboard requested.
+    """
