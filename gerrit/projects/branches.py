@@ -14,6 +14,10 @@ class Branch(BaseModel):
         super(Branch, self).__init__(**kwargs)
         self.attributes = ['ref', 'web_links', 'revision', 'can_delete', 'project', 'gerrit']
 
+    @property
+    def name(self):
+        return self.ref.replace(self.branch_prefix, '')
+
     def get_file_content(self, file: str) -> str:
         """
         Gets the content of a file from the HEAD revision of a certain branch.
@@ -22,9 +26,7 @@ class Branch(BaseModel):
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project,
-                                                                  self.ref.replace(self.branch_prefix, ''),
-                                                                  quote(file, safe=''))
+        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.name, quote(file, safe=''))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -37,7 +39,7 @@ class Branch(BaseModel):
         :param MergeInput: the MergeInput entity
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.ref.replace(self.branch_prefix, ''))
+        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint, **MergeInput)
         result = self.gerrit.decode_response(response)
         return result
@@ -48,7 +50,7 @@ class Branch(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.ref.replace(self.branch_prefix, ''))
+        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.name)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result

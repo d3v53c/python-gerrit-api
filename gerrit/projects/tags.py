@@ -7,9 +7,15 @@ from gerrit.utils.models import BaseModel
 
 
 class Tag(BaseModel):
+    tag_prefix = 'refs/tags/'
+
     def __init__(self, **kwargs):
         super(Tag, self).__init__(**kwargs)
         self.attributes = ['ref', 'object', 'message', 'revision', 'tagger', 'project', 'gerrit']
+
+    @property
+    def name(self):
+        return self.ref.replace(self.tag_prefix, '')
 
 
 class Tags:
