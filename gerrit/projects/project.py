@@ -7,31 +7,13 @@ from gerrit.projects.commit import Commit
 from gerrit.projects.dashboards import Dashboards
 from gerrit.utils.common import check
 from gerrit.utils.exceptions import UnknownCommit
+from gerrit.utils.models import BaseModel
 
 
-class GerritProject:
-    def __init__(self, json, gerrit):
-        self.json = json
-        self.gerrit = gerrit
-
-        self.id = None
-        self.name = None
-        self.state = None
-        self.labels = None
-        self.web_links = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __load__(self):
-        self.id = self.json.get('id')
-        self.name = self.json.get('name')
-        self.labels = self.json.get('labels')
-        self.state = self.json.get('state')
-        self.web_links = self.json.get('web_links')
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'id', self.id)
+class GerritProject(BaseModel):
+    def __init__(self, **kwargs):
+        super(GerritProject, self).__init__(**kwargs)
+        self.attributes = ['id', 'name', 'state', 'labels', 'web_links', 'test', 'gerrit']
 
     @property
     def description(self) -> str:
@@ -301,7 +283,7 @@ class GerritProject:
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
-            return Commit(project=self.id, json=result, gerrit=self.gerrit)
+            return Commit.parse(result, project=self.id, gerrit=self.gerrit)
         else:
             raise UnknownCommit(commit)
 

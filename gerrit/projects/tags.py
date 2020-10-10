@@ -3,37 +3,18 @@
 # @Author: Jialiang Shi
 from gerrit.utils.exceptions import UnknownTag
 from gerrit.utils.common import check
+from gerrit.utils.models import BaseModel
 
 
-class Tag:
-    def __init__(self, project, json, gerrit):
-        self.project = project
-        self.json = json
-        self.gerrit = gerrit
-
-        self.ref = None
-        self.name = None
-        self.object = None
-        self.message = None
-        self.revision = None
-        self.tagger = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'ref', self.ref)
-
-    def __load__(self):
-        self.ref = self.json.get('ref')
-        self.name = self.ref.replace('refs/heads/', '')
-        self.object = self.json.get('object')
-        self.message = self.json.get('message')
-        self.revision = self.json.get('revision')
-        self.tagger = self.json.get('tagger', {})
+class Tag(BaseModel):
+    def __init__(self, **kwargs):
+        super(Tag, self).__init__(**kwargs)
+        self.attributes = ['ref', 'object', 'message', 'revision', 'tagger', 'project', 'gerrit']
 
 
 class Tags:
+    tag_prefix = 'refs/tags/'
+
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
@@ -85,7 +66,7 @@ class Tags:
         result = [row for row in self._data if row['ref'] == ref]
         if result:
             ref_date = result[0]
-            return Tag(project=self.project, json=ref_date, gerrit=self.gerrit)
+            return Tag.parse(ref_date, project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownTag(ref)
 
@@ -96,7 +77,7 @@ class Tags:
         :param value:
         :return:
         """
-        return self.create(key.replace('refs/tags/', ''), value)
+        return self.create(key.replace(self.tag_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -105,7 +86,7 @@ class Tags:
         :param key:
         :return:
         """
-        return self.delete(key.replace('refs/tags/', ''))
+        return self.delete(key.replace(self.tag_prefix, ''))
 
     def __iter__(self):
         """
@@ -113,7 +94,7 @@ class Tags:
         :return:
         """
         for row in self._data:
-            yield Tag(project=self.project, json=row, gerrit=self.gerrit)
+            yield Tag.parse(row, project=self.project, gerrit=self.gerrit)
 
     @check
     def create(self, name: str, TagInput: dict) -> Tag:
@@ -124,14 +105,14 @@ class Tags:
         :param TagInput: the TagInput entity
         :return:
         """
-        ref = 'refs/tags/' + name
+        ref = self.tag_prefix + name
         if ref in self.keys():
             return self[ref]
 
         endpoint = '/projects/%s/tags/%s' % (self.project, name)
         response = self.gerrit.make_call('put', endpoint, **TagInput)
         result = self.gerrit.decode_response(response)
-        return Tag(project=self.project, json=result, gerrit=self.gerrit)
+        return Tag.parse(result, project=self.project, gerrit=self.gerrit)
 
     def delete(self, name):
         """
@@ -141,4 +122,5 @@ class Tags:
         :return:
         """
         endpoint = '/projects/%s/tags/%s' % (self.project, name)
-        self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()

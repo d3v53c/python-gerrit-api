@@ -1,31 +1,13 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+from gerrit.utils.models import BaseModel
 
 
-class GerritAccount:
-    def __init__(self, json, gerrit):
-        self.json = json
-        self.gerrit = gerrit
-
-        self.username = None
-        self.registered_on = None
-        self._account_id = None
-        self.name = None
-        self.email = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __load__(self):
-        self.username = self.json.get('username')
-        self.registered_on = self.json.get('registered_on')
-        self._account_id = self.json.get('_account_id')
-        self.name = self.json.get('name')
-        self.email = self.json.get('email')
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'username', self.username)
+class GerritAccount(BaseModel):
+    def __init__(self, **kwargs):
+        super(GerritAccount, self).__init__(**kwargs)
+        self.attributes = ['username', 'registered_on', '_account_id', 'name', 'email', 'gerrit']
 
     def set_name(self, AccountNameInput: dict) -> str:
         """

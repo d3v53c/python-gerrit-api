@@ -3,34 +3,13 @@
 # @Author: Jialiang Shi
 from urllib.parse import quote
 from gerrit.utils.common import check
+from gerrit.utils.models import BaseModel
 
 
-class Commit:
-    def __init__(self, project, json, gerrit):
-        self.project = project
-        self.json = json
-        self.gerrit = gerrit
-
-        self.commit_id = None
-        self.author = None
-        self.committer = None
-        self.message = None
-        self.parents = None
-        self.subject = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __load__(self):
-        self.commit_id = self.json.get('commit')
-        self.author = self.json.get('author')
-        self.committer = self.json.get('committer')
-        self.message = self.json.get('message')
-        self.parents = self.json.get('parents')
-        self.subject = self.json.get('subject')
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'commit', self.commit_id)
+class Commit(BaseModel):
+    def __init__(self, **kwargs):
+        super(Commit, self).__init__(**kwargs)
+        self.attributes = ['commit', 'author', 'committer', 'message', 'parents', 'subject', 'project', 'gerrit']
 
     def get_include_in(self) -> dict:
         """
@@ -38,7 +17,7 @@ class Commit:
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit_id)
+        endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -50,7 +29,7 @@ class Commit:
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit_id, quote(file, safe=''))
+        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit, quote(file, safe=''))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -62,7 +41,7 @@ class Commit:
         :param CherryPickInput: the CherryPickInput entity
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit_id)
+        endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit)
         response = self.gerrit.make_call('post', endpoint, **CherryPickInput)
         result = self.gerrit.decode_response(response)
         return result
@@ -73,7 +52,7 @@ class Commit:
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit_id)
+        endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result

@@ -4,34 +4,15 @@
 from urllib.parse import quote
 from gerrit.utils.exceptions import UnknownBranch
 from gerrit.utils.common import check
+from gerrit.utils.models import BaseModel
 
 
-class Branch:
+class Branch(BaseModel):
     branch_prefix = 'refs/heads/'
 
-    def __init__(self, project, json, gerrit):
-        self.project = project
-        self.json = json
-        self.gerrit = gerrit
-
-        self.ref = None
-        self.name = None
-        self.web_links = None
-        self.revision = None
-        self.can_delete = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'ref', self.ref)
-
-    def __load__(self):
-        self.ref = self.json.get('ref')
-        self.name = self.ref.replace('refs/heads/', '')
-        self.web_links = self.json.get('web_links', [])
-        self.revision = self.json.get('revision')
-        self.can_delete = self.json.get('can_delete', False)
+    def __init__(self, **kwargs):
+        super(Branch, self).__init__(**kwargs)
+        self.attributes = ['ref', 'web_links', 'revision', 'can_delete', 'project', 'gerrit']
 
     def get_file_content(self, file: str) -> str:
         """
@@ -41,7 +22,9 @@ class Branch:
         :param file:
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.name, quote(file, safe=''))
+        endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project,
+                                                                  self.ref.replace(self.branch_prefix, ''),
+                                                                  quote(file, safe=''))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -54,7 +37,7 @@ class Branch:
         :param MergeInput: the MergeInput entity
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.name)
+        endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.ref.replace(self.branch_prefix, ''))
         response = self.gerrit.make_call('get', endpoint, **MergeInput)
         result = self.gerrit.decode_response(response)
         return result
@@ -65,7 +48,7 @@ class Branch:
 
         :return:
         """
-        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.name)
+        endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.ref.replace(self.branch_prefix, ''))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
@@ -128,7 +111,7 @@ class Branches:
         result = [row for row in self._data if row['ref'] == ref]
         if result:
             ref_date = result[0]
-            return Branch(project=self.project, json=ref_date, gerrit=self.gerrit)
+            return Branch.parse(ref_date, project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownBranch(ref)
 
@@ -156,7 +139,7 @@ class Branches:
         :return:
         """
         for row in self._data:
-            yield Branch(project=self.project, json=row, gerrit=self.gerrit)
+            yield Branch.parse(row, project=self.project, gerrit=self.gerrit)
 
     @check
     def create(self, name: str, BranchInput: dict) -> Branch:
@@ -174,7 +157,7 @@ class Branches:
         endpoint = '/projects/%s/branches/%s' % (self.project, name)
         response = self.gerrit.make_call('put', endpoint, **BranchInput)
         result = self.gerrit.decode_response(response)
-        return Branch(project=self.project, json=result, gerrit=self.gerrit)
+        return Branch.parse(result, project=self.project, gerrit=self.gerrit)
 
     def delete(self, name: str):
         """
@@ -184,4 +167,5 @@ class Branches:
         :return:
         """
         endpoint = '/projects/%s/branches/%s' % (self.project, name)
-        self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()

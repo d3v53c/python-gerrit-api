@@ -20,8 +20,7 @@ class GerritAccounts:
         endpoint = '/accounts/?suggest&q=%s' % query
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        for item in result:
-            yield GerritAccount(json=item, gerrit=self.gerrit)
+        return GerritAccount.parse_list(result, gerrit=self.gerrit)
 
     def get(self, username: str) -> GerritAccount:
         """
@@ -35,7 +34,7 @@ class GerritAccounts:
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
-            return GerritAccount(json=result, gerrit=self.gerrit)
+            return GerritAccount.parse(result, gerrit=self.gerrit)
         else:
             raise UnknownAccount(username)
 
@@ -51,4 +50,4 @@ class GerritAccounts:
         endpoint = '/accounts/%s' % username
         response = self.gerrit.make_call('put', endpoint, **AccountInput)
         result = self.gerrit.decode_response(response)
-        return GerritAccount(json=result, gerrit=self.gerrit)
+        return GerritAccount.parse(result, gerrit=self.gerrit)

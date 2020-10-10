@@ -10,7 +10,7 @@ class GerritProjects:
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self):
+    def list(self) -> list:
         """
         Lists the projects accessible by the caller.
 
@@ -19,10 +19,9 @@ class GerritProjects:
         endpoint = '/projects/?all'
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        for item in result.values():
-            yield GerritProject(json=item, gerrit=self.gerrit)
+        return GerritProject.parse_list(list(result.values()), gerrit=self.gerrit)
 
-    def search(self, query: str):
+    def search(self, query: str) -> list:
         """
         Queries projects visible to the caller. The query string must be provided by the query parameter.
         The start and limit parameters can be used to skip/limit results.
@@ -40,8 +39,7 @@ class GerritProjects:
         endpoint = '/projects/?query=%s' % query
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        for item in result:
-            yield GerritProject(json=item, gerrit=self.gerrit)
+        return GerritProject.parse_list(result, gerrit=self.gerrit)
 
     def get(self, project_name: str) -> GerritProject:
         """
@@ -55,7 +53,7 @@ class GerritProjects:
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
-            return GerritProject(json=result, gerrit=self.gerrit)
+            return GerritProject.parse(result, gerrit=self.gerrit)
         else:
             raise UnknownProject(project_name)
 

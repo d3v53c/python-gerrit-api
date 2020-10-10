@@ -3,38 +3,14 @@
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
 from gerrit.utils.exceptions import UnknownDashboard
+from gerrit.utils.models import BaseModel
 
 
-class Dashboard:
-    def __init__(self, project, json, gerrit):
-        self.project = project
-        self.json = json
-        self.gerrit = gerrit
-
-        self.id = None
-        self.ref = None
-        self.path = None
-        self.description = None
-        self.url = None
-        self.is_default = None
-        self.title = None
-        self.sections = None
-
-        if self.json is not None:
-            self.__load__()
-
-    def __repr__(self):
-        return '%s(%s=%s)' % (self.__class__.__name__, 'id', self.id)
-
-    def __load__(self):
-        self.id = self.json.get('id')
-        self.ref = self.json.get('ref')
-        self.path = self.json.get('path')
-        self.description = self.json.get('description')
-        self.url = self.json.get('url')
-        self.is_default = self.json.get('is_default', False)
-        self.title = self.json.get('title')
-        self.sections = self.json.get('sections', [])
+class Dashboard(BaseModel):
+    def __init__(self, **kwargs):
+        super(Dashboard, self).__init__(**kwargs)
+        self.attributes = ['id', 'ref', 'path', 'description', 'url', 'is_default', 'title', 'sections', 'project',
+                           'gerrit']
 
 
 class Dashboards:
@@ -51,9 +27,7 @@ class Dashboards:
         endpoint = '/projects/%s/dashboards/' % self.project
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-
-        for item in result:
-            yield Dashboard(project=self.project, json=item, gerrit=self.gerrit)
+        return Dashboard.parse_list(result, project=self.project, gerrit=self.gerrit)
 
     @check
     def create(self, name: str, DashboardInput: dict) -> Dashboard:
@@ -67,7 +41,7 @@ class Dashboards:
         endpoint = '/projects/%s/dashboards/%s' % (self.project, name)
         response = self.gerrit.make_call('put', endpoint, **DashboardInput)
         result = self.gerrit.decode_response(response)
-        return Dashboard(project=self.project, json=result, gerrit=self.gerrit)
+        return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
     def get(self, id: str) -> Dashboard:
         """
@@ -80,7 +54,7 @@ class Dashboards:
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
-            return Dashboard(project=self.project, json=result, gerrit=self.gerrit)
+            return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownDashboard(id)
 
@@ -92,4 +66,5 @@ class Dashboards:
         :return:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, id)
-        self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()
