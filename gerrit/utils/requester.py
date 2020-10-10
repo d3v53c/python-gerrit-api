@@ -84,7 +84,7 @@ class Requester:
         request_kwargs['cert'] = self.cert
 
         if data:
-                # It may seem odd, but some Gerrit operations require posting
+            # It may seem odd, but some Gerrit operations require posting
             # an empty string.
             request_kwargs['data'] = data
 

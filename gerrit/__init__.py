@@ -13,13 +13,13 @@ class GerritClient:
 
     def __init__(
             self,
-            base_url,
-            username,
-            password,
-            ssl_verify=True,
-            cert=None,
-            timeout=60,
-            max_retries=None):
+            base_url: str,
+            username: str,
+            password: str,
+            ssl_verify: bool = True,
+            cert: str = None,
+            timeout: int = 60,
+            max_retries: int = None):
         self._base_url = self.strip_trailing_slash(base_url)
 
         self.requester = Requester(
