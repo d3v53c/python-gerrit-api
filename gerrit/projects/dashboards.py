@@ -12,6 +12,16 @@ class Dashboard(BaseModel):
         self.attributes = ['id', 'ref', 'path', 'description', 'url', 'is_default', 'title', 'sections', 'project',
                            'gerrit']
 
+    def delete(self):
+        """
+        Deletes a project dashboard.
+
+        :return:
+        """
+        endpoint = '/projects/%s/dashboards/%s' % (self.project, self.id)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()
+
 
 class Dashboards:
     def __init__(self, project, gerrit):
@@ -57,14 +67,3 @@ class Dashboards:
             return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownDashboard(id)
-
-    def delete(self, id: str):
-        """
-        Deletes a project dashboard.
-
-        :param id: dashboard id
-        :return:
-        """
-        endpoint = '/projects/%s/dashboards/%s' % (self.project, id)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()

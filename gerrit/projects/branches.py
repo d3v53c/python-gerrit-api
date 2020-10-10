@@ -55,6 +55,16 @@ class Branch(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
+    def delete(self):
+        """
+        Delete a branch.
+
+        :return:
+        """
+        endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()
+
 
 class Branches:
     branch_prefix = 'refs/heads/'
@@ -110,6 +120,9 @@ class Branches:
         :param ref:
         :return:
         """
+        if not ref.startswith(self.branch_prefix):
+            raise KeyError("branch ref should start with {}".format(self.branch_prefix))
+
         result = [row for row in self._data if row['ref'] == ref]
         if result:
             ref_date = result[0]
@@ -124,7 +137,10 @@ class Branches:
         :param value:
         :return:
         """
-        return self.create(key.replace(self.branch_prefix, ''), value)
+        if not key.startswith(self.branch_prefix):
+            raise KeyError("branch ref should start with {}".format(self.branch_prefix))
+
+        self.create(key.replace(self.branch_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -133,7 +149,7 @@ class Branches:
         :param key:
         :return:
         """
-        return self.delete(key.replace(self.branch_prefix, ''))
+        self[key].delete()
 
     def __iter__(self):
         """
@@ -160,14 +176,3 @@ class Branches:
         response = self.gerrit.make_call('put', endpoint, **BranchInput)
         result = self.gerrit.decode_response(response)
         return Branch.parse(result, project=self.project, gerrit=self.gerrit)
-
-    def delete(self, name: str):
-        """
-        Delete a branch.
-
-        :param name: The name of a branch or HEAD. The prefix refs/heads/ can be omitted.
-        :return:
-        """
-        endpoint = '/projects/%s/branches/%s' % (self.project, name)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()

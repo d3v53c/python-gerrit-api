@@ -17,6 +17,16 @@ class Tag(BaseModel):
     def name(self):
         return self.ref.replace(self.tag_prefix, '')
 
+    def delete(self):
+        """
+        Delete a tag.
+
+        :return:
+        """
+        endpoint = '/projects/%s/tags/%s' % (self.project, self.name)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()
+
 
 class Tags:
     tag_prefix = 'refs/tags/'
@@ -69,6 +79,9 @@ class Tags:
         :param ref:
         :return:
         """
+        if not ref.startswith(self.tag_prefix):
+            raise KeyError("tag ref should start with {}".format(self.tag_prefix))
+
         result = [row for row in self._data if row['ref'] == ref]
         if result:
             ref_date = result[0]
@@ -83,7 +96,10 @@ class Tags:
         :param value:
         :return:
         """
-        return self.create(key.replace(self.tag_prefix, ''), value)
+        if not key.startswith(self.tag_prefix):
+            raise KeyError("tag ref should start with {}".format(self.tag_prefix))
+
+        self.create(key.replace(self.tag_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -92,7 +108,7 @@ class Tags:
         :param key:
         :return:
         """
-        return self.delete(key.replace(self.tag_prefix, ''))
+        self[key].delete()
 
     def __iter__(self):
         """
@@ -119,14 +135,3 @@ class Tags:
         response = self.gerrit.make_call('put', endpoint, **TagInput)
         result = self.gerrit.decode_response(response)
         return Tag.parse(result, project=self.project, gerrit=self.gerrit)
-
-    def delete(self, name):
-        """
-        Delete a tag.
-
-        :param name: the tag name
-        :return:
-        """
-        endpoint = '/projects/%s/tags/%s' % (self.project, name)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()
