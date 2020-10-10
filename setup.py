@@ -17,7 +17,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='pygerrit',
+    name='pygerrit3',
 
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.9.9',
