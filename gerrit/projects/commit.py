@@ -2,44 +2,37 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.projects.branches import Branch
-from gerrit.projects.tags import Tag
-from gerrit.utils.exceptions import UnknownCommit
 from gerrit.utils.common import check
 
 
 class Commit:
-    def __init__(self, project, commit, gerrit):
+    def __init__(self, project, json, gerrit):
         self.project = project
-        self.commit_id = commit
+        self.json = json
         self.gerrit = gerrit
 
+        self.commit_id = None
         self.author = None
         self.committer = None
         self.message = None
         self.parents = None
         self.subject = None
 
-        self.__load__()
+        if self.json is not None:
+            self.__load__()
 
     def __load__(self):
-        endpoint = '/projects/%s/commits/%s' % (self.project, self.commit_id)
-        response = self.gerrit.make_call('get', endpoint)
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            self.author = result.get('author')
-            self.committer = result.get('committer')
-            self.message = result.get('message')
-            self.parents = result.get('parents')
-            self.subject = result.get('subject')
-        else:
-            raise UnknownCommit(self.commit_id)
+        self.commit_id = self.json.get('commit')
+        self.author = self.json.get('author')
+        self.committer = self.json.get('committer')
+        self.message = self.json.get('message')
+        self.parents = self.json.get('parents')
+        self.subject = self.json.get('subject')
 
     def __repr__(self):
         return '%s(%s=%s)' % (self.__class__.__name__, 'commit', self.commit_id)
 
-    def get_include_in(self) -> list:
+    def get_include_in(self) -> dict:
         """
         Retrieves the branches and tags in which a change is included.
 
@@ -48,10 +41,7 @@ class Commit:
         endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit_id)
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        branches = result.get('branches', [])
-        tags = result.get('tags', [])
-        return [Branch(self.project, 'refs/heads/'+branch, self.gerrit) for branch in branches] + \
-               [Tag(self.project, 'refs/tags/'+tag, self.gerrit) for tag in tags]
+        return result
 
     def get_file_content(self, file: str) -> str:
         """

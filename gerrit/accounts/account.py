@@ -1,33 +1,28 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.exceptions import UnknownAccount
 
 
 class GerritAccount:
-    def __init__(self, username, gerrit):
-        self.username = username
+    def __init__(self, json, gerrit):
+        self.json = json
         self.gerrit = gerrit
 
+        self.username = None
         self.registered_on = None
         self._account_id = None
-        # self.name = None
+        self.name = None
         self.email = None
 
-        self.__load__()
+        if self.json is not None:
+            self.__load__()
 
     def __load__(self):
-        endpoint = '/accounts/%s/detail' % self.username
-        response = self.gerrit.make_call('get', endpoint)
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            self.registered_on = result.get('registered_on')
-            self._account_id = result.get('_account_id')
-            self.name = result.get('name')
-            self.email = result.get('email')
-        else:
-            raise UnknownAccount(self.username)
+        self.username = self.json.get('username')
+        self.registered_on = self.json.get('registered_on')
+        self._account_id = self.json.get('_account_id')
+        self.name = self.json.get('name')
+        self.email = self.json.get('email')
 
     def __repr__(self):
         return '%s(%s=%s)' % (self.__class__.__name__, 'username', self.username)

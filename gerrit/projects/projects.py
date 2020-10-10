@@ -3,6 +3,7 @@
 # @Author: Jialiang Shi
 from gerrit.projects.project import GerritProject
 from gerrit.utils.common import check
+from gerrit.utils.exceptions import UnknownProject
 
 
 class GerritProjects:
@@ -19,7 +20,7 @@ class GerritProjects:
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         for item in result.values():
-            yield GerritProject(id=item.get('id'), gerrit=self.gerrit)
+            yield GerritProject(json=item, gerrit=self.gerrit)
 
     def search(self, query: str):
         """
@@ -40,7 +41,7 @@ class GerritProjects:
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         for item in result:
-            yield GerritProject(id=item.get('id'), gerrit=self.gerrit)
+            yield GerritProject(json=item, gerrit=self.gerrit)
 
     def get(self, project_name: str) -> GerritProject:
         """
@@ -49,7 +50,14 @@ class GerritProjects:
         :param project_name: the name of the project
         :return:
         """
-        return GerritProject(id=project_name, gerrit=self.gerrit)
+        endpoint = '/projects/%s' % project_name
+        response = self.gerrit.make_call('get', endpoint)
+
+        if response.status_code < 300:
+            result = self.gerrit.decode_response(response)
+            return GerritProject(json=result, gerrit=self.gerrit)
+        else:
+            raise UnknownProject(project_name)
 
     @check
     def create(self, project_name: str, ProjectInput: dict) -> GerritProject:
@@ -63,4 +71,4 @@ class GerritProjects:
         endpoint = '/projects/%s' % project_name
         response = self.gerrit.make_call('put', endpoint, **ProjectInput)
         result = self.gerrit.decode_response(response)
-        return GerritProject(id=result.get('id'), gerrit=self.gerrit)
+        return GerritProject(json=result, gerrit=self.gerrit)

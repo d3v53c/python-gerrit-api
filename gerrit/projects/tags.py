@@ -6,32 +6,31 @@ from gerrit.utils.common import check
 
 
 class Tag:
-    def __init__(self, project, ref, gerrit):
+    def __init__(self, project, json, gerrit):
         self.project = project
-        self.ref = ref
+        self.json = json
         self.gerrit = gerrit
 
+        self.ref = None
         self.name = None
         self.object = None
         self.message = None
         self.revision = None
         self.tagger = None
 
-        self.__load__()
+        if self.json is not None:
+            self.__load__()
 
     def __repr__(self):
         return '%s(%s=%s)' % (self.__class__.__name__, 'ref', self.ref)
 
     def __load__(self):
-        self.name = self.ref.replace('refs/tags/', '')
-        endpoint = '/projects/%s/tags/%s' % (self.project, self.name)
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-
-        self.object = result.get('object')
-        self.message = result.get('message')
-        self.revision = result.get('revision')
-        self.tagger = result.get('tagger', {})
+        self.ref = self.json.get('ref')
+        self.name = self.ref.replace('refs/heads/', '')
+        self.object = self.json.get('object')
+        self.message = self.json.get('message')
+        self.revision = self.json.get('revision')
+        self.tagger = self.json.get('tagger', {})
 
 
 class Tags:
@@ -86,7 +85,7 @@ class Tags:
         result = [row for row in self._data if row['ref'] == ref]
         if result:
             ref_date = result[0]
-            return Tag(project=self.project, ref=ref_date['ref'], gerrit=self.gerrit)
+            return Tag(project=self.project, json=ref_date, gerrit=self.gerrit)
         else:
             raise UnknownTag(ref)
 
@@ -114,7 +113,7 @@ class Tags:
         :return:
         """
         for row in self._data:
-            yield Tag(project=self.project, ref=row['ref'], gerrit=self.gerrit)
+            yield Tag(project=self.project, json=row, gerrit=self.gerrit)
 
     @check
     def create(self, name: str, TagInput: dict) -> Tag:
@@ -132,7 +131,7 @@ class Tags:
         endpoint = '/projects/%s/tags/%s' % (self.project, name)
         response = self.gerrit.make_call('put', endpoint, **TagInput)
         result = self.gerrit.decode_response(response)
-        return Tag(project=self.project, ref=result['ref'], gerrit=self.gerrit)
+        return Tag(project=self.project, json=result, gerrit=self.gerrit)
 
     def delete(self, name):
         """

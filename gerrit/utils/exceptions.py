@@ -50,3 +50,9 @@ class UnknownDashboard(KeyError, NotFound):
     """
     Gerrit does not recognize the dashboard requested.
     """
+
+
+class UnknownAccount(KeyError, NotFound):
+    """
+    Gerrit does not recognize the account requested.
+    """

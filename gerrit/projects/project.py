@@ -5,34 +5,30 @@ from gerrit.projects.branches import Branches
 from gerrit.projects.tags import Tags
 from gerrit.projects.commit import Commit
 from gerrit.projects.dashboards import Dashboards
-from gerrit.utils.exceptions import UnknownProject
 from gerrit.utils.common import check
+from gerrit.utils.exceptions import UnknownCommit
 
 
 class GerritProject:
-    def __init__(self, id, gerrit):
-        self.id = id
+    def __init__(self, json, gerrit):
+        self.json = json
         self.gerrit = gerrit
 
+        self.id = None
         self.name = None
-        self.labels = None
         self.state = None
+        self.labels = None
         self.web_links = None
 
-        self.__load__()
+        if self.json is not None:
+            self.__load__()
 
     def __load__(self):
-        endpoint = '/projects/%s' % self.id
-        response = self.gerrit.make_call('get', endpoint)
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            self.name = result.get('name')
-            self.labels = result.get('labels')
-            self.state = result.get('state')
-            self.web_links = result.get('web_links')
-        else:
-            raise UnknownProject(self.id)
+        self.id = self.json.get('id')
+        self.name = self.json.get('name')
+        self.labels = self.json.get('labels')
+        self.state = self.json.get('state')
+        self.web_links = self.json.get('web_links')
 
     def __repr__(self):
         return '%s(%s=%s)' % (self.__class__.__name__, 'id', self.id)
@@ -282,7 +278,7 @@ class GerritProject:
 
         child_projects = []
         for item in result:
-            child_projects.append(GerritProject(id=item['id'], gerrit=self.gerrit))
+            child_projects.append(GerritProject(json=item, gerrit=self.gerrit))
         return child_projects
 
     @property
@@ -300,11 +296,19 @@ class GerritProject:
 
         :return:
         """
-        return Commit(self.id, commit, self.gerrit)
+        endpoint = '/projects/%s/commits/%s' % (self.id, commit)
+        response = self.gerrit.make_call('get', endpoint)
+
+        if response.status_code < 300:
+            result = self.gerrit.decode_response(response)
+            return Commit(project=self.id, json=result, gerrit=self.gerrit)
+        else:
+            raise UnknownCommit(commit)
 
     @property
     def dashboards(self) -> Dashboards:
         """
+        gerrit dashboards operations
 
         :return:
         """
