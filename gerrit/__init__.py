@@ -43,7 +43,7 @@ class GerritClient:
             url = url[:-1]
         return url
 
-    def _get_endpoint_url(self, endpoint):
+    def get_endpoint_url(self, endpoint):
         """
         Return the complete url including host and port for a given endpoint.
         :param endpoint: service endpoint as str
@@ -80,7 +80,7 @@ class GerritClient:
 
     def make_call(self, method, endpoint, **data):
         call = getattr(self.requester, method.lower())
-        base_url = self._get_endpoint_url(endpoint)
+        base_url = self.get_endpoint_url(endpoint)
 
         if method.lower() == 'get' or method.lower() == 'delete':
             res = call(base_url, params=data or {})

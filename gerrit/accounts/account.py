@@ -187,7 +187,7 @@ class GerritAccount(BaseModel):
         return result
 
     @property
-    def groups(self):
+    def groups(self) -> list:
         """
         Lists all groups that contain the specified user as a member.
 
@@ -198,8 +198,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @property
-    def avatar(self):
+    def get_avatar(self) -> str:
         """
         Retrieves the avatar image of the user.
         :return:
@@ -209,7 +208,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_avatar_change_url(self):
+    def get_avatar_change_url(self) -> str:
         """
         Retrieves the avatar image of the user.
         :return:
@@ -218,3 +217,185 @@ class GerritAccount(BaseModel):
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
         return result
+
+    def get_user_preferences(self):
+        """
+        Retrieves the user’s preferences.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    @check
+    def set_user_preferences(self, PreferencesInput: dict) -> dict:
+        """
+        Sets the user’s preferences.
+
+        :param PreferencesInput: the PreferencesInput entity
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences' % self.username
+        response = self.gerrit.make_call('put', endpoint, **PreferencesInput)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def get_diff_preferences(self):
+        """
+        Retrieves the diff preferences of a user.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences.diff' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    @check
+    def set_diff_preferences(self, DiffPreferencesInput: dict) -> dict:
+        """
+        Sets the diff preferences of a user.
+
+        :param DiffPreferencesInput: the DiffPreferencesInput entity
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences.diff' % self.username
+        response = self.gerrit.make_call('put', endpoint, **DiffPreferencesInput)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def get_edit_preferences(self):
+        """
+        Retrieves the edit preferences of a user.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences.edit' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    @check
+    def set_edit_preferences(self, EditPreferencesInfo: dict) -> dict:
+        """
+        Sets the edit preferences of a user.
+
+        :param EditPreferencesInfo: the EditPreferencesInfo entity
+        :return:
+        """
+        endpoint = '/accounts/%s/preferences.edit' % self.username
+        response = self.gerrit.make_call('put', endpoint, **EditPreferencesInfo)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def get_watched_projects(self) -> list:
+        """
+        Retrieves all projects a user is watching.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/watched.projects' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def modify_watched_projects(self, ProjectWatchInfo: list) -> list:
+        """
+        Add new projects to watch or update existing watched projects.
+
+        :param ProjectWatchInfo: the ProjectWatchInfo entities as list
+        :return:
+        """
+        endpoint = '/accounts/%s/watched.projects' % self.username
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url,
+                                              json=ProjectWatchInfo,
+                                              headers={'Content-Type': 'application/json'})
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def delete_watched_projects(self, ProjectWatchInfo: list):
+        """
+        Projects posted to this endpoint will no longer be watched.
+
+        :param ProjectWatchInfo: the watched projects as list
+        :return:
+        """
+        endpoint = '/accounts/%s/watched.projects:delete' % self.username
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url,
+                                              json=ProjectWatchInfo,
+                                              headers={'Content-Type': 'application/json'})
+        response.raise_for_status()
+
+    def get_external_ids(self) -> list:
+        """
+        Retrieves the external ids of a user account.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/external.ids' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def delete_external_ids(self, ExternalIDsInfo: list):
+        """
+        Delete a list of external ids for a user account.
+
+        :param ExternalIDsInfo: the external ids as list
+        :return:
+        """
+        endpoint = '/accounts/%s/external.ids:delete' % self.username
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url,
+                                              json=ExternalIDsInfo,
+                                              headers={'Content-Type': 'application/json'})
+        response.raise_for_status()
+
+    def list_contributor_agreements(self) -> list:
+        """
+        Gets a list of the user’s signed contributor agreements.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/agreements' % self.username
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def sign_contributor_agreement(self, ContributorAgreementInput: dict) -> str:
+        """
+        Signs a contributor agreement.
+
+        :param ContributorAgreementInput: the ContributorAgreementInput entity
+        :return:
+        """
+        endpoint = '/accounts/%s/agreements' % self.username
+        response = self.gerrit.make_call('put', endpoint, **ContributorAgreementInput)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def delete_draft_comments(self, DeleteDraftCommentsInput: dict) -> list:
+        """
+        Deletes some or all of a user’s draft comments.
+
+        :param DeleteDraftCommentsInput: the DeleteDraftCommentsInput entity
+        :return:
+        """
+        endpoint = '/accounts/%s/drafts:delete' % self.username
+        response = self.gerrit.make_call('post', endpoint, **DeleteDraftCommentsInput)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def index(self):
+        """
+        Adds or updates the account in the secondary index.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/index' % self.username
+        response = self.gerrit.make_call('post', endpoint)
+        response.raise_for_status()

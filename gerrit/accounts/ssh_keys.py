@@ -61,7 +61,7 @@ class SSHKeys:
         :return:
         """
         endpoint = '/accounts/%s/sshkeys' % self.username
-        base_url = self.gerrit._get_endpoint_url(endpoint)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.post(base_url, data=ssh_key, headers={'Content-Type': 'plain/text'})
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
