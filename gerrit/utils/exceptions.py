@@ -56,3 +56,21 @@ class UnknownAccount(KeyError, NotFound):
     """
     Gerrit does not recognize the account requested.
     """
+
+
+class UnknownEmail(KeyError, NotFound):
+    """
+    Gerrit does not recognize the email requested.
+    """
+
+
+class UnknownSSHKey(KeyError, NotFound):
+    """
+    Gerrit does not recognize the SSH key requested.
+    """
+
+
+class UnknownGPGKey(KeyError, NotFound):
+    """
+    Gerrit does not recognize the GPG key requested.
+    """

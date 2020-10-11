@@ -2,6 +2,9 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
+from gerrit.accounts.emails import Emails
+from gerrit.accounts.ssh_keys import SSHKeys
+from gerrit.accounts.gpg_keys import GPGKeys
 from gerrit.utils.common import check
 
 
@@ -148,142 +151,17 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_emails(self) -> list:
-        """
-        Returns the email addresses that are configured for the specified user.
+    @property
+    def emails(self):
+        return Emails(username=self.username, gerrit=self.gerrit)
 
-        :return:
-        """
-        endpoint = '/accounts/%s/emails' % self.username
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
+    @property
+    def ssh_keys(self):
+        return SSHKeys(username=self.username, gerrit=self.gerrit)
 
-    def get_email(self, email: str) -> dict:
-        """
-        Retrieves an email address of a user.
-
-        :param email:
-        :return:
-        """
-        endpoint = '/accounts/%s/emails/%s' % (self.username, email)
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def delete_email(self, email: str):
-        """
-        Deletes an email address of an account.
-
-        :param email:
-        :return:
-        """
-        endpoint = '/accounts/%s/emails/%s' % (self.username, email)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()
-
-    def set_preferred_email(self, email: str):
-        """
-        Sets an email address as preferred email address for an account.
-
-        :param email:
-        :return:
-        """
-        endpoint = '/accounts/%s/emails/%s/preferred' % (self.username, email)
-        response = self.gerrit.make_call('put', endpoint)
-        response.raise_for_status()
-
-    def list_ssh_keys(self) -> list:
-        """
-        Returns the SSH keys of an account.
-
-        :return:
-        """
-        endpoint = '/accounts/%s/sshkeys' % self.username
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def get_ssh_key(self, ssh_key_id: int) -> dict:
-        """
-        Retrieves an SSH key of a user.
-
-        :param ssh_key_id: ssh key id
-        :return:
-        """
-        endpoint = '/accounts/%s/sshkeys/%s' % (self.username, ssh_key_id)
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def add_ssh_key(self, ssh_key: str) -> dict:
-        """
-
-        :param ssh_key:
-        :return:
-        """
-        endpoint = '/accounts/%s/sshkeys' % self.username
-        base_url = self.gerrit._get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, data=ssh_key, headers={'Content-Type': 'plain/text'})
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def delete_ssh_key(self, ssh_key_id: int):
-        """
-
-        :param ssh_key_id:
-        :return:
-        """
-        endpoint = '/accounts/%s/sshkeys/%s' % (self.username, ssh_key_id)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()
-
-    def list_gpg_keys(self) -> dict:
-        """
-        Returns the GPG keys of an account.
-
-        :return:
-        """
-        endpoint = '/accounts/%s/gpgkeys' % self.username
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def get_gpg_key(self, gpg_key_id: str) -> dict:
-        """
-        Retrieves a GPG key of a user.
-
-        :param gpg_key_id: gpg key id
-        :return:
-        """
-        endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, gpg_key_id)
-        response = self.gerrit.make_call('get', endpoint)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    @check
-    def modify_gpg_keys(self, GpgKeysInput: dict) -> dict:
-        """
-        Add or delete one or more GPG keys for a user.
-
-        :param GpgKeysInput: the GpgKeysInput entity
-        :return:
-        """
-        endpoint = '/accounts/%s/gpgkeys' % self.username
-        response = self.gerrit.make_call('post', endpoint, **GpgKeysInput)
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def delete_gpg_key(self, gpg_key_id: str):
-        """
-        Deletes a GPG key of a user.
-
-        :param gpg_key_id: gpg key id
-        :return:
-        """
-        endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, gpg_key_id)
-        response = self.gerrit.make_call('delete', endpoint)
-        response.raise_for_status()
+    @property
+    def gpg_keys(self):
+        return GPGKeys(username=self.username, gerrit=self.gerrit)
 
     def list_capabilities(self) -> dict:
         """
