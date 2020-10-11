@@ -186,8 +186,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @property
-    def groups(self) -> list:
+    def get_groups(self) -> list:
         """
         Lists all groups that contain the specified user as a member.
 

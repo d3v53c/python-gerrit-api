@@ -260,7 +260,7 @@ class GerritProject(BaseModel):
 
         child_projects = []
         for item in result:
-            child_projects.append(GerritProject(json=item, gerrit=self.gerrit))
+            child_projects.append(GerritProject.parse(item, gerrit=self.gerrit))
         return child_projects
 
     @property

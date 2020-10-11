@@ -6,6 +6,7 @@ from gerrit.utils.requester import Requester
 from gerrit.config.config import GerritConfig
 from gerrit.projects.projects import GerritProjects
 from gerrit.accounts.accounts import GerritAccounts
+from gerrit.groups.groups import GerritGroups
 
 
 class GerritClient:
@@ -100,3 +101,7 @@ class GerritClient:
     @property
     def accounts(self):
         return GerritAccounts(gerrit=self)
+
+    @property
+    def groups(self):
+        return GerritGroups(gerrit=self)

@@ -69,4 +69,4 @@ class GerritProjects:
         endpoint = '/projects/%s' % project_name
         response = self.gerrit.make_call('put', endpoint, **ProjectInput)
         result = self.gerrit.decode_response(response)
-        return GerritProject(json=result, gerrit=self.gerrit)
+        return GerritProject.parse(result, gerrit=self.gerrit)

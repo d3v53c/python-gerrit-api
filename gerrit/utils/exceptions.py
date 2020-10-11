@@ -74,3 +74,9 @@ class UnknownGPGKey(KeyError, NotFound):
     """
     Gerrit does not recognize the GPG key requested.
     """
+
+
+class UnknownGroup(KeyError, NotFound):
+    """
+    Gerrit does not recognize the Group requested.
+    """
