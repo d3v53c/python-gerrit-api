@@ -23,6 +23,10 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/name' % self.id
         response = self.gerrit.make_call('put', endpoint, **GroupNameInput)
         result = self.gerrit.decode_response(response)
+
+        # update group model's name
+        self.name = result
+
         return result
 
     @check
@@ -36,6 +40,10 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/description' % self.id
         response = self.gerrit.make_call('put', endpoint, **GroupDescriptionInput)
         result = self.gerrit.decode_response(response)
+
+        # update group model's description
+        self.description = result
+
         return result
 
     def delete_description(self):
@@ -48,6 +56,9 @@ class GerritGroup(BaseModel):
         response = self.gerrit.make_call('delete', endpoint)
         response.raise_for_status()
 
+        # update group model's description
+        self.description = None
+
     @check
     def set_options(self, GroupOptionsInput: dict) -> dict:
         """
@@ -59,6 +70,10 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/options' % self.id
         response = self.gerrit.make_call('put', endpoint, **GroupOptionsInput)
         result = self.gerrit.decode_response(response)
+
+        # update group model's options
+        self.options = result
+
         return result
 
     @check
@@ -72,7 +87,12 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/owner' % self.id
         response = self.gerrit.make_call('put', endpoint, **GroupOwnerInput)
         result = self.gerrit.decode_response(response)
-        return self.gerrit.groups.get(result.get('id'))
+
+        # update group model's owner and owner_id
+        self.owner = result.get('owner')
+        self.owner_id = result.get('owner_id')
+
+        return self.gerrit.groups.get(result.get('owner_id'))
 
     def get_audit_log(self) -> list:
         """

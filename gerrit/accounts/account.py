@@ -26,6 +26,10 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/name' % self.username
         response = self.gerrit.make_call('put', endpoint, **AccountNameInput)
         result = self.gerrit.decode_response(response)
+
+        # update account model's name
+        self.name = result
+
         return result
 
     def delete_name(self):
@@ -39,6 +43,9 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/name' % self.username
         response = self.gerrit.make_call('delete', endpoint)
         response.raise_for_status()
+
+        # update account model's name
+        self.name = None
 
     @property
     def status(self) -> str:
@@ -67,7 +74,7 @@ class GerritAccount(BaseModel):
         response.raise_for_status()
 
     @check
-    def set_username(self, UsernameInput: dict):
+    def set_username(self, UsernameInput: dict) -> str:
         """
         Sets the username of an account.
         Some realms may not allow to modify the account username.
@@ -79,6 +86,10 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/username' % self.username
         response = self.gerrit.make_call('put', endpoint, **UsernameInput)
         result = self.gerrit.decode_response(response)
+
+        # update account model's username
+        self.username = result
+
         return result
 
     def get_active(self) -> str:
