@@ -160,3 +160,50 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.make_call('delete', endpoint)
         response.raise_for_status()
+
+    def list_subgroups(self) -> list:
+        """
+        Lists the direct subgroups of a group.
+
+        :return:
+        """
+        endpoint = '/groups/%s/groups/' % self.id
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return [self.gerrit.groups.get(item.get('id')) for item in result]
+
+    def get_subgroup(self, id: str):
+        """
+        Retrieves a subgroup.
+
+        :param id:
+        :return:
+        """
+        endpoint = '/groups/%s/groups/%s' % (self.id, id)
+        response = self.gerrit.make_call('get', endpoint)
+        result = self.gerrit.decode_response(response)
+        return self.gerrit.groups.get(result.get('id'))
+
+    def add_subgroup(self, subgroup):
+        """
+        Adds an internal or external group as subgroup to a Gerrit internal group.
+
+        :param subgroup:
+        :return:
+        """
+
+        endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
+        response = self.gerrit.make_call('put', endpoint)
+        result = self.gerrit.decode_response(response)
+        return self.gerrit.groups.get(result.get('id'))
+
+    def remove_subgroup(self, subgroup):
+        """
+        Removes a subgroup from a Gerrit internal group.
+
+        :param id: subgroup id
+        :return:
+        """
+        endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
+        response = self.gerrit.make_call('delete', endpoint)
+        response.raise_for_status()
