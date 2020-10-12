@@ -13,7 +13,7 @@ from gerrit.utils.models import BaseModel
 class GerritProject(BaseModel):
     def __init__(self, **kwargs):
         super(GerritProject, self).__init__(**kwargs)
-        self.attributes = ['id', 'name', 'state', 'labels', 'web_links', 'test', 'gerrit']
+        self.attributes = ['id', 'name', 'state', 'labels', 'web_links', 'gerrit']
 
     @property
     def description(self) -> str:

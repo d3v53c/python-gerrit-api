@@ -13,7 +13,7 @@ class GerritGroup(BaseModel):
                            'id', 'group_id', 'owner', 'owner_id', 'created_on', 'gerrit']
 
     @check
-    def set_name(self, GroupNameInput: dict) -> str:
+    def rename(self, GroupNameInput: dict) -> str:
         """
         Renames a Gerrit internal group.
 
@@ -176,7 +176,7 @@ class GerritGroup(BaseModel):
         """
         Retrieves a subgroup.
 
-        :param id:
+        :param id: sub group id
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, id)
@@ -191,7 +191,6 @@ class GerritGroup(BaseModel):
         :param subgroup:
         :return:
         """
-
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
         response = self.gerrit.make_call('put', endpoint)
         result = self.gerrit.decode_response(response)
@@ -201,7 +200,7 @@ class GerritGroup(BaseModel):
         """
         Removes a subgroup from a Gerrit internal group.
 
-        :param id: subgroup id
+        :param subgroup:
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
