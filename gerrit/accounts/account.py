@@ -186,7 +186,8 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_groups(self) -> list:
+    @property
+    def groups(self) -> list:
         """
         Lists all groups that contain the specified user as a member.
 
@@ -195,7 +196,7 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/groups' % self.username
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        return result
+        return [self.gerrit.groups.get(item.get('id')) for item in result]
 
     def get_avatar(self) -> str:
         """

@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.accounts.accounts import GerritAccounts
 from gerrit.accounts.account import GerritAccount
 from gerrit.utils.common import check
 
@@ -73,7 +72,7 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/owner' % self.id
         response = self.gerrit.make_call('put', endpoint, **GroupOwnerInput)
         result = self.gerrit.decode_response(response)
-        return self.parse(result, gerrit=self.gerrit)
+        return self.gerrit.groups.get(result.get('id'))
 
     def get_audit_log(self) -> list:
         """
@@ -104,7 +103,7 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/' % self.id
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        return GerritAccount.parse_list(result, gerrit=self.gerrit)
+        return [self.gerrit.accounts.get(member.get('username')) for member in result]
 
     def get_member(self, username: str) -> GerritAccount:
         """
@@ -117,7 +116,7 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-        return GerritAccount.parse(result, gerrit=self.gerrit)
+        return self.gerrit.accounts.get(result.get('username'))
 
     def add_member(self, account: GerritAccount) -> GerritAccount:
         """
@@ -129,7 +128,7 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.make_call('put', endpoint)
         result = self.gerrit.decode_response(response)
-        return GerritAccount.parse(result, gerrit=self.gerrit)
+        return self.gerrit.accounts.get(result.get('username'))
 
     def remove_member(self, account: GerritAccount):
         """

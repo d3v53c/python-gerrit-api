@@ -257,11 +257,7 @@ class GerritProject(BaseModel):
         endpoint = '/projects/%s/children/' % self.id
         response = self.gerrit.make_call('get', endpoint)
         result = self.gerrit.decode_response(response)
-
-        child_projects = []
-        for item in result:
-            child_projects.append(GerritProject.parse(item, gerrit=self.gerrit))
-        return child_projects
+        return [self.gerrit.projects.get(item.get('id')) for item in result]
 
     @property
     def tags(self) -> Tags:
