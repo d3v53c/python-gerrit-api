@@ -80,3 +80,15 @@ class UnknownGroup(KeyError, NotFound):
     """
     Gerrit does not recognize the Group requested.
     """
+
+
+class UnknownTask(KeyError, NotFound):
+    """
+    Gerrit does not recognize the task requested.
+    """
+
+
+class UnknownCache(KeyError, NotFound):
+    """
+    Gerrit does not recognize the cache requested.
+    """

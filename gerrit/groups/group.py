@@ -107,6 +107,7 @@ class GerritGroup(BaseModel):
 
     def index(self):
         """
+        Adds or updates the internal group in the secondary index.
 
         :return:
         """
