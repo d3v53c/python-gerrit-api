@@ -11,6 +11,7 @@ from gerrit.groups.groups import GerritGroups
 
 class GerritClient:
     GERRIT_AUTH_SUFFIX = '/a'
+    default_headers = {'Content-Type': 'application/json; charset=UTF-8'}
 
     def __init__(
             self,
@@ -24,9 +25,8 @@ class GerritClient:
         self._base_url = self.strip_trailing_slash(base_url)
 
         self.requester = Requester(
-            username,
-            password,
-            base_url=self._base_url,
+            username=username,
+            password=password,
             ssl_verify=ssl_verify,
             cert=cert,
             timeout=timeout,
@@ -78,17 +78,6 @@ class GerritClient:
             return json.loads(content)
         except ValueError:
             raise ValueError("Invalid json content: %s", content)
-
-    def make_call(self, method, endpoint, **data):
-        call = getattr(self.requester, method.lower())
-        base_url = self.get_endpoint_url(endpoint)
-
-        if method.lower() == 'get' or method.lower() == 'delete':
-            res = call(base_url, params=data or {})
-        else:
-            res = call(base_url, json=data or {}, headers={'content-type': 'application/json'})
-
-        return res
 
     @property
     def config(self):

@@ -17,32 +17,34 @@ class GerritProject(BaseModel):
 
     @property
     def description(self) -> str:
-        """s
+        """
         Retrieves the description of a project.
 
         :return:
         """
         endpoint = '/projects/%s/description' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_description(self, ProjectDescriptionInput: dict) -> str:
+    def set_description(self, input_: dict) -> str:
         """
         Sets the description of a project.
 
-        :param ProjectDescriptionInput: the ProjectDescriptionInput entity.
+        :param input_: the ProjectDescriptionInput entity.
         :return:
         """
         endpoint = '/projects/%s/description' % self.id
-        response = self.gerrit.make_call('put', endpoint, **ProjectDescriptionInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
     def delete_description(self):
         endpoint = '/projects/%s/description' % self.id
-        self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()
 
     @property
     def parent(self) -> str:
@@ -52,21 +54,21 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/parent' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_parent(self, ProjectParentInput: dict) -> str:
+    def set_parent(self, input_: dict) -> str:
         """
         Sets the parent project for a project.
 
-        :param ProjectParentInput: The ProjectParentInput entity.
-        :type dict
+        :param input_: The ProjectParentInput entity.
         :return:
         """
         endpoint = '/projects/%s/parent' % self.id
-        response = self.gerrit.make_call('put', endpoint, **ProjectParentInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -78,20 +80,21 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/HEAD' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_HEAD(self, HeadInput: dict) -> str:
+    def set_HEAD(self, input_: dict) -> str:
         """
         Sets HEAD for a project.
 
-        :param HeadInput: The HeadInput entity.
+        :param input_: The HeadInput entity.
         :return:
         """
         endpoint = '/projects/%s/HEAD' % self.id
-        response = self.gerrit.make_call('put', endpoint, **HeadInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -105,20 +108,21 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/config' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_config(self, ConfigInput: dict) -> dict:
+    def set_config(self, input_: dict) -> dict:
         """
         Sets the configuration of a project.
 
-        :param ConfigInput: the ConfigInput entity.
+        :param input_: the ConfigInput entity.
         :return:
         """
         endpoint = '/projects/%s/config' % self.id
-        response = self.gerrit.make_call('put', endpoint, **ConfigInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -129,33 +133,35 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/statistics.git' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def run_garbage_collection(self, GCInput: dict) -> str:
+    def run_garbage_collection(self, input_: dict) -> str:
         """
         Run the Git garbage collection for the repository of a project.
 
-        :param GCInput: the GCInput entity
+        :param input_: the GCInput entity
         :return:
         """
         endpoint = '/projects/%s/gc' % self.id
-        response = self.gerrit.make_call('post', endpoint, **GCInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def ban_commits(self, BanInput: dict) -> dict:
+    def ban_commits(self, input_: dict) -> dict:
         """
         Marks commits as banned for the project.
 
-        :param BanInput: the BanInput entity.
+        :param input_: the BanInput entity.
         :return:
         """
         endpoint = '/projects/%s/ban' % self.id
-        response = self.gerrit.make_call('put', endpoint, **BanInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -167,20 +173,21 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/access' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_access_rights(self, ProjectAccessInput: dict) -> dict:
+    def set_access_rights(self, input_: dict) -> dict:
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
 
-        :param ProjectAccessInput: the ProjectAccessInput entity
+        :param input_: the ProjectAccessInput entity
         :return:
         """
         endpoint = '/projects/%s/access' % self.id
-        response = self.gerrit.make_call('post', endpoint, **ProjectAccessInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -197,22 +204,24 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/check.access?%s' % (self.id, options)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def index(self, IndexProjectInput: dict):
+    def index(self, input_: dict):
         """
         Adds or updates the current project (and children, if specified) in the secondary index.
         The indexing task is executed asynchronously in background and this command returns immediately
         if async is specified in the input.
 
-        :param IndexProjectInput: the IndexProjectInput entity
+        :param input_: the IndexProjectInput entity
         :return:
         """
         endpoint = '/projects/%s/index' % self.id
-        self.gerrit.make_call('post', endpoint, **IndexProjectInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response.raise_for_status()
 
     def index_change(self):
         """
@@ -223,18 +232,20 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/index.changes' % self.id
-        self.gerrit.make_call('post', endpoint)
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()
 
     @check
-    def check_consistency(self, CheckProjectInput: dict) -> dict:
+    def check_consistency(self, input_: dict) -> dict:
         """
         Performs consistency checks on the project.
 
-        :param CheckProjectInput: the CheckProjectInput entity
+        :param input_: the CheckProjectInput entity
         :return:
         """
         endpoint = '/projects/%s/check' % self.id
-        response = self.gerrit.make_call('post', endpoint, **CheckProjectInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -255,7 +266,7 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/children/' % self.id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return [self.gerrit.projects.get(item.get('id')) for item in result]
 
@@ -275,7 +286,7 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/commits/%s' % (self.id, commit)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)

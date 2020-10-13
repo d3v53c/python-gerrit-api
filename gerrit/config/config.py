@@ -17,7 +17,7 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/version'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -28,19 +28,20 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/info'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def check_consistency(self, ConsistencyCheckInput: dict) -> dict:
+    def check_consistency(self, input_: dict) -> dict:
         """
         Runs consistency checks and returns detected problems.
 
-        :param ConsistencyCheckInput: the ConsistencyCheckInput entity
+        :param input_: the ConsistencyCheckInput entity
         :return:
         """
         endpoint = '/config/server/check.consistency'
-        response = self.gerrit.make_call('post', endpoint, **ConsistencyCheckInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -51,19 +52,20 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/reload'
-        response = self.gerrit.make_call('post', endpoint)
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def confirm_email(self, EmailConfirmationInput: dict):
+    def confirm_email(self, input_: dict):
         """
         Confirms that the user owns an email address.
 
-        :param EmailConfirmationInput: the EmailConfirmationInput entity
+        :param input_: the EmailConfirmationInput entity
         :return:
         """
         endpoint = '/config/server/email.confirm'
-        response = self.gerrit.make_call('put', endpoint, **EmailConfirmationInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()
 
     @property
@@ -77,7 +79,7 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/summary'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -89,7 +91,7 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/capabilities'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -104,7 +106,7 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/top-menus'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -115,20 +117,21 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/preferences'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_default_user_preferences(self, PreferencesInput: dict) -> dict:
+    def set_default_user_preferences(self, input_: dict) -> dict:
         """
         Sets the default user preferences for the server.
 
-        :param PreferencesInput: the PreferencesInput entity
+        :param input_: the PreferencesInput entity
         :return:
         """
         endpoint = '/config/server/preferences'
-        response = self.gerrit.make_call('put', endpoint, **PreferencesInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -139,20 +142,21 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/preferences.diff'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_default_diff_preferences(self, DiffPreferencesInput: dict) -> dict:
+    def set_default_diff_preferences(self, input_: dict) -> dict:
         """
         Sets the default diff preferences for the server.
 
-        :param DiffPreferencesInput: the DiffPreferencesInput entity
+        :param input_: the DiffPreferencesInput entity
         :return:
         """
         endpoint = '/config/server/preferences.diff'
-        response = self.gerrit.make_call('put', endpoint, **DiffPreferencesInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -163,30 +167,32 @@ class GerritConfig:
         :return:
         """
         endpoint = '/config/server/preferences.edit'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_default_edit_preferences(self, EditPreferencesInfo: dict) -> dict:
+    def set_default_edit_preferences(self, input_: dict) -> dict:
         """
         Sets the default edit preferences for the server.
 
-        :param EditPreferencesInfo: the EditPreferencesInfo entity
+        :param input_: the EditPreferencesInfo entity
         :return:
         """
         endpoint = '/config/server/preferences.edit'
-        response = self.gerrit.make_call('put', endpoint, **EditPreferencesInfo)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
-    def index_changes(self, IndexChangesInput: dict):
+    def index_changes(self, input_: dict):
         """
         Index a set of changes
 
-        :param IndexChangesInput: the IndexChangesInput entity
+        :param input_: the IndexChangesInput entity
         :return:
         """
         endpoint = '/config/server/index.changes'
-        response = self.gerrit.make_call('post', endpoint, **IndexChangesInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()

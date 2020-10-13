@@ -17,7 +17,7 @@ class SSHKey(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/sshkeys/%s' % (self.username, self.seq)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -33,7 +33,7 @@ class SSHKeys:
         :return:
         """
         endpoint = '/accounts/%s/sshkeys' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return SSHKey.parse_list(result, username=self.username, gerrit=self.gerrit)
 
@@ -45,7 +45,7 @@ class SSHKeys:
         :return:
         """
         endpoint = '/accounts/%s/sshkeys/%s' % (self.username, seq)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)

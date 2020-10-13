@@ -24,7 +24,7 @@ class Tag(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/tags/%s' % (self.project, self.name)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -42,7 +42,7 @@ class Tags:
         :return:
         """
         endpoint = '/projects/%s/tags/' % self.project
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -119,12 +119,12 @@ class Tags:
             yield Tag.parse(row, project=self.project, gerrit=self.gerrit)
 
     @check
-    def create(self, name: str, TagInput: dict) -> Tag:
+    def create(self, name: str, input_: dict) -> Tag:
         """
         Creates a new tag on the project.
 
         :param name: the tag name
-        :param TagInput: the TagInput entity
+        :param input_: the TagInput entity
         :return:
         """
         ref = self.tag_prefix + name
@@ -132,6 +132,7 @@ class Tags:
             return self[ref]
 
         endpoint = '/projects/%s/tags/%s' % (self.project, name)
-        response = self.gerrit.make_call('put', endpoint, **TagInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return Tag.parse(result, project=self.project, gerrit=self.gerrit)

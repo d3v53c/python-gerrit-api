@@ -17,7 +17,7 @@ class GerritGroups:
         :return:
         """
         endpoint = '/groups/'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
         groups = []
@@ -36,7 +36,7 @@ class GerritGroups:
         :return:
         """
         endpoint = '/groups/?query2=inname:%s' % name
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse_list(result, gerrit=self.gerrit)
 
@@ -48,22 +48,23 @@ class GerritGroups:
         :return:
         """
         endpoint = '/groups/%s' % id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return GerritGroup.parse(result, gerrit=self.gerrit)
         else:
             raise UnknownGroup(id)
 
-    def create(self, name: str, GroupInput: dict) -> GerritGroup:
+    def create(self, name: str, input_: dict) -> GerritGroup:
         """
         Creates a new Gerrit internal group.
 
         :param name: group name
-        :param GroupInput: the GroupInput entity
+        :param input_: the GroupInput entity
         :return:
         """
         endpoint = '/groups/%s' % name
-        response = self.gerrit.make_call('put', endpoint, **GroupInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse(result, gerrit=self.gerrit)

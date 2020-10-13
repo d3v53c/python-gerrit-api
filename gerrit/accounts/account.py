@@ -14,17 +14,18 @@ class GerritAccount(BaseModel):
         self.attributes = ['username', 'registered_on', '_account_id', 'name', 'email', 'gerrit']
 
     @check
-    def set_name(self, AccountNameInput: dict) -> str:
+    def set_name(self, input_: dict) -> str:
         """
         Sets the full name of an account.
         Some realms may not allow to modify the account name.
         In this case the request is rejected with “405 Method Not Allowed”.
 
-        :param AccountNameInput: the AccountNameInput entity
+        :param input_: the AccountNameInput entity
         :return:
         """
         endpoint = '/accounts/%s/name' % self.username
-        response = self.gerrit.make_call('put', endpoint, **AccountNameInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
 
         # update account model's name
@@ -41,7 +42,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/name' % self.username
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
         # update account model's name
@@ -56,7 +57,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/status' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -70,21 +71,23 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/status' % self.username
         options = {"status": status}
-        response = self.gerrit.make_call('put', endpoint, **options)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=options, headers=self.gerrit.default_headers)
         response.raise_for_status()
 
     @check
-    def set_username(self, UsernameInput: dict) -> str:
+    def set_username(self, input_: dict) -> str:
         """
         Sets the username of an account.
         Some realms may not allow to modify the account username.
         In this case the request is rejected with “405 Method Not Allowed”.
 
-        :param UsernameInput: the UsernameInput entity
+        :param input_: the UsernameInput entity
         :return:
         """
         endpoint = '/accounts/%s/username' % self.username
-        response = self.gerrit.make_call('put', endpoint, **UsernameInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
 
         # update account model's username
@@ -99,7 +102,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/active' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -111,7 +114,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/active' % self.username
-        response = self.gerrit.make_call('put', endpoint)
+        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
     def delete_active(self):
@@ -123,19 +126,20 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/active' % self.username
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
     @check
-    def set_http_password(self, HttpPasswordInput: dict) -> str:
+    def set_http_password(self, input_: dict) -> str:
         """
         Sets/Generates the HTTP password of an account.
 
-        :param HttpPasswordInput: the HttpPasswordInput entity
+        :param input_: the HttpPasswordInput entity
         :return:
         """
         endpoint = '/accounts/%s/password.http' % self.username
-        response = self.gerrit.make_call('put', endpoint, **HttpPasswordInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -146,7 +150,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/password.http' % self.username
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
     def get_oauth_token(self) -> dict:
@@ -158,7 +162,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/oauthtoken' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -181,7 +185,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/capabilities' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -193,7 +197,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/capabilities/%s' % (self.username, capability)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -205,7 +209,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/groups' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return [self.gerrit.groups.get(item.get('id')) for item in result]
 
@@ -215,7 +219,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/avatar' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -225,7 +229,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/avatar.change.url' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -236,20 +240,21 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/preferences' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_user_preferences(self, PreferencesInput: dict) -> dict:
+    def set_user_preferences(self, input_: dict) -> dict:
         """
         Sets the user’s preferences.
 
-        :param PreferencesInput: the PreferencesInput entity
+        :param input_: the PreferencesInput entity
         :return:
         """
         endpoint = '/accounts/%s/preferences' % self.username
-        response = self.gerrit.make_call('put', endpoint, **PreferencesInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -260,20 +265,21 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/preferences.diff' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_diff_preferences(self, DiffPreferencesInput: dict) -> dict:
+    def set_diff_preferences(self, input_: dict) -> dict:
         """
         Sets the diff preferences of a user.
 
-        :param DiffPreferencesInput: the DiffPreferencesInput entity
+        :param input_: the DiffPreferencesInput entity
         :return:
         """
         endpoint = '/accounts/%s/preferences.diff' % self.username
-        response = self.gerrit.make_call('put', endpoint, **DiffPreferencesInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -284,20 +290,21 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/preferences.edit' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def set_edit_preferences(self, EditPreferencesInfo: dict) -> dict:
+    def set_edit_preferences(self, input_: dict) -> dict:
         """
         Sets the edit preferences of a user.
 
-        :param EditPreferencesInfo: the EditPreferencesInfo entity
+        :param input_: the EditPreferencesInfo entity
         :return:
         """
         endpoint = '/accounts/%s/preferences.edit' % self.username
-        response = self.gerrit.make_call('put', endpoint, **EditPreferencesInfo)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -308,37 +315,33 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/watched.projects' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def modify_watched_projects(self, ProjectWatchInfo: list) -> list:
+    def modify_watched_projects(self, input_: list) -> list:
         """
         Add new projects to watch or update existing watched projects.
 
-        :param ProjectWatchInfo: the ProjectWatchInfo entities as list
+        :param input_: the ProjectWatchInfo entities as list
         :return:
         """
         endpoint = '/accounts/%s/watched.projects' % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url,
-                                              json=ProjectWatchInfo,
-                                              headers={'Content-Type': 'application/json'})
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_watched_projects(self, ProjectWatchInfo: list):
+    def delete_watched_projects(self, input_: list):
         """
         Projects posted to this endpoint will no longer be watched.
 
-        :param ProjectWatchInfo: the watched projects as list
+        :param input_: the watched projects as list
         :return:
         """
         endpoint = '/accounts/%s/watched.projects:delete' % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url,
-                                              json=ProjectWatchInfo,
-                                              headers={'Content-Type': 'application/json'})
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()
 
     def get_external_ids(self) -> list:
@@ -348,22 +351,20 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/external.ids' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_external_ids(self, ExternalIDsInfo: list):
+    def delete_external_ids(self, input_: list):
         """
         Delete a list of external ids for a user account.
 
-        :param ExternalIDsInfo: the external ids as list
+        :param input_: the external ids as list
         :return:
         """
         endpoint = '/accounts/%s/external.ids:delete' % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url,
-                                              json=ExternalIDsInfo,
-                                              headers={'Content-Type': 'application/json'})
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()
 
     def list_contributor_agreements(self) -> list:
@@ -373,31 +374,33 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/agreements' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def sign_contributor_agreement(self, ContributorAgreementInput: dict) -> str:
+    def sign_contributor_agreement(self, input_: dict) -> str:
         """
         Signs a contributor agreement.
 
-        :param ContributorAgreementInput: the ContributorAgreementInput entity
+        :param input_: the ContributorAgreementInput entity
         :return:
         """
         endpoint = '/accounts/%s/agreements' % self.username
-        response = self.gerrit.make_call('put', endpoint, **ContributorAgreementInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_draft_comments(self, DeleteDraftCommentsInput: dict) -> list:
+    def delete_draft_comments(self, input_: dict) -> list:
         """
         Deletes some or all of a user’s draft comments.
 
-        :param DeleteDraftCommentsInput: the DeleteDraftCommentsInput entity
+        :param input_: the DeleteDraftCommentsInput entity
         :return:
         """
         endpoint = '/accounts/%s/drafts:delete' % self.username
-        response = self.gerrit.make_call('post', endpoint, **DeleteDraftCommentsInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -408,5 +411,5 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/index' % self.username
-        response = self.gerrit.make_call('post', endpoint)
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()

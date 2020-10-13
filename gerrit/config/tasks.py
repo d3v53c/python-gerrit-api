@@ -18,7 +18,7 @@ class Task(BaseModel):
         :return:
         """
         endpoint = '/config/server/tasks/%s' % self.id
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -34,7 +34,7 @@ class Tasks:
         :return:
         """
         endpoint = '/config/server/tasks/'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Task.parse_list(result, gerrit=self.gerrit)
 
@@ -47,7 +47,7 @@ class Tasks:
         :return:
         """
         endpoint = '/config/server/tasks/%s' % id
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return Task.parse(result, gerrit=self.gerrit)

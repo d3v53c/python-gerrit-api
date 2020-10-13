@@ -27,20 +27,20 @@ class Branch(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.name, quote(file, safe=''))
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def get_mergeable_information(self, MergeInput: dict) -> dict:
+    def get_mergeable_information(self, input_: dict) -> dict:
         """
         Gets whether the source is mergeable with the target branch.
 
-        :param MergeInput: the MergeInput entity
+        :param input_: the MergeInput entity
         :return:
         """
         endpoint = '/projects/%s/branches/%s/mergeable' % (self.project, self.name)
-        response = self.gerrit.make_call('get', endpoint, **MergeInput)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint), params=input_)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -51,7 +51,7 @@ class Branch(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/branches/%s/reflog' % (self.project, self.name)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -62,7 +62,7 @@ class Branch(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -80,7 +80,7 @@ class Branches:
         :return:
         """
         endpoint = '/projects/%s/branches/' % self.project
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         for item in result:
             if item['ref'] == 'refs/meta/config':
@@ -160,12 +160,12 @@ class Branches:
             yield Branch.parse(row, project=self.project, gerrit=self.gerrit)
 
     @check
-    def create(self, name: str, BranchInput: dict) -> Branch:
+    def create(self, name: str, input_: dict) -> Branch:
         """
         Creates a new branch.
 
         :param name: the branch name
-        :param BranchInput: the BranchInput entity
+        :param input_: the BranchInput entity
         :return:
         """
         ref = self.branch_prefix + name
@@ -173,6 +173,7 @@ class Branches:
             return self[ref]
 
         endpoint = '/projects/%s/branches/%s' % (self.project, name)
-        response = self.gerrit.make_call('put', endpoint, **BranchInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return Branch.parse(result, project=self.project, gerrit=self.gerrit)

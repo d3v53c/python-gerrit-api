@@ -18,7 +18,7 @@ class GerritAccounts:
         :return:
         """
         endpoint = '/accounts/?suggest&q=%s' % query
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse_list(result, gerrit=self.gerrit)
 
@@ -30,7 +30,7 @@ class GerritAccounts:
         :return:
         """
         endpoint = '/accounts/%s/detail' % username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
@@ -39,15 +39,16 @@ class GerritAccounts:
             raise UnknownAccount(username)
 
     @check
-    def create(self, username: str, AccountInput: dict) -> GerritAccount:
+    def create(self, username: str, input_: dict) -> GerritAccount:
         """
         Creates a new account.
 
         :param username: account username
-        :param AccountInput: the AccountInput entity
+        :param input_: the AccountInput entity
         :return:
         """
         endpoint = '/accounts/%s' % username
-        response = self.gerrit.make_call('put', endpoint, **AccountInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse(result, gerrit=self.gerrit)

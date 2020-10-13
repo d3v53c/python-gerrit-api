@@ -17,7 +17,7 @@ class Cache(BaseModel):
         :return:
         """
         endpoint = '/config/server/caches/%s/flush' % self.name
-        response = self.gerrit.make_call('post', endpoint)
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -32,7 +32,7 @@ class Caches:
         :return:
         """
         endpoint = '/config/server/caches/'
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
         caches = []
@@ -51,20 +51,21 @@ class Caches:
         :return:
         """
         endpoint = '/config/server/caches/%s' % name
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return Cache.parse(result, gerrit=self.gerrit)
         else:
             raise UnknownCache(name)
 
-    def operation(self, CacheOperationInput: dict):
+    def operation(self, input_: dict):
         """
         Cache Operations
 
-        :param CacheOperationInput: the CacheOperationInput entity
+        :param input_: the CacheOperationInput entity
         :return:
         """
         endpoint = '/config/server/caches/'
-        response = self.gerrit.make_call('post', endpoint, **CacheOperationInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()

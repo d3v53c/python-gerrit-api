@@ -18,7 +18,7 @@ class GPGKey(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, self.id)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -34,7 +34,7 @@ class GPGKeys:
         :return:
         """
         endpoint = '/accounts/%s/gpgkeys' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         keys = []
         for key, value in result.items():
@@ -52,7 +52,7 @@ class GPGKeys:
         :return:
         """
         endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, gpg_key_id)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
@@ -60,15 +60,16 @@ class GPGKeys:
             raise UnknownGPGKey(gpg_key_id)
 
     @check
-    def modify(self, GpgKeysInput: dict):
+    def modify(self, input_: dict):
         """
         Add or delete one or more GPG keys for a user.
 
-        :param GpgKeysInput: the GpgKeysInput entity
+        :param input_: the GpgKeysInput entity
         :return:
         """
         endpoint = '/accounts/%s/gpgkeys' % self.username
-        response = self.gerrit.make_call('post', endpoint, **GpgKeysInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 

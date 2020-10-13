@@ -17,7 +17,7 @@ class Email(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/emails/%s' % (self.username, self.email)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
     def set_preferred(self):
@@ -27,7 +27,7 @@ class Email(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/emails/%s/preferred' % (self.username, self.email)
-        response = self.gerrit.make_call('put', endpoint)
+        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         print(response.status_code)
         response.raise_for_status()
 
@@ -44,7 +44,7 @@ class Emails:
         :return:
         """
         endpoint = '/accounts/%s/emails' % self.username
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Email.parse_list(result, username=self.username, gerrit=self.gerrit)
 
@@ -55,7 +55,7 @@ class Emails:
         :return:
         """
         endpoint = '/accounts/%s/emails/%s' % (self.username, email)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return Email.parse(result, username=self.username, gerrit=self.gerrit)

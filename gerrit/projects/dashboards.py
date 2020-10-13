@@ -19,7 +19,7 @@ class Dashboard(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, self.id)
-        response = self.gerrit.make_call('delete', endpoint)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
 
@@ -35,21 +35,22 @@ class Dashboards:
         :return:
         """
         endpoint = '/projects/%s/dashboards/' % self.project
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Dashboard.parse_list(result, project=self.project, gerrit=self.gerrit)
 
     @check
-    def create(self, name: str, DashboardInput: dict) -> Dashboard:
+    def create(self, name: str, input_: dict) -> Dashboard:
         """
         Creates a project dashboard, if a project dashboard with the given dashboard ID doesn’t exist yet.
 
         :param name: the dashboard name
-        :param DashboardInput: the DashboardInput entity
+        :param input_: the DashboardInput entity
         :return:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, name)
-        response = self.gerrit.make_call('put', endpoint, **DashboardInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
@@ -60,7 +61,7 @@ class Dashboards:
         :return:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, id)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)

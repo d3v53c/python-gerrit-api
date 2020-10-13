@@ -18,26 +18,13 @@ class Requester:
     VALID_STATUS_CODES = [200, ]
     AUTH_COOKIE = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """
-        :param args:
         :param kwargs:
         """
-        username = None
-        password = None
-        token = None
         timeout = 10
-
-        if len(args) == 1:
-            token, = args
-        elif len(args) == 2:
-            username, password = args
-
-        base_url = kwargs.get('base_url')
-        self.base_scheme = urlparse.urlsplit(base_url).scheme if base_url else None
-        self.username = kwargs.get('username', username)
-        self.password = kwargs.get('password', password)
-        self.token = kwargs.get('token', token)
+        self.username = kwargs.get('username')
+        self.password = kwargs.get('password')
         self.ssl_verify = kwargs.get('ssl_verify')
         self.cert = kwargs.get('cert')
         self.timeout = kwargs.get('timeout', timeout)
@@ -59,9 +46,7 @@ class Requester:
         :return:
         """
         request_kwargs = kwargs
-        if self.token:
-            request_kwargs['auth'] = self.token, ''
-        elif self.username and self.password:
+        if self.username and self.password:
             request_kwargs['auth'] = (self.username, self.password)
 
         if params:
@@ -95,25 +80,6 @@ class Requester:
 
         return request_kwargs
 
-    def _update_url_scheme(self, url):
-        """
-        Updates scheme of given url to the one used in Gerrit baseurl.
-        :param url:
-        :return:
-        """
-        if self.base_scheme and not url.startswith("%s://" % self.base_scheme):
-            url_split = urlparse.urlsplit(url)
-            url = urlparse.urlunsplit(
-                [
-                    self.base_scheme,
-                    url_split.netloc,
-                    url_split.path,
-                    url_split.query,
-                    url_split.fragment
-                ]
-            )
-        return url
-
     def get(self, url, params=None, headers=None, allow_redirects=True, stream=False):
         """
         :param url:
@@ -129,7 +95,7 @@ class Requester:
             allow_redirects=allow_redirects,
             stream=stream
         )
-        return self.session.get(self._update_url_scheme(url), **request_kwargs)
+        return self.session.get(url, **request_kwargs)
 
     def post(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
         """
@@ -151,7 +117,7 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.post(self._update_url_scheme(url), **request_kwargs)
+        return self.session.post(url, **request_kwargs)
 
     def put(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
         """
@@ -173,7 +139,7 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.put(self._update_url_scheme(url), **request_kwargs)
+        return self.session.put(url, **request_kwargs)
 
     def delete(self, url, params=None, data=None, headers=None, allow_redirects=True, **kwargs):
         """
@@ -191,4 +157,4 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.delete(self._update_url_scheme(url), **request_kwargs)
+        return self.session.delete(url, **request_kwargs)

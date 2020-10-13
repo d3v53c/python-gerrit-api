@@ -18,7 +18,7 @@ class Commit(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
@@ -30,19 +30,20 @@ class Commit(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit, quote(file, safe=''))
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
     @check
-    def cherry_pick(self, CherryPickInput: dict) -> dict:
+    def cherry_pick(self, input_: dict) -> dict:
         """
 
-        :param CherryPickInput: the CherryPickInput entity
+        :param input_: the CherryPickInput entity
         :return:
         """
         endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit)
-        response = self.gerrit.make_call('post', endpoint, **CherryPickInput)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return result
 
@@ -53,6 +54,6 @@ class Commit(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit)
-        response = self.gerrit.make_call('get', endpoint)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
