@@ -7,6 +7,7 @@ from gerrit.config.config import GerritConfig
 from gerrit.projects.projects import GerritProjects
 from gerrit.accounts.accounts import GerritAccounts
 from gerrit.groups.groups import GerritGroups
+from gerrit.plugins.plugins import GerritPlugins
 
 
 class GerritClient:
@@ -94,3 +95,8 @@ class GerritClient:
     @property
     def groups(self):
         return GerritGroups(gerrit=self)
+
+    @property
+    def plugins(self):
+        return GerritPlugins(gerrit=self)
+

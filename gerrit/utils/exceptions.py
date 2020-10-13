@@ -92,3 +92,9 @@ class UnknownCache(KeyError, NotFound):
     """
     Gerrit does not recognize the cache requested.
     """
+
+
+class UnknownPlugin(KeyError, NotFound):
+    """
+    Gerrit does not recognize the plugin requested.
+    """
