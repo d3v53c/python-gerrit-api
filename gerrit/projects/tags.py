@@ -34,6 +34,8 @@ class Tag(BaseModel):
         else:
             response.raise_for_status()
 
+        # Reset to get it refreshed from Gerrit
+        self._data = []
 
 class Tags:
     tag_prefix = 'refs/tags/'
@@ -41,7 +43,7 @@ class Tags:
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
-        self._data = self.poll()
+        self._data = []
 
     def poll(self):
         """
@@ -57,6 +59,9 @@ class Tags:
         """
         Iterate over the names of all available tags
         """
+        if not self._data:
+            self._data = self.poll()
+
         for row in self._data:
             yield row['ref']
 
@@ -106,7 +111,7 @@ class Tags:
         if not key.startswith(self.tag_prefix):
             raise KeyError("tag ref should start with {}".format(self.tag_prefix))
 
-        self.create(key.replace(self.tag_prefix, ''), value)
+        return self.create(key.replace(self.tag_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -122,8 +127,20 @@ class Tags:
 
         :return:
         """
+        if not self._data:
+            self._data = self.poll()
+
         for row in self._data:
             yield Tag.parse(row, project=self.project, gerrit=self.gerrit)
+
+    def get(self, name: str):
+        """
+        get a tag by ref
+
+        :param name:
+        :return:
+        """
+        return self[name]
 
     @check
     def create(self, name: str, input_: dict) -> Tag:
@@ -142,4 +159,8 @@ class Tags:
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []
+
         return Tag.parse(result, project=self.project, gerrit=self.gerrit)

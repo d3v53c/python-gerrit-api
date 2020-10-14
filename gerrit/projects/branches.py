@@ -72,6 +72,9 @@ class Branch(BaseModel):
         else:
             response.raise_for_status()
 
+        # Reset to get it refreshed from Gerrit
+        self._data = []
+
 
 class Branches:
     branch_prefix = 'refs/heads/'
@@ -79,7 +82,7 @@ class Branches:
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
-        self._data = self.poll()
+        self._data = []
 
     def poll(self):
         """
@@ -98,6 +101,9 @@ class Branches:
         """
         Iterate over the names of all available branches
         """
+        if not self._data:
+            self._data = self.poll()
+
         for row in self._data:
             yield row['ref']
 
@@ -147,7 +153,7 @@ class Branches:
         if not key.startswith(self.branch_prefix):
             raise KeyError("branch ref should start with {}".format(self.branch_prefix))
 
-        self.create(key.replace(self.branch_prefix, ''), value)
+        return self.create(key.replace(self.branch_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -163,8 +169,20 @@ class Branches:
 
         :return:
         """
+        if not self._data:
+            self._data = self.poll()
+
         for row in self._data:
             yield Branch.parse(row, project=self.project, gerrit=self.gerrit)
+
+    def get(self, name: str):
+        """
+        get a branch by ref
+
+        :param name:
+        :return:
+        """
+        return self[name]
 
     @check
     def create(self, name: str, input_: dict) -> Branch:
@@ -183,4 +201,8 @@ class Branches:
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []
+
         return Branch.parse(result, project=self.project, gerrit=self.gerrit)
