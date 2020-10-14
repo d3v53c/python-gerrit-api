@@ -104,3 +104,9 @@ class UnknownWebhook(KeyError, NotFound):
     """
     Gerrit does not recognize the webhook requested.
     """
+
+
+class UnknownChange(KeyError, NotFound):
+    """
+    Gerrit does not recognize the change requested.
+    """
