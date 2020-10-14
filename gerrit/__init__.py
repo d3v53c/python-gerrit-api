@@ -72,6 +72,7 @@ class GerritClient:
                            (sys._getframe(1).f_code.co_name,
                             sys._getframe(1).f_code.co_filename,
                             sys._getframe(1).f_lineno))
+            return
         else:
             response.raise_for_status()
 

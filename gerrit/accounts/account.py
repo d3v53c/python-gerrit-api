@@ -15,7 +15,7 @@ class GerritAccount(BaseModel):
         self.attributes = ['username', 'registered_on', '_account_id', 'name', 'email', 'gerrit']
 
     @check
-    def set_name(self, input_: dict) -> str:
+    def set_name(self, input_: dict):
         """
         Sets the full name of an account.
         Some realms may not allow to modify the account name.
@@ -30,9 +30,9 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update account model's name
-        self.name = result
-
-        return result
+        if result:
+            self.name = result
+            return result
 
     def delete_name(self):
         """
@@ -52,8 +52,8 @@ class GerritAccount(BaseModel):
         else:
             response.raise_for_status()
 
-        # update account model's name
-        self.name = None
+            # update account model's name
+            self.name = None
 
     @property
     def status(self) -> str:
@@ -83,7 +83,7 @@ class GerritAccount(BaseModel):
         response.raise_for_status()
 
     @check
-    def set_username(self, input_: dict) -> str:
+    def set_username(self, input_: dict):
         """
         Sets the username of an account.
         Some realms may not allow to modify the account username.
@@ -98,9 +98,9 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update account model's username
-        self.username = result
-
-        return result
+        if result:
+            self.username = result
+            return result
 
     def get_active(self) -> str:
         """

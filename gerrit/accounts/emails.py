@@ -28,7 +28,6 @@ class Email(BaseModel):
         """
         endpoint = '/accounts/%s/emails/%s/preferred' % (self.username, self.email)
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        print(response.status_code)
         response.raise_for_status()
 
 

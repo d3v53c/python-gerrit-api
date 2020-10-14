@@ -64,7 +64,7 @@ class Webhooks:
         """
         Get information about one webhook.
 
-        :param id: webhook id
+        :param name: the webhook name
         :return:
         """
         endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, name)
