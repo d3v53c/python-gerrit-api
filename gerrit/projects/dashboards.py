@@ -57,6 +57,7 @@ class Dashboards:
     def get(self, id: str) -> Dashboard:
         """
         Retrieves a project dashboard. The dashboard can be defined on that project or be inherited from a parent project.
+
         :param id: dashboard id
         :return:
         """

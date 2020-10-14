@@ -98,3 +98,9 @@ class UnknownPlugin(KeyError, NotFound):
     """
     Gerrit does not recognize the plugin requested.
     """
+
+
+class UnknownWebhook(KeyError, NotFound):
+    """
+    Gerrit does not recognize the webhook requested.
+    """

@@ -5,6 +5,7 @@ from gerrit.projects.branches import Branches
 from gerrit.projects.tags import Tags
 from gerrit.projects.commit import Commit
 from gerrit.projects.dashboards import Dashboards
+from gerrit.projects.webhooks import Webhooks
 from gerrit.utils.common import check
 from gerrit.utils.exceptions import UnknownCommit
 from gerrit.utils.models import BaseModel
@@ -44,6 +45,16 @@ class GerritProject(BaseModel):
     def delete_description(self):
         endpoint = '/projects/%s/description' % self.id
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()
+
+    def delete(self):
+        """
+        Delete the project, requires delete-project plugin
+
+        :return:
+        """
+        endpoint = '/projects/%s/delete-project~delete' % self.id
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
 
     @property
@@ -302,3 +313,12 @@ class GerritProject(BaseModel):
         :return:
         """
         return Dashboards(project=self.id, gerrit=self.gerrit)
+
+    @property
+    def webhooks(self) -> Webhooks:
+        """
+        gerrit webhooks operations, requires delete-project plugin
+
+        :return:
+        """
+        return Webhooks(project=self.id, gerrit=self.gerrit)
