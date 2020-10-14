@@ -77,9 +77,9 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/status' % self.username
-        options = {"status": status}
+        input_ = {"status": status}
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=options, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         response.raise_for_status()
 
     @check

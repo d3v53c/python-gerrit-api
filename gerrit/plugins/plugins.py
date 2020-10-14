@@ -60,30 +60,30 @@ class GerritPlugins:
         plugins = [item for item in result.values()]
         return GerritPlugin.parse_list(plugins, gerrit=self.gerrit)
 
-    def get(self, id: str) -> GerritPlugin:
+    def get(self, id_: str) -> GerritPlugin:
         """
 
-        :param id: plugin id
+        :param id_: plugin id
         :return:
         """
-        endpoint = '/plugins/%s/gerrit~status' % id
+        endpoint = '/plugins/%s/gerrit~status' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return GerritPlugin.parse(result, gerrit=self.gerrit)
         else:
-            raise UnknownPlugin(id)
+            raise UnknownPlugin(id_)
 
-    def install(self, id: str, input_: dict) -> GerritPlugin:
+    def install(self, id_: str, input_: dict) -> GerritPlugin:
         """
         Installs a new plugin on the Gerrit server.
 
-        :param id: plugin id
+        :param id_: plugin id
         :param input_: the PluginInput entity
         :return:
         """
-        endpoint = '/plugins/%s.jar' % id
+        endpoint = '/plugins/%s.jar' % id_
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)

@@ -40,20 +40,20 @@ class GerritGroups:
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, id: str) -> GerritGroup:
+    def get(self, id_: str) -> GerritGroup:
         """
         Retrieves a group.
 
-        :param id:
+        :param id_: group id
         :return:
         """
-        endpoint = '/groups/%s' % id
+        endpoint = '/groups/%s' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return GerritGroup.parse(result, gerrit=self.gerrit)
         else:
-            raise UnknownGroup(id)
+            raise UnknownGroup(id_)
 
     def create(self, name: str, input_: dict) -> GerritGroup:
         """

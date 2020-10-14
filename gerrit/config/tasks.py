@@ -38,18 +38,18 @@ class Tasks:
         result = self.gerrit.decode_response(response)
         return Task.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, id: str) -> Task:
+    def get(self, id_: str) -> Task:
         """
         Retrieves a task from the background work queue that the Gerrit daemon is currently performing,
         or will perform in the near future.
 
-        :param id: task id
+        :param id_: task id
         :return:
         """
-        endpoint = '/config/server/tasks/%s' % id
+        endpoint = '/config/server/tasks/%s' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return Task.parse(result, gerrit=self.gerrit)
         else:
-            raise UnknownTask(id)
+            raise UnknownTask(id_)

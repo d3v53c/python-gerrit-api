@@ -194,14 +194,14 @@ class GerritGroup(BaseModel):
         if result:
             return [self.gerrit.groups.get(item.get('id')) for item in result]
 
-    def get_subgroup(self, id: str):
+    def get_subgroup(self, id_: str):
         """
         Retrieves a subgroup.
 
-        :param id: sub group id
+        :param id_: sub group id
         :return:
         """
-        endpoint = '/groups/%s/groups/%s' % (self.id, id)
+        endpoint = '/groups/%s/groups/%s' % (self.id, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         if result:

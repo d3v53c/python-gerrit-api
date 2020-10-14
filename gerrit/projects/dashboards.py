@@ -54,18 +54,18 @@ class Dashboards:
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def get(self, id: str) -> Dashboard:
+    def get(self, id_: str) -> Dashboard:
         """
         Retrieves a project dashboard. The dashboard can be defined on that project or be inherited from a parent project.
 
-        :param id: dashboard id
+        :param id_: dashboard id
         :return:
         """
-        endpoint = '/projects/%s/dashboards/%s' % (self.project, id)
+        endpoint = '/projects/%s/dashboards/%s' % (self.project, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
 
         if response.status_code < 300:
             result = self.gerrit.decode_response(response)
             return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
         else:
-            raise UnknownDashboard(id)
+            raise UnknownDashboard(id_)
