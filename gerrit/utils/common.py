@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 import inspect
+import logging
 
 
 def check(fn):
@@ -32,3 +33,11 @@ def check(fn):
         return result
     return wrapper
 
+
+# create logger
+logger = logging.getLogger("pygerrit3")
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(formatter)
+logger.addHandler(console)

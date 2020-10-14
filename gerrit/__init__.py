@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+import sys
 import json
 from gerrit.utils.requester import Requester
 from gerrit.config.config import GerritConfig
@@ -8,6 +9,7 @@ from gerrit.projects.projects import GerritProjects
 from gerrit.accounts.accounts import GerritAccounts
 from gerrit.groups.groups import GerritGroups
 from gerrit.plugins.plugins import GerritPlugins
+from gerrit.utils.common import logger
 
 
 class GerritClient:
@@ -64,7 +66,15 @@ class GerritClient:
         """
         magic_json_prefix = ")]}'\n"
         content_type = response.headers.get("content-type", "")
-        response.raise_for_status()
+
+        if response.status_code == 405:
+            logger.error('405 Method Not Allowed for this function: \'%s\'. (%s: %s)' %
+                           (sys._getframe(1).f_code.co_name,
+                            sys._getframe(1).f_code.co_filename,
+                            sys._getframe(1).f_lineno))
+        else:
+            response.raise_for_status()
+
         content = response.content.strip()
         if response.encoding:
             content = content.decode(response.encoding)

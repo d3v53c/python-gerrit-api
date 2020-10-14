@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+import sys
 from gerrit.utils.models import BaseModel
 from gerrit.accounts.emails import Emails
 from gerrit.accounts.ssh_keys import SSHKeys
 from gerrit.accounts.gpg_keys import GPGKeys
-from gerrit.utils.common import check
+from gerrit.utils.common import check, logger
 
 
 class GerritAccount(BaseModel):
@@ -43,7 +44,13 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/name' % self.username
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        if response.status_code == 405:
+            logger.error('405 Method Not Allowed for this function: \'%s\'. (%s: %s)' %
+                         (sys._getframe().f_code.co_name,
+                          sys._getframe().f_code.co_filename,
+                          sys._getframe().f_lineno))
+        else:
+            response.raise_for_status()
 
         # update account model's name
         self.name = None
@@ -127,7 +134,13 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/active' % self.username
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        if response.status_code == 409:
+            logger.error('409 Conflict, the account was already inactive. Not Allowed for this function: \'%s\'. (%s: %s)' %
+                         (sys._getframe().f_code.co_name,
+                          sys._getframe().f_code.co_filename,
+                          sys._getframe().f_lineno))
+        else:
+            response.raise_for_status()
 
     @check
     def set_http_password(self, input_: dict) -> str:
@@ -163,8 +176,21 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/oauthtoken' % self.username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        result = self.gerrit.decode_response(response)
-        return result
+
+        if response.status_code == 404:
+            logger.error('404 Not Found, there is no token available, or the token has already expired. '
+                         'Not Allowed for this function: \'%s\'. (%s: %s)' %
+                         (sys._getframe().f_code.co_name,
+                          sys._getframe().f_code.co_filename,
+                          sys._getframe().f_lineno))
+        elif response.status_code == 403:
+            logger.error('403 Forbidden, Not Allowed for this function: \'%s\'. (%s: %s)' %
+                         (sys._getframe().f_code.co_name,
+                          sys._getframe().f_code.co_filename,
+                          sys._getframe().f_lineno))
+        else:
+            result = self.gerrit.decode_response(response)
+            return result
 
     @property
     def emails(self):

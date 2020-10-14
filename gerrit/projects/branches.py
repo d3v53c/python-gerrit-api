@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+import sys
 from urllib.parse import quote
 from gerrit.utils.exceptions import UnknownBranch
-from gerrit.utils.common import check
+from gerrit.utils.common import check, logger
 from gerrit.utils.models import BaseModel
 
 
@@ -63,7 +64,13 @@ class Branch(BaseModel):
         """
         endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        if response.status_code == 409:
+            logger.error('409 Conflict, this branch could not be deleted. Method Not Allowed for this function: \'%s\'. (%s: %s)' %
+                         (sys._getframe().f_code.co_name,
+                          sys._getframe().f_code.co_filename,
+                          sys._getframe().f_lineno))
+        else:
+            response.raise_for_status()
 
 
 class Branches:
