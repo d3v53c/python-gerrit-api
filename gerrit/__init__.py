@@ -67,15 +67,7 @@ class GerritClient:
         """
         magic_json_prefix = ")]}'\n"
         content_type = response.headers.get("content-type", "")
-
-        if response.status_code == 405:
-            logger.error('405 Method Not Allowed for this function: \'%s\'. (%s: %s)' %
-                           (sys._getframe(1).f_code.co_name,
-                            sys._getframe(1).f_code.co_filename,
-                            sys._getframe(1).f_lineno))
-            return
-        else:
-            response.raise_for_status()
+        response.raise_for_status()
 
         content = response.content.strip()
         if response.encoding:

@@ -17,6 +17,8 @@ class GerritGroup(BaseModel):
     def rename(self, input_: dict):
         """
         Renames a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param input_: the GroupNameInput entity
         :return:
@@ -27,14 +29,15 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update group model's name
-        if result:
-            self.name = result
-            return result
+        self.name = result
+        return result
 
     @check
     def set_description(self, input_: dict):
         """
         Sets the description of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param input_: the GroupDescriptionInput entity
         :return:
@@ -45,32 +48,30 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update group model's description
-        if result:
-            self.description = result
-            return result
+        self.description = result
+        return result
 
     def delete_description(self):
         """
         Sets the description of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :return:
         """
         endpoint = '/groups/%s/description' % self.id
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code == 405:
-            logger.error('405 Method Not Allowed for this function: \'%s\', This method is only allowed for Gerrit internal groups. (%s: %s)' %
-                         (sys._getframe().f_code.co_name,
-                          sys._getframe().f_code.co_filename,
-                          sys._getframe().f_lineno))
-        else:
-            response.raise_for_status()
-            # update group model's description
-            self.description = None
+        response.raise_for_status()
+
+        # update group model's description
+        self.description = None
 
     @check
     def set_options(self, input_: dict):
         """
         Sets the options of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param input_: the GroupOptionsInput entity
         :return:
@@ -81,14 +82,15 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update group model's options
-        if result:
-            self.options = result
-            return result
+        self.options = result
+        return result
 
     @check
     def set_owner(self, input_: dict):
         """
         Sets the owner group of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param input_: the GroupOwnerInput entity
         :return:
@@ -99,15 +101,16 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update group model's owner and owner_id
-        if result:
-            self.owner = result.get('owner')
-            self.owner_id = result.get('owner_id')
+        self.owner = result.get('owner')
+        self.owner_id = result.get('owner_id')
 
-            return self.gerrit.groups.get(result.get('owner_id'))
+        return self.gerrit.groups.get(result.get('owner_id'))
 
     def get_audit_log(self):
         """
         Gets the audit log of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :return:
         """
@@ -129,18 +132,21 @@ class GerritGroup(BaseModel):
     def list_members(self):
         """
         Lists the direct members of a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :return:
         """
         endpoint = '/groups/%s/members/' % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return [self.gerrit.accounts.get(member.get('username')) for member in result]
+        return [self.gerrit.accounts.get(member.get('username')) for member in result]
 
     def get_member(self, username: str):
         """
         Retrieves a group member.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param username: account username
         :return:
@@ -149,12 +155,13 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return self.gerrit.accounts.get(result.get('username'))
+        return self.gerrit.accounts.get(result.get('username'))
 
     def add_member(self, account: GerritAccount):
         """
         Adds a user as member to a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param account:
         :return:
@@ -162,41 +169,39 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return self.gerrit.accounts.get(result.get('username'))
+        return self.gerrit.accounts.get(result.get('username'))
 
     def remove_member(self, account: GerritAccount):
         """
         Removes a user from a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param account:
         :return:
         """
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code == 405:
-            logger.error('405 Method Not Allowed for this function: \'%s\', This method is only allowed for Gerrit internal groups. (%s: %s)' %
-                         (sys._getframe().f_code.co_name,
-                          sys._getframe().f_code.co_filename,
-                          sys._getframe().f_lineno))
-        else:
-            response.raise_for_status()
+        response.raise_for_status()
 
     def list_subgroups(self):
         """
         Lists the direct subgroups of a group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :return:
         """
         endpoint = '/groups/%s/groups/' % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return [self.gerrit.groups.get(item.get('id')) for item in result]
+        return [self.gerrit.groups.get(item.get('id')) for item in result]
 
     def get_subgroup(self, id_: str):
         """
         Retrieves a subgroup.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param id_: sub group id
         :return:
@@ -204,12 +209,13 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/groups/%s' % (self.id, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return self.gerrit.groups.get(result.get('id'))
+        return self.gerrit.groups.get(result.get('id'))
 
     def add_subgroup(self, subgroup):
         """
         Adds an internal or external group as subgroup to a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param subgroup:
         :return:
@@ -217,22 +223,17 @@ class GerritGroup(BaseModel):
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        if result:
-            return self.gerrit.groups.get(result.get('id'))
+        return self.gerrit.groups.get(result.get('id'))
 
     def remove_subgroup(self, subgroup):
         """
         Removes a subgroup from a Gerrit internal group.
+        This endpoint is only allowed for Gerrit internal groups;
+        attempting to call on a non-internal group will return 405 Method Not Allowed.
 
         :param subgroup:
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code == 405:
-            logger.error('405 Method Not Allowed for this function: \'%s\', This method is only allowed for Gerrit internal groups. (%s: %s)' %
-                         (sys._getframe().f_code.co_name,
-                          sys._getframe().f_code.co_filename,
-                          sys._getframe().f_lineno))
-        else:
-            response.raise_for_status()
+        response.raise_for_status()

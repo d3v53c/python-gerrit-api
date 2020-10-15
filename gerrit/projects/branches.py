@@ -64,13 +64,7 @@ class Branch(BaseModel):
         """
         endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code == 409:
-            logger.error('409 Conflict, this branch could not be deleted. Method Not Allowed for this function: \'%s\'. (%s: %s)' %
-                         (sys._getframe().f_code.co_name,
-                          sys._getframe().f_code.co_filename,
-                          sys._getframe().f_lineno))
-        else:
-            response.raise_for_status()
+        response.raise_for_status()
 
         # Reset to get it refreshed from Gerrit
         self._data = []
