@@ -30,9 +30,8 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
 
         # update account model's name
-        if result:
-            self.name = result
-            return result
+        self.name = result
+        return result
 
     def delete_name(self):
         """
