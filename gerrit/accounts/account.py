@@ -6,7 +6,7 @@ from gerrit.utils.models import BaseModel
 from gerrit.accounts.emails import Emails
 from gerrit.accounts.ssh_keys import SSHKeys
 from gerrit.accounts.gpg_keys import GPGKeys
-from gerrit.utils.common import check, logger
+from gerrit.utils.common import check
 
 
 class GerritAccount(BaseModel):
@@ -412,3 +412,73 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/index' % self.username
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
+
+    def get_default_starred_changes(self) -> list:
+        """
+        Gets the changes that were starred with the default star by the identified user account.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/starred.changes' % self.username
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return [self.gerrit.changes.get(item.get('id')) for item in result]
+
+    def put_default_star_on_change(self, change):
+        """
+        Star a change with the default label.
+
+        :param change:
+        :return:
+        """
+        endpoint = '/accounts/%s/starred.changes/%s' % (self.username, change.id)
+        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()
+
+    def remove_default_star_from_change(self, change):
+        """
+        Remove the default star label from a change. This stops notifications.
+
+        :param change:
+        :return:
+        """
+        endpoint = '/accounts/%s/starred.changes/%s' % (self.username, change.id)
+        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()
+
+    def get_starred_changes(self) -> list:
+        """
+        Gets the changes that were starred with any label by the identified user account.
+
+        :return:
+        """
+        endpoint = '/accounts/%s/stars.changes' % self.username
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return [self.gerrit.changes.get(item.get('id')) for item in result]
+
+    def get_star_labels_from_change(self, change) -> list:
+        """
+        Get star labels from a change.
+
+        :param change:
+        :return:
+        """
+        endpoint = '/accounts/%s/stars.changes/%s' % (self.username, change.id)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def update_star_labels_on_change(self, change, input_: dict):
+        """
+        Update star labels on a change.
+
+        :param change:
+        :param input_:
+        :return:
+        """
+        endpoint = '/accounts/%s/stars.changes/%s' % (self.username, change.id)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        result = self.gerrit.decode_response(response)
+        return result

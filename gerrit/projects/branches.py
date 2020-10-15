@@ -4,7 +4,7 @@
 import sys
 from urllib.parse import quote
 from gerrit.utils.exceptions import UnknownBranch
-from gerrit.utils.common import check, logger
+from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
 
 

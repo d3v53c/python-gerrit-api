@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownChange
 from gerrit.accounts.account import GerritAccount
 from gerrit.utils.models import BaseModel
 
@@ -136,7 +135,7 @@ class GerritChange(BaseModel):
     def rebase(self, input_: dict):
         """
         Rebases a change.
-        If the change cannot be rebased, e.g. due to conflicts, the response is °∞409 Conflict°±
+        If the change cannot be rebased, e.g. due to conflicts, the response is ‚Äú409 Conflict‚Äù
         and the error message is contained in the response body.
 
         :param input_: the RebaseInput entity
@@ -152,8 +151,8 @@ class GerritChange(BaseModel):
     def move(self, input_: dict):
         """
         Move a change.
-        If the change cannot be moved because the change state doesn°Øt allow moving the change,
-        the response is °∞409 Conflict°± and the error message is contained in the response body.
+        If the change cannot be moved because the change state doesn‚Äôt allow moving the change,
+        the response is ‚Äú409 Conflict‚Äù and the error message is contained in the response body.
 
         :param input_: the MoveInput entity
         :return:
@@ -168,8 +167,8 @@ class GerritChange(BaseModel):
     def revert(self, input_: dict):
         """
         Reverts a change.
-        If the change cannot be reverted because the change state doesn°Øt allow reverting the change,
-        the response is °∞409 Conflict°± and the error message is contained in the response body.
+        If the change cannot be reverted because the change state doesn‚Äôt allow reverting the change,
+        the response is ‚Äú409 Conflict‚Äù and the error message is contained in the response body.
 
         :param input_: the RevertInput entity
         :return:
@@ -184,8 +183,8 @@ class GerritChange(BaseModel):
     def submit(self, input_: dict):
         """
         Submits  a change.
-        If the change cannot be submitted because the submit rule doesn°Øt allow submitting the change,
-        the response is °∞409 Conflict°± and the error message is contained in the response body.
+        If the change cannot be submitted because the submit rule doesn‚Äôt allow submitting the change,
+        the response is ‚Äú409 Conflict‚Äù and the error message is contained in the response body.
 
         :param input_: the SubmitInput entity
         :return:
@@ -334,24 +333,10 @@ class GerritChange(BaseModel):
         response.raise_for_status()
 
     @check
-    def mark_private(self, input_: dict):
-        """
-        Marks the change to be private. Only open changes can be marked private.
-        Changes may only be marked private by the owner or site administrators.
-
-        :param input_: the PrivateInput entity
-        :return:
-        """
-        endpoint = '/changes/%s/private' % self.id
-        base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
-
-    @check
     def unmark_private(self, input_: dict = None):
         """
         Marks the change to be non-private. Note users can only unmark own private changes.
-        If the change was already not private, the response is °∞409 Conflict°±.
+        If the change was already not private, the response is ‚Äú409 Conflict‚Äù.
 
         :param input_: the PrivateInput entity
         :return:
@@ -368,7 +353,7 @@ class GerritChange(BaseModel):
     def ignore(self):
         """
         Marks a change as ignored. The change will not be shown in the incoming reviews dashboard, and email
-        notifications will be suppressed. Ignoring a change does not cause the change°Øs "updated" timestamp to be
+        notifications will be suppressed. Ignoring a change does not cause the change‚Äôs "updated" timestamp to be
         modified, and the owner is not notified.
 
         :return:

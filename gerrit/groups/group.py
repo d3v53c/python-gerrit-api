@@ -4,7 +4,7 @@
 import sys
 from gerrit.utils.models import BaseModel
 from gerrit.accounts.account import GerritAccount
-from gerrit.utils.common import check, logger
+from gerrit.utils.common import check
 
 
 class GerritGroup(BaseModel):

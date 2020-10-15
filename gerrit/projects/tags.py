@@ -3,7 +3,7 @@
 # @Author: Jialiang Shi
 import sys
 from gerrit.utils.exceptions import UnknownTag
-from gerrit.utils.common import check, logger
+from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
 
 
