@@ -95,7 +95,8 @@ class GerritChange(BaseModel):
         endpoint = '/changes/%s/assignee' % self.id
         response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.accounts.get(result.get('username'))
+        if result:
+            return self.gerrit.accounts.get(result.get('username'))
 
     def get_pure_revert(self, commit) -> dict:
         """

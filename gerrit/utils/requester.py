@@ -36,11 +36,11 @@ class Requester:
             self.session.mount('http://', retry_adapter)
             self.session.mount('https://', retry_adapter)
 
-    def get_request_dict(self, params=None, data=None, files=None, headers=None, **kwargs):
+    def get_request_dict(self, params=None, data=None, json=None, headers=None, **kwargs):
         """
         :param params:
         :param data:
-        :param files:
+        :param json:
         :param headers:
         :param kwargs:
         :return:
@@ -50,14 +50,11 @@ class Requester:
             request_kwargs['auth'] = (self.username, self.password)
 
         if params:
-            assert isinstance(
-                params, dict), 'Params must be a dict, got %s' % repr(params)
+            assert isinstance(params, dict), 'Params must be a dict, got %s' % repr(params)
             request_kwargs['params'] = params
 
         if headers:
-            assert isinstance(
-                headers, dict), \
-                'headers must be a dict, got %s' % repr(headers)
+            assert isinstance(headers, dict), 'headers must be a dict, got %s' % repr(headers)
             request_kwargs['headers'] = headers
 
         if self.AUTH_COOKIE:
@@ -68,13 +65,14 @@ class Requester:
         request_kwargs['verify'] = self.ssl_verify
         request_kwargs['cert'] = self.cert
 
+        if data and json:
+            raise ValueError("Cannot use data and json together")
+
         if data:
-            # It may seem odd, but some Gerrit operations require posting
-            # an empty string.
             request_kwargs['data'] = data
 
-        if files:
-            request_kwargs['files'] = files
+        if json:
+            request_kwargs['json'] = json
 
         request_kwargs['timeout'] = self.timeout
 
@@ -141,19 +139,15 @@ class Requester:
             **kwargs)
         return self.session.put(url, **request_kwargs)
 
-    def delete(self, url, params=None, data=None, headers=None, allow_redirects=True, **kwargs):
+    def delete(self, url, headers=None, allow_redirects=True, **kwargs):
         """
         :param url:
-        :param params:
-        :param data:
         :param headers:
         :param allow_redirects:
         :param kwargs:
         :return:
         """
         request_kwargs = self.get_request_dict(
-            params=params,
-            data=data,
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
