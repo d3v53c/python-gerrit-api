@@ -478,7 +478,7 @@ class GerritChange(BaseModel):
         Deletes a change message.
         Note that only users with the Administrate Server global capability are permitted to delete a change message.
 
-        :param id_:
+        :param id_: change message id
         :param input_: the DeleteChangeMessageInput entity
         :return:
         """

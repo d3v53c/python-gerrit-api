@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import sys
 from gerrit.utils.models import BaseModel
 from gerrit.accounts.emails import Emails
 from gerrit.accounts.ssh_keys import SSHKeys

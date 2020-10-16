@@ -26,7 +26,7 @@ class Commit(BaseModel):
         """
         Gets the content of a file from a certain commit.
 
-        :param file:
+        :param file: the file path
         :return:
         """
         endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit, quote(file, safe=''))

@@ -57,8 +57,7 @@ class GerritPlugins:
         endpoint = '/plugins/?all'
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        plugins = [item for item in result.values()]
-        return GerritPlugin.parse_list(plugins, gerrit=self.gerrit)
+        return GerritPlugin.parse_list(list(result.values()), gerrit=self.gerrit)
 
     def get(self, id_: str) -> GerritPlugin:
         """

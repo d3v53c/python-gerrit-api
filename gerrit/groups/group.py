@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import sys
 from gerrit.utils.models import BaseModel
 from gerrit.accounts.account import GerritAccount
 from gerrit.utils.common import check
@@ -163,7 +162,7 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param account:
+        :param account: gerrit account
         :return:
         """
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
@@ -177,7 +176,7 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param account:
+        :param account: gerrit account
         :return:
         """
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
@@ -217,7 +216,7 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param subgroup:
+        :param subgroup: gerrit subgroup
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
@@ -231,7 +230,7 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param subgroup:
+        :param subgroup: gerrit subgroup
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)

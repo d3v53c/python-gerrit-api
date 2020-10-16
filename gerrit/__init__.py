@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import sys
 import json
 from gerrit.utils.requester import Requester
 from gerrit.config.config import GerritConfig
@@ -14,6 +13,10 @@ from gerrit.utils.common import logger
 
 
 class GerritClient:
+    """
+    Python wrapper for the Gerrit V3.x API.
+
+    """
     GERRIT_AUTH_SUFFIX = '/a'
     default_headers = {'Content-Type': 'application/json; charset=UTF-8'}
 
@@ -41,7 +44,7 @@ class GerritClient:
     def strip_trailing_slash(cls, url):
         """
         remove url's trailing slash
-        :param url:
+        :param url: url
         :return:
         """
         while url.endswith('/'):
@@ -82,29 +85,57 @@ class GerritClient:
         try:
             return json.loads(content)
         except ValueError:
-            raise ValueError("Invalid json content: %s", content)
+            raise ValueError("Invalid json content: {}".format(content))
 
     @property
     def config(self):
+        """
+        Config related REST APIs
+
+        :return:
+        """
         return GerritConfig(gerrit=self)
 
     @property
     def projects(self):
+        """
+        Project related REST APIs
+        :return:
+        """
         return GerritProjects(gerrit=self)
 
     @property
     def changes(self):
+        """
+        Change related REST APIs
+
+        :return:
+        """
         return GerritChanges(gerrit=self)
 
     @property
     def accounts(self):
+        """
+        Account related REST APIs
+
+        :return:
+        """
         return GerritAccounts(gerrit=self)
 
     @property
     def groups(self):
+        """
+        Group related REST APIs
+
+        :return:
+        """
         return GerritGroups(gerrit=self)
 
     @property
     def plugins(self):
-        return GerritPlugins(gerrit=self)
+        """
+        Plugin related REST APIs
 
+        :return:
+        """
+        return GerritPlugins(gerrit=self)

@@ -32,7 +32,7 @@ class GerritGroups:
         """
         Query Groups
 
-        :param name:
+        :param name: group name
         :return:
         """
         endpoint = '/groups/?query2=inname:%s' % name
@@ -55,6 +55,7 @@ class GerritGroups:
         else:
             raise UnknownGroup(id_)
 
+    @check
     def create(self, name: str, input_: dict) -> GerritGroup:
         """
         Creates a new Gerrit internal group.

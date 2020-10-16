@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import sys
 from gerrit.utils.exceptions import UnknownTag
 from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
@@ -82,7 +81,7 @@ class Tags:
         """
         get a tag by ref
 
-        :param ref:
+        :param ref: the tag ref
         :return:
         """
         if not ref.startswith(self.tag_prefix):
@@ -131,7 +130,7 @@ class Tags:
         """
         get a tag by ref
 
-        :param name:
+        :param name: the tag ref
         :return:
         """
         return self[name]

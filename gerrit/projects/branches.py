@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import sys
 from urllib.parse import quote
 from gerrit.utils.exceptions import UnknownBranch
 from gerrit.utils.common import check
@@ -24,7 +23,7 @@ class Branch(BaseModel):
         Gets the content of a file from the HEAD revision of a certain branch.
         The content is returned as base64 encoded string.
 
-        :param file:
+        :param file: the file path
         :return:
         """
         endpoint = '/projects/%s/branches/%s/files/%s/content' % (self.project, self.name, quote(file, safe=''))
@@ -124,7 +123,7 @@ class Branches:
         """
         get a branch by ref
 
-        :param ref:
+        :param ref: branch ref
         :return:
         """
         if not ref.startswith(self.branch_prefix):
@@ -173,7 +172,7 @@ class Branches:
         """
         get a branch by ref
 
-        :param name:
+        :param name: branch ref name
         :return:
         """
         return self[name]

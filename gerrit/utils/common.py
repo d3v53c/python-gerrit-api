@@ -3,9 +3,11 @@
 # @Author: Jialiang Shi
 import inspect
 import logging
+from functools import wraps
 
 
 def check(fn):
+    @wraps(fn)
     def wrapper(*args, **kwargs):
         sig = inspect.signature(fn)
         params = sig.parameters
@@ -27,8 +29,8 @@ def check(fn):
         return_type = fn.__annotations__.get('return', None)
         if return_type and not isinstance(result, return_type):
             raise TypeError("{} should return {}, not {}".format(fn.__name__,
-                                                                    return_type.__name__,
-                                                                    type(result).__name__))
+                                                                 return_type.__name__,
+                                                                 type(result).__name__))
 
         return result
     return wrapper

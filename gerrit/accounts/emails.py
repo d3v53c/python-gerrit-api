@@ -65,7 +65,7 @@ class Emails:
         """
         Sets an email address as preferred email address for an account.
 
-        :param email:
+        :param email: account email
         :return:
         """
         self.get(email).set_preferred()
