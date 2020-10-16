@@ -3,6 +3,7 @@
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
 from gerrit.accounts.account import GerritAccount
+from gerrit.changes.edit import Edit
 from gerrit.utils.models import BaseModel
 
 
@@ -11,6 +12,36 @@ class GerritChange(BaseModel):
         super(GerritChange, self).__init__(**kwargs)
         self.attributes = ['id', 'project', 'branch', 'change_id', 'subject', 'status', 'created', 'updated',
                            'mergeable', 'insertions', 'deletions', '_number', 'owner', 'gerrit']
+
+    @check
+    def update(self, input_: dict):
+        """
+        Update an existing change by using a MergePatchSetInput entity.
+        Gerrit will create a merge commit based on the information of MergePatchSetInput and add a new patch set to
+        the change corresponding to the new merge commit.
+
+        :param input_: the MergePatchSetInput entity
+        :return:
+        """
+        endpoint = '/changes/%s/merge' % self.id
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        result = self.gerrit.decode_response(response)
+        return self.gerrit.changes.get(result.get('id'))
+
+    @check
+    def set_commit_message(self, input_: dict) -> str:
+        """
+        Creates a new patch set with a new commit message.
+
+        :param input_: the CommitMessageInput entity
+        :return:
+        """
+        endpoint = '/changes/%s/message' % self.id
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        result = self.gerrit.decode_response(response)
+        return result
 
     @property
     def topic(self) -> str:
@@ -460,3 +491,27 @@ class GerritChange(BaseModel):
             response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
             result = self.gerrit.decode_response(response)
             return result
+
+    def get_edit(self):
+        """
+        Retrieves a change edit details.
+        As response an EditInfo entity is returned that describes the change edit,
+        or “204 No Content” when change edit doesn’t exist for this change.
+
+        :return:
+        """
+        endpoint = '/changes/%s/edit' % self.id
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        if result:
+            return Edit.parse(result, change=self.id, gerrit=self.gerrit)
+
+    def create_empty_edit(self):
+        """
+        Creates empty change edit
+
+        :return:
+        """
+        endpoint = '/changes/%s/edit' % self.id
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
+        response.raise_for_status()

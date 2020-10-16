@@ -50,36 +50,3 @@ class GerritChanges:
         response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
-
-    @check
-    def create_merge_patch_set(self, id_: str, input_: dict) -> GerritChange:
-        """
-        Update an existing change by using a MergePatchSetInput entity.
-        Gerrit will create a merge commit based on the information of MergePatchSetInput and add a new patch set to
-        the change corresponding to the new merge commit.
-
-        :param id_: change id
-        :param input_: the MergePatchSetInput entity
-        :return:
-        """
-        endpoint = '/changes/%s/merge' % id_
-        base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        result = self.gerrit.decode_response(response)
-        return GerritChange.parse(result, gerrit=self.gerrit)
-
-    @check
-    def set_commit_message(self, id_: str, input_: dict) -> str:
-        """
-        Creates a new patch set with a new commit message.
-
-        :param id_: change id
-        :param input_: the CommitMessageInput entity
-        :return:
-        """
-        endpoint = '/changes/%s/message' % id_
-        base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
-        result = self.gerrit.decode_response(response)
-        return result
-
