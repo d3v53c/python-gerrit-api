@@ -110,3 +110,9 @@ class UnknownChange(KeyError, NotFound):
     """
     Gerrit does not recognize the change requested.
     """
+
+
+class UnknownReviewer(KeyError, NotFound):
+    """
+    Gerrit does not recognize the review requested.
+    """

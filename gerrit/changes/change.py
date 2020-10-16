@@ -3,6 +3,7 @@
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
 from gerrit.accounts.account import GerritAccount
+from gerrit.changes.reviewers import Reviewers
 from gerrit.changes.edit import Edit
 from gerrit.utils.models import BaseModel
 
@@ -515,3 +516,7 @@ class GerritChange(BaseModel):
         endpoint = '/changes/%s/edit' % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         response.raise_for_status()
+
+    @property
+    def reviewers(self):
+        return Reviewers(change=self.id, gerrit=self.gerrit)
