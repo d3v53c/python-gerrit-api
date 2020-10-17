@@ -3,7 +3,6 @@
 # @Author: Jialiang Shi
 from gerrit.accounts.account import GerritAccount
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownAccount
 
 
 class GerritAccounts:
@@ -42,12 +41,8 @@ class GerritAccounts:
         """
         endpoint = '/accounts/%s/detail' % username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GerritAccount.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownAccount(username)
+        result = self.gerrit.decode_response(response)
+        return GerritAccount.parse(result, gerrit=self.gerrit)
 
     @check
     def create(self, username: str, input_: dict) -> GerritAccount:

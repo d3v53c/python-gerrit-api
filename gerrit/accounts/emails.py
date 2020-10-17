@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.utils.exceptions import UnknownEmail
 
 
 class Email(BaseModel):
@@ -17,8 +16,7 @@ class Email(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/emails/%s' % (self.username, self.email)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def set_preferred(self):
         """
@@ -27,8 +25,7 @@ class Email(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/emails/%s/preferred' % (self.username, self.email)
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Emails:
@@ -55,11 +52,9 @@ class Emails:
         """
         endpoint = '/accounts/%s/emails/%s' % (self.username, email)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return Email.parse(result, username=self.username, gerrit=self.gerrit)
-        else:
-            raise UnknownEmail(email)
+        result = self.gerrit.decode_response(response)
+        return Email.parse(result, username=self.username, gerrit=self.gerrit)
+
 
     def set_preferred(self, email: str):
         """

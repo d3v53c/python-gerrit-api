@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.exceptions import UnknownCache
 from gerrit.utils.models import BaseModel
 
 
@@ -17,8 +16,7 @@ class Cache(BaseModel):
         :return:
         """
         endpoint = '/config/server/caches/%s/flush' % self.name
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Caches:
@@ -52,11 +50,8 @@ class Caches:
         """
         endpoint = '/config/server/caches/%s' % name
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return Cache.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownCache(name)
+        result = self.gerrit.decode_response(response)
+        return Cache.parse(result, gerrit=self.gerrit)
 
     def operation(self, input_: dict):
         """
@@ -67,5 +62,4 @@ class Caches:
         """
         endpoint = '/config/server/caches/'
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)

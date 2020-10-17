@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownDashboard
 from gerrit.utils.models import BaseModel
 
 
@@ -19,8 +18,7 @@ class Dashboard(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, self.id)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Dashboards:
@@ -42,7 +40,7 @@ class Dashboards:
     @check
     def create(self, name: str, input_: dict) -> Dashboard:
         """
-        Creates a project dashboard, if a project dashboard with the given dashboard ID doesn’t exist yet.
+        Creates a project dashboard, if a project dashboard with the given dashboard ID doesn't exist yet.
 
         :param name: the dashboard name
         :param input_: the DashboardInput entity
@@ -63,9 +61,5 @@ class Dashboards:
         """
         endpoint = '/projects/%s/dashboards/%s' % (self.project, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
-        else:
-            raise UnknownDashboard(id_)
+        result = self.gerrit.decode_response(response)
+        return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)

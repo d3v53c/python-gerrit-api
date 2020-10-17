@@ -7,7 +7,6 @@ from gerrit.projects.commit import Commit
 from gerrit.projects.dashboards import Dashboards
 from gerrit.projects.webhooks import Webhooks
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownCommit
 from gerrit.utils.models import BaseModel
 
 
@@ -44,8 +43,7 @@ class GerritProject(BaseModel):
 
     def delete_description(self):
         endpoint = '/projects/%s/description' % self.id
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def delete(self):
         """
@@ -54,8 +52,7 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/delete-project~delete' % self.id
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @property
     def parent(self) -> str:
@@ -231,8 +228,7 @@ class GerritProject(BaseModel):
         """
         endpoint = '/projects/%s/index' % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     def index_change(self):
         """
@@ -243,8 +239,7 @@ class GerritProject(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/index.changes' % self.id
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @check
     def check_consistency(self, input_: dict) -> dict:
@@ -298,12 +293,8 @@ class GerritProject(BaseModel):
         """
         endpoint = '/projects/%s/commits/%s' % (self.id, commit)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return Commit.parse(result, project=self.id, gerrit=self.gerrit)
-        else:
-            raise UnknownCommit(commit)
+        result = self.gerrit.decode_response(response)
+        return Commit.parse(result, project=self.id, gerrit=self.gerrit)
 
     @property
     def dashboards(self) -> Dashboards:

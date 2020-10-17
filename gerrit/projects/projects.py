@@ -3,7 +3,6 @@
 # @Author: Jialiang Shi
 from gerrit.projects.project import GerritProject
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownProject
 
 
 class GerritProjects:
@@ -50,12 +49,8 @@ class GerritProjects:
         """
         endpoint = '/projects/%s' % project_name
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GerritProject.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownProject(project_name)
+        result = self.gerrit.decode_response(response)
+        return GerritProject.parse(result, gerrit=self.gerrit)
 
     @check
     def create(self, project_name: str, input_: dict) -> GerritProject:

@@ -79,8 +79,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/topic' % self.id
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def get_assignee(self) -> GerritAccount:
         """
@@ -184,7 +183,7 @@ class GerritChange(BaseModel):
     def move(self, input_: dict):
         """
         Move a change.
-        If the change cannot be moved because the change state doesn’t allow moving the change,
+        If the change cannot be moved because the change state doesn't allow moving the change,
         the response is “409 Conflict” and the error message is contained in the response body.
 
         :param input_: the MoveInput entity
@@ -200,8 +199,8 @@ class GerritChange(BaseModel):
     def revert(self, input_: dict):
         """
         Reverts a change.
-        If the change cannot be reverted because the change state doesn’t allow reverting the change,
-        the response is “409 Conflict” and the error message is contained in the response body.
+        If the change cannot be reverted because the change state doesn't allow reverting the change,
+        the response is 409 Conflict and the error message is contained in the response body.
 
         :param input_: the RevertInput entity
         :return:
@@ -216,8 +215,8 @@ class GerritChange(BaseModel):
     def submit(self, input_: dict):
         """
         Submits  a change.
-        If the change cannot be submitted because the submit rule doesn’t allow submitting the change,
-        the response is “409 Conflict” and the error message is contained in the response body.
+        If the change cannot be submitted because the submit rule doesn't allow submitting the change,
+        the response is 409 Conflict and the error message is contained in the response body.
 
         :param input_: the SubmitInput entity
         :return:
@@ -235,8 +234,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s' % self.id
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def get_include_in(self) -> dict:
         """
@@ -256,8 +254,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/index' % self.id
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     def list_comments(self) -> dict:
         """
@@ -334,8 +331,7 @@ class GerritChange(BaseModel):
         """
         endpoint = '/changes/%s/wip' % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     @check
     def set_ready_for_review(self, input_: dict):
@@ -348,8 +344,7 @@ class GerritChange(BaseModel):
         """
         endpoint = '/changes/%s/ready' % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     @check
     def mark_private(self, input_: dict):
@@ -362,8 +357,7 @@ class GerritChange(BaseModel):
         """
         endpoint = '/changes/%s/private' % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     @check
     def unmark_private(self, input_: dict = None):
@@ -376,12 +370,11 @@ class GerritChange(BaseModel):
         """
         if input_ is None:
             endpoint = '/changes/%s/private' % self.id
-            response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
             endpoint = '/changes/%s/private.delete' % self.id
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+            self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     def ignore(self):
         """
@@ -392,8 +385,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/ignore' % self.id
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def unignore(self):
         """
@@ -402,8 +394,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/unignore' % self.id
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def mark_as_reviewed(self):
         """
@@ -412,8 +403,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/reviewed' % self.id
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def mark_as_unreviewed(self):
         """
@@ -422,8 +412,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/unreviewed' % self.id
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def get_hashtags(self) -> list:
         """
@@ -484,8 +473,7 @@ class GerritChange(BaseModel):
         """
         if input_ is None:
             endpoint = '/changes/%s/messages/%s' % (self.id, id_)
-            response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-            response.raise_for_status()
+            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
             endpoint = '/changes/%s/messages/%s/delete' % (self.id, id_)
             base_url = self.gerrit.get_endpoint_url(endpoint)
@@ -497,7 +485,7 @@ class GerritChange(BaseModel):
         """
         Retrieves a change edit details.
         As response an EditInfo entity is returned that describes the change edit,
-        or “204 No Content” when change edit doesn’t exist for this change.
+        or 204 No Content when change edit doesn't exist for this change.
 
         :return:
         """
@@ -514,8 +502,7 @@ class GerritChange(BaseModel):
         :return:
         """
         endpoint = '/changes/%s/edit' % self.id
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @property
     def reviewers(self):

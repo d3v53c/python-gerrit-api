@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.utils.exceptions import UnknownSSHKey
 
 
 class SSHKey(BaseModel):
@@ -17,8 +16,7 @@ class SSHKey(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/sshkeys/%s' % (self.username, self.seq)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class SSHKeys:
@@ -46,11 +44,8 @@ class SSHKeys:
         """
         endpoint = '/accounts/%s/sshkeys/%s' % (self.username, seq)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
-        else:
-            raise UnknownSSHKey(seq)
+        result = self.gerrit.decode_response(response)
+        return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
 
     def add(self, ssh_key: str) -> SSHKey:
         """

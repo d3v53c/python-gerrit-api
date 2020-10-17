@@ -3,7 +3,6 @@
 # @Author: Jialiang Shi
 from gerrit.groups.group import GerritGroup
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownGroup
 
 
 class GerritGroups:
@@ -49,11 +48,8 @@ class GerritGroups:
         """
         endpoint = '/groups/%s' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GerritGroup.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownGroup(id_)
+        result = self.gerrit.decode_response(response)
+        return GerritGroup.parse(result, gerrit=self.gerrit)
 
     @check
     def create(self, name: str, input_: dict) -> GerritGroup:

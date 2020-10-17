@@ -1,9 +1,17 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-import six.moves.urllib.parse as urlparse
 from requests import Session
 from requests.adapters import HTTPAdapter
+from gerrit.utils.exceptions import (
+    NotAllowedError,
+    ValidationError,
+    AuthError,
+    NotFoundError,
+    ConflictError,
+    ClientError,
+    ServerError
+)
 
 
 class Requester:
@@ -93,7 +101,7 @@ class Requester:
             allow_redirects=allow_redirects,
             stream=stream
         )
-        return self.session.get(url, **request_kwargs)
+        return self.confirm_status(self.session.get(url, **request_kwargs))
 
     def post(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
         """
@@ -115,7 +123,7 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.post(url, **request_kwargs)
+        return self.confirm_status(self.session.post(url, **request_kwargs))
 
     def put(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
         """
@@ -137,7 +145,7 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.put(url, **request_kwargs)
+        return self.confirm_status(self.session.put(url, **request_kwargs))
 
     def delete(self, url, headers=None, allow_redirects=True, **kwargs):
         """
@@ -151,4 +159,62 @@ class Requester:
             headers=headers,
             allow_redirects=allow_redirects,
             **kwargs)
-        return self.session.delete(url, **request_kwargs)
+        return self.confirm_status(self.session.delete(url, **request_kwargs))
+
+    @staticmethod
+    def confirm_status(res):
+        """
+        check response status code
+        :param res:
+        :return:
+        """
+        http_error_msg = ''
+        if isinstance(res.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = res.reason.decode('utf-8')
+            except UnicodeDecodeError:
+                reason = res.reason.decode('iso-8859-1')
+        else:
+            reason = res.reason
+
+        if 400 <= res.status_code < 500:
+            http_error_msg = u'%s Client Error: %s for url: %s' % (res.status_code, reason, res.url)
+
+        elif 500 <= res.status_code < 600:
+            http_error_msg = u'%s Server Error: %s for url: %s' % (res.status_code, reason, res.url)
+
+        if res.status_code < 300:
+            # OK, return http response
+            return res
+
+        elif res.status_code == 400:
+            # Validation error
+            raise ValidationError(http_error_msg)
+
+        elif res.status_code == 403:
+            # Auth error
+            raise AuthError(http_error_msg)
+
+        elif res.status_code == 404:
+            # Not Found
+            raise NotFoundError(http_error_msg)
+
+        elif res.status_code == 405:
+            # Method Not Allowed
+            raise NotAllowedError(http_error_msg)
+
+        elif res.status_code == 409:
+            # Conflict
+            raise ConflictError(http_error_msg)
+
+        elif res.status_code < 500:
+            # Other 4xx, generic client error
+            raise ClientError(http_error_msg)
+
+        else:
+            # 5xx is server error
+            raise ServerError(http_error_msg)

@@ -14,7 +14,7 @@ from gerrit.utils.common import logger
 
 class GerritClient:
     """
-    Python wrapper for the Gerrit V3.x API.
+    Python wrapper for the Gerrit V3.x REST API.
 
     """
     GERRIT_AUTH_SUFFIX = '/a'
@@ -70,7 +70,6 @@ class GerritClient:
         """
         magic_json_prefix = ")]}'\n"
         content_type = response.headers.get("content-type", "")
-        response.raise_for_status()
 
         content = response.content.strip()
         if response.encoding:

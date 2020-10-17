@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.exceptions import UnknownTag
 from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
+from gerrit.utils.exceptions import UnknownTag
 
 
 class Tag(BaseModel):
@@ -24,11 +24,8 @@ class Tag(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/tags/%s' % (self.project, self.name)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-        # Reset to get it refreshed from Gerrit
-        self._data = []
 
 class Tags:
     tag_prefix = 'refs/tags/'
@@ -87,10 +84,12 @@ class Tags:
         if not ref.startswith(self.tag_prefix):
             raise KeyError("tag ref should start with {}".format(self.tag_prefix))
 
+        if not self._data:
+            self._data = self.poll()
+
         result = [row for row in self._data if row['ref'] == ref]
         if result:
-            ref_date = result[0]
-            return Tag.parse(ref_date, project=self.project, gerrit=self.gerrit)
+            return Tag.parse(result[0], project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownTag(ref)
 
@@ -104,7 +103,7 @@ class Tags:
         if not key.startswith(self.tag_prefix):
             raise KeyError("tag ref should start with {}".format(self.tag_prefix))
 
-        return self.create(key.replace(self.tag_prefix, ''), value)
+        self.create(key.replace(self.tag_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -114,6 +113,9 @@ class Tags:
         :return:
         """
         self[key].delete()
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []
 
     def __iter__(self):
         """

@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownWebhook
 from gerrit.utils.models import BaseModel
 
 
@@ -18,8 +17,7 @@ class Webhook(BaseModel):
         :return:
         """
         endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, self.name)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Webhooks:
@@ -69,10 +67,6 @@ class Webhooks:
         """
         endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, name)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            result.update({"name": name})
-            return Webhook.parse(result, project=self.project, gerrit=self.gerrit)
-        else:
-            raise UnknownWebhook(name)
+        result = self.gerrit.decode_response(response)
+        result.update({"name": name})
+        return Webhook.parse(result, project=self.project, gerrit=self.gerrit)

@@ -59,8 +59,7 @@ class GerritGroup(BaseModel):
         :return:
         """
         endpoint = '/groups/%s/description' % self.id
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
         # update group model's description
         self.description = None
@@ -125,8 +124,7 @@ class GerritGroup(BaseModel):
         :return:
         """
         endpoint = '/groups/%s/index' % self.id
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     def list_members(self):
         """
@@ -180,8 +178,7 @@ class GerritGroup(BaseModel):
         :return:
         """
         endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def list_subgroups(self):
         """
@@ -234,5 +231,4 @@ class GerritGroup(BaseModel):
         :return:
         """
         endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

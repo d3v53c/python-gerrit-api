@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownReviewer
 from gerrit.utils.models import BaseModel
 
 
@@ -21,12 +20,11 @@ class Reviewer(BaseModel):
         """
         if input_ is None:
             endpoint = '/changes/%s/reviewers/%s' % (self.change, self.username)
-            response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
             endpoint = '/changes/%s/reviewers/%s/delete' % (self.change, self.username)
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+            self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     def list_votes(self) -> dict:
         """
@@ -51,12 +49,11 @@ class Reviewer(BaseModel):
         """
         if input_ is None:
             endpoint = '/changes/%s/reviewers/%s/votes/%s' % (self.change, self.username, label)
-            response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
             endpoint = '/changes/%s/reviewers/%s/votes/%s/delete' % (self.change, self.username, label)
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+            self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
 
 class Reviewers:
@@ -84,11 +81,9 @@ class Reviewers:
         """
         endpoint = '/changes/%s/reviewers/%s' % (self.change, query)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
+        result = self.gerrit.decode_response(response)
+        if result:
             return Reviewer.parse(result[0], change=self.change, gerrit=self.gerrit)
-        else:
-            raise UnknownReviewer(query)
 
     @check
     def add(self, input_: dict) -> dict:

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.exceptions import UnknownTask
 from gerrit.utils.models import BaseModel
 
 
@@ -18,8 +17,7 @@ class Task(BaseModel):
         :return:
         """
         endpoint = '/config/server/tasks/%s' % self.id
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Tasks:
@@ -48,8 +46,5 @@ class Tasks:
         """
         endpoint = '/config/server/tasks/%s' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return Task.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownTask(id_)
+        result = self.gerrit.decode_response(response)
+        return Task.parse(result, gerrit=self.gerrit)

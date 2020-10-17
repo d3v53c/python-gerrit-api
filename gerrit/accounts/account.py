@@ -41,8 +41,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/name' % self.username
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
         # update account model's name
         self.name = None
@@ -71,8 +70,7 @@ class GerritAccount(BaseModel):
         endpoint = '/accounts/%s/status' % self.username
         input_ = {"status": status}
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
 
     @check
     def set_username(self, input_: dict):
@@ -112,8 +110,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/active' % self.username
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def delete_active(self):
         """
@@ -124,8 +121,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/active' % self.username
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     @check
     def set_http_password(self, input_: dict) -> str:
@@ -148,8 +144,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/password.http' % self.username
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def get_oauth_token(self) -> dict:
         """
@@ -339,8 +334,7 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/watched.projects:delete' % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     def get_external_ids(self) -> list:
         """
@@ -362,8 +356,7 @@ class GerritAccount(BaseModel):
         """
         endpoint = '/accounts/%s/external.ids:delete' % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
 
     def list_contributor_agreements(self) -> list:
         """
@@ -409,8 +402,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/index' % self.username
-        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     def get_default_starred_changes(self) -> list:
         """
@@ -431,8 +423,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/starred.changes/%s' % (self.username, change.id)
-        response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def remove_default_star_from_change(self, change):
         """
@@ -442,8 +433,7 @@ class GerritAccount(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/starred.changes/%s' % (self.username, change.id)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def get_starred_changes(self) -> list:
         """

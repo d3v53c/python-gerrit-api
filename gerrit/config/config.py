@@ -65,8 +65,7 @@ class GerritConfig:
         """
         endpoint = '/config/server/email.confirm'
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
 
     @property
     def caches(self) -> Caches:
@@ -194,5 +193,4 @@ class GerritConfig:
         """
         endpoint = '/config/server/index.changes'
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
-        response.raise_for_status()
+        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)

@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.utils.exceptions import UnknownGPGKey
 from gerrit.utils.common import check
 
 
@@ -18,8 +17,7 @@ class GPGKey(BaseModel):
         :return:
         """
         endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, self.id)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class GPGKeys:
@@ -53,11 +51,8 @@ class GPGKeys:
         """
         endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, gpg_key_id)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
-        else:
-            raise UnknownGPGKey(gpg_key_id)
+        result = self.gerrit.decode_response(response)
+        return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
 
     @check
     def modify(self, input_: dict):

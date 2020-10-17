@@ -12,107 +12,61 @@ class GerritAPIException(Exception):
     pass
 
 
-class NotFound(GerritAPIException):
+class ClientError(GerritAPIException):
+    pass
+
+
+class ServerError(GerritAPIException):
+    pass
+
+
+class AuthError(ClientError):
+    """
+    403 Forbidden is returned if the operation is not allowed because the calling user does not have sufficient permissions.
+    """
+    pass
+
+
+class ValidationError(ClientError):
+    """
+    400 Bad Request is returned if the request is not understood by the server due to malformed syntax.
+    E.g. 400 Bad Request is returned if JSON input is expected but the 'Content-Type' of the request is not 'application/json' or the request body doesn't contain valid JSON.
+    400 Bad Request is also returned if required input fields are not set or if options are set which cannot be used together.
+    """
+    pass
+
+
+class NotAllowedError(ClientError):
+    """
+    405 Method Not Allowed is returned if the resource exists but doesn't support the operation.
+    """
+    pass
+
+
+class ConflictError(ClientError):
+    """
+    409 Conflict is returned if the request cannot be completed because the current state of the resource doesn't allow the operation.
+    """
+    pass
+
+
+class NotFoundError(ClientError):
     """
     Resource cannot be found
     """
     pass
 
 
-class UnknownProject(KeyError, NotFound):
-    """
-    Gerrit does not recognize the Project requested.
-    """
-    pass
-
-
-class UnknownBranch(KeyError, NotFound):
+class UnknownBranch(KeyError, NotFoundError):
     """
     Gerrit does not recognize the branch requested.
     """
     pass
 
 
-class UnknownTag(KeyError, NotFound):
+class UnknownTag(KeyError, NotFoundError):
     """
     Gerrit does not recognize the tag requested.
     """
     pass
 
-
-class UnknownCommit(KeyError, NotFound):
-    """
-    Gerrit does not recognize the commit requested.
-    """
-
-
-class UnknownDashboard(KeyError, NotFound):
-    """
-    Gerrit does not recognize the dashboard requested.
-    """
-
-
-class UnknownAccount(KeyError, NotFound):
-    """
-    Gerrit does not recognize the account requested.
-    """
-
-
-class UnknownEmail(KeyError, NotFound):
-    """
-    Gerrit does not recognize the email requested.
-    """
-
-
-class UnknownSSHKey(KeyError, NotFound):
-    """
-    Gerrit does not recognize the SSH key requested.
-    """
-
-
-class UnknownGPGKey(KeyError, NotFound):
-    """
-    Gerrit does not recognize the GPG key requested.
-    """
-
-
-class UnknownGroup(KeyError, NotFound):
-    """
-    Gerrit does not recognize the Group requested.
-    """
-
-
-class UnknownTask(KeyError, NotFound):
-    """
-    Gerrit does not recognize the task requested.
-    """
-
-
-class UnknownCache(KeyError, NotFound):
-    """
-    Gerrit does not recognize the cache requested.
-    """
-
-
-class UnknownPlugin(KeyError, NotFound):
-    """
-    Gerrit does not recognize the plugin requested.
-    """
-
-
-class UnknownWebhook(KeyError, NotFound):
-    """
-    Gerrit does not recognize the webhook requested.
-    """
-
-
-class UnknownChange(KeyError, NotFound):
-    """
-    Gerrit does not recognize the change requested.
-    """
-
-
-class UnknownReviewer(KeyError, NotFound):
-    """
-    Gerrit does not recognize the review requested.
-    """

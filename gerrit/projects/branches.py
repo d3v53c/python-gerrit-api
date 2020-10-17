@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.utils.exceptions import UnknownBranch
 from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
+from gerrit.utils.exceptions import UnknownBranch
 
 
 class Branch(BaseModel):
@@ -62,11 +62,7 @@ class Branch(BaseModel):
         :return:
         """
         endpoint = '/projects/%s/branches/%s' % (self.project, self.name)
-        response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        response.raise_for_status()
-
-        # Reset to get it refreshed from Gerrit
-        self._data = []
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
 class Branches:
@@ -129,10 +125,12 @@ class Branches:
         if not ref.startswith(self.branch_prefix):
             raise KeyError("branch ref should start with {}".format(self.branch_prefix))
 
+        if not self._data:
+            self._data = self.poll()
+
         result = [row for row in self._data if row['ref'] == ref]
         if result:
-            ref_date = result[0]
-            return Branch.parse(ref_date, project=self.project, gerrit=self.gerrit)
+            return Branch.parse(result[0], project=self.project, gerrit=self.gerrit)
         else:
             raise UnknownBranch(ref)
 
@@ -146,7 +144,7 @@ class Branches:
         if not key.startswith(self.branch_prefix):
             raise KeyError("branch ref should start with {}".format(self.branch_prefix))
 
-        return self.create(key.replace(self.branch_prefix, ''), value)
+        self.create(key.replace(self.branch_prefix, ''), value)
 
     def __delitem__(self, key):
         """
@@ -156,6 +154,9 @@ class Branches:
         :return:
         """
         self[key].delete()
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []
 
     def __iter__(self):
         """

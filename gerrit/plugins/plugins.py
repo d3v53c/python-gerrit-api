@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.exceptions import UnknownPlugin
 from gerrit.utils.models import BaseModel
 
 
@@ -67,12 +66,8 @@ class GerritPlugins:
         """
         endpoint = '/plugins/%s/gerrit~status' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GerritPlugin.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownPlugin(id_)
+        result = self.gerrit.decode_response(response)
+        return GerritPlugin.parse(result, gerrit=self.gerrit)
 
     def install(self, id_: str, input_: dict) -> GerritPlugin:
         """

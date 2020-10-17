@@ -3,7 +3,6 @@
 # @Author: Jialiang Shi
 from gerrit.changes.change import GerritChange
 from gerrit.utils.common import check
-from gerrit.utils.exceptions import UnknownChange
 
 
 class GerritChanges:
@@ -30,12 +29,8 @@ class GerritChanges:
         """
         endpoint = '/changes/%s' % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-
-        if response.status_code < 300:
-            result = self.gerrit.decode_response(response)
-            return GerritChange.parse(result, gerrit=self.gerrit)
-        else:
-            raise UnknownChange(id_)
+        result = self.gerrit.decode_response(response)
+        return GerritChange.parse(result, gerrit=self.gerrit)
 
     @check
     def create(self, input_: dict) -> GerritChange:
