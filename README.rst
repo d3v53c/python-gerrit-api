@@ -11,7 +11,7 @@
 
 
 ====================================================
-Python wrapper for the Gerrit V3.x API.
+Python wrapper for the Gerrit V3.x REST API.
 ====================================================
 
 Installation

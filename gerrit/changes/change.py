@@ -4,6 +4,7 @@
 from gerrit.utils.common import check
 from gerrit.accounts.account import GerritAccount
 from gerrit.changes.reviewers import Reviewers
+from gerrit.changes.revision import Revision
 from gerrit.changes.edit import Edit
 from gerrit.utils.models import BaseModel
 
@@ -507,3 +508,11 @@ class GerritChange(BaseModel):
     @property
     def reviewers(self):
         return Reviewers(change=self.id, gerrit=self.gerrit)
+
+    def get_revision(self, revision_id: str):
+        """
+
+        :param revision_id:
+        :return:
+        """
+        return Revision(project=self.project, change=self.id, revision=revision_id, gerrit=self.gerrit)

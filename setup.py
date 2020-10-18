@@ -22,7 +22,7 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.9.9',
 
-    description='Python wrapper for the Gerrit V3.x API.',
+    description='Python wrapper for the Gerrit V3.x REST API.',
     long_description=long_description,
     url='https://github.com/shijl0925/pygerrit3',
     author='Jialiang Shi',

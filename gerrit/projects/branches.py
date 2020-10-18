@@ -32,7 +32,7 @@ class Branch(BaseModel):
         return result
 
     @check
-    def get_mergeable_information(self, input_: dict) -> dict:
+    def is_mergeable(self, input_: dict) -> dict:
         """
         Gets whether the source is mergeable with the target branch.
 
