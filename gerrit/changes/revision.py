@@ -3,6 +3,8 @@
 # @Author: Jialiang Shi
 from urllib.parse import quote
 from gerrit.changes.drafts import Drafts
+from gerrit.changes.comments import Comments
+from gerrit.changes.files import Files
 
 
 class Revision:
@@ -232,3 +234,35 @@ class Revision:
     @property
     def drafts(self):
         return Drafts(change=self.change, revision=self.revision, gerrit=self.gerrit)
+
+    @property
+    def comments(self):
+        return Comments(change=self.change, revision=self.revision, gerrit=self.gerrit)
+
+    @property
+    def files(self):
+        return Files(change=self.change, revision=self.revision, gerrit=self.gerrit)
+
+    def cherry_pick(self, input_: dict):
+        """
+        Cherry picks a revision to a destination branch.
+
+        :param input_: the CherryPickInput entity
+        :return:
+        """
+        endpoint = '/changes/%s/revisions/%s/cherrypick' % (self.change, self.revision)
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def list_reviewers(self):
+        """
+        Lists the reviewers of a revision.
+
+        :return:
+        """
+        endpoint = '/changes/%s/revisions/%s/reviewers' % (self.change, self.revision)
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return result

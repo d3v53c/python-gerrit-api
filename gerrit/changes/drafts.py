@@ -59,6 +59,7 @@ class Drafts:
 
     def get(self, id_: str):
         """
+        Retrieves a draft comment of a revision that belongs to the calling user.
 
         :param id_:
         :return:

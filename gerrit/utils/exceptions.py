@@ -70,3 +70,9 @@ class UnknownTag(KeyError, NotFoundError):
     """
     pass
 
+
+class UnknownFile(KeyError, NotFoundError):
+    """
+    Gerrit does not recognize the revision file requested.
+    """
+    pass
