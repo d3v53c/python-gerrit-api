@@ -27,7 +27,18 @@ class GerritAccount(BaseModel):
         Some realms may not allow to modify the account name.
         In this case the request is rejected with “405 Method Not Allowed”.
 
-        :param input_: the AccountNameInput entity
+        .. code-block:: python
+
+            input_ = {
+                "name": "Keven Shi"
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_name(input_)
+
+
+        :param input_: the AccountNameInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#account-name-input
         :return:
         """
         endpoint = "/accounts/%s/name" % self.username
@@ -90,7 +101,17 @@ class GerritAccount(BaseModel):
         Some realms may not allow to modify the account username.
         In this case the request is rejected with “405 Method Not Allowed”.
 
-        :param input_: the UsernameInput entity
+        .. code-block:: python
+
+            input_ = {
+                "username": "shijl0925.shi"
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_username(input_)
+
+        :param input_: the UsernameInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#username-input
         :return:
         """
         endpoint = "/accounts/%s/username" % self.username
@@ -141,7 +162,18 @@ class GerritAccount(BaseModel):
         """
         Sets/Generates the HTTP password of an account.
 
-        :param input_: the HttpPasswordInput entity
+        .. code-block:: python
+
+            input_ = {
+                "generate": 'true',
+                "http_password": "the_password"
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_http_password(input_)
+
+        :param input_: the HttpPasswordInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#http-password-input
         :return:
         """
         endpoint = "/accounts/%s/password.http" % self.username
@@ -257,7 +289,27 @@ class GerritAccount(BaseModel):
         """
         Sets the user’s preferences.
 
-        :param input_: the PreferencesInput entity
+        .. code-block:: python
+
+            input_ = {
+                "changes_per_page": 50,
+                "show_site_header": true,
+                "use_flash_clipboard": true,
+                "expand_inline_diffs": true,
+                "download_command": "CHECKOUT",
+                "date_format": "STD",
+                "time_format": "HHMM_12",
+                "size_bar_in_change_table": true,
+                "review_category_strategy": "NAME",
+                "diff_view": "SIDE_BY_SIDE",
+                "mute_common_path_prefixes": true,
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_user_preferences(input_)
+
+        :param input_: the PreferencesInput entity，
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#preferences-input
         :return:
         """
         endpoint = "/accounts/%s/preferences" % self.username
@@ -284,7 +336,28 @@ class GerritAccount(BaseModel):
         """
         Sets the diff preferences of a user.
 
-        :param input_: the DiffPreferencesInput entity
+        .. code-block:: python
+
+            input_ = {
+                "context": 10,
+                "theme": "ECLIPSE",
+                "ignore_whitespace": "IGNORE_ALL",
+                "intraline_difference": true,
+                "line_length": 100,
+                "cursor_blink_rate": 500,
+                "show_line_endings": true,
+                "show_tabs": true,
+                "show_whitespace_errors": true,
+                "syntax_highlighting": true,
+                "tab_size": 8,
+                "font_size": 12
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_diff_preferences(input_)
+
+        :param input_: the DiffPreferencesInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#diff-preferences-input
         :return:
         """
         endpoint = "/accounts/%s/preferences.diff" % self.username
@@ -311,7 +384,30 @@ class GerritAccount(BaseModel):
         """
         Sets the edit preferences of a user.
 
-        :param input_: the EditPreferencesInfo entity
+        .. code-block:: python
+
+            input_ = {
+                "theme": "ECLIPSE",
+                "key_map_type": "VIM",
+                "tab_size": 4,
+                "line_length": 80,
+                "indent_unit": 2,
+                "cursor_blink_rate": 530,
+                "hide_top_menu": true,
+                "show_tabs": true,
+                "show_whitespace_errors": true,
+                "syntax_highlighting": true,
+                "hide_line_numbers": true,
+                "match_brackets": true,
+                "line_wrapping": false,
+                "auto_close_brackets": true
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_edit_preferences(input_)
+
+        :param input_: the EditPreferencesInfo entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#edit-preferences-info
         :return:
         """
         endpoint = "/accounts/%s/preferences.edit" % self.username
@@ -400,7 +496,16 @@ class GerritAccount(BaseModel):
         """
         Signs a contributor agreement.
 
-        :param input_: the ContributorAgreementInput entity
+        .. code-block:: python
+
+            input_ = {
+                "name": "Individual"
+            }
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.sign_contributor_agreement(input_)
+
+        :param input_: the ContributorAgreementInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#contributor-agreement-input
         :return:
         """
         endpoint = "/accounts/%s/agreements" % self.username
@@ -493,8 +598,20 @@ class GerritAccount(BaseModel):
         """
         Update star labels on a change.
 
+        .. code-block:: python
+
+            input_ = {
+                "add": ["blue", "red"],
+                "remove": ["yellow"]
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.update_star_labels_on_change(change, input_)
+
+
         :param change:
-        :param input_:
+        :param input_: the StarsInput entity,
+          http://172.16.212.117:8080/Documentation/rest-api-accounts.html#stars-input
         :return:
         """
         endpoint = "/accounts/%s/stars.changes/%s" % (self.username, change.id)

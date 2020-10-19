@@ -59,6 +59,17 @@ class Webhooks:
         """
         Create or update a webhook for a project.
 
+        .. code-block:: python
+
+            input_ = {
+                "url": "https://foo.org/gerrit-events",
+                "maxTries": "3",
+                "sslVerify": "true"
+            }
+
+            project = gerrit.projects.get('myproject')
+            new_webhook = project.webhooks.create('test', input_)
+
         :param name: the webhook name
         :param input_: the RemoteInfo entity
         :return:

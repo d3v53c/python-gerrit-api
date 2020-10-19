@@ -57,8 +57,21 @@ class GerritProjects:
         """
         Creates a new project.
 
+        .. code-block:: python
+
+            input_ = {
+                "description": "This is a demo project.",
+                "submit_type": "INHERIT",
+                "owners": [
+                  "MyProject-Owners"
+                ]
+            }
+            project = gerrit.projects.create('MyProject', input_)
+
         :param project_name: the name of the project
-        :param input_: the ProjectInput entity
+        :param input_: the ProjectInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-input
+
         :return:
         """
         endpoint = "/projects/%s" % project_name

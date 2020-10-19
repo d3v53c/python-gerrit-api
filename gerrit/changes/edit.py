@@ -101,7 +101,18 @@ class Edit(BaseModel):
         """
         Modify commit message.
 
-        :param input_: the ChangeEditMessageInput entity
+        .. code-block:: python
+
+            input_ = {
+                "message": "New commit message\\n\\nChange-Id: I10394472cbd17dd12454f229e4f6de00b143a444"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            edit = change.get_edit()
+            edit.change_commit_message(input_)
+
+        :param input_: the ChangeEditMessageInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#change-edit-message-input
         :return:
         """
         endpoint = "/changes/%s/edit:message" % self.change
@@ -126,7 +137,18 @@ class Edit(BaseModel):
         """
         Promotes change edit to a regular patch set.
 
-        :param input_: the PublishChangeEditInput entity
+        .. code-block:: python
+
+            input_ = {
+                "notify": "NONE"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            edit = change.get_edit()
+            edit.publish(input_)
+
+        :param input_: the PublishChangeEditInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#publish-change-edit-input
         :return:
         """
         endpoint = "/changes/%s/edit:publish" % self.change

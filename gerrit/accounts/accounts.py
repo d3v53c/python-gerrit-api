@@ -49,8 +49,22 @@ class GerritAccounts:
         """
         Creates a new account.
 
+        .. code-block:: python
+
+            input_ = {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "ssh_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==",
+                "http_password": "19D9aIn7zePb",
+                "groups": [
+                  "MyProject-Owners"
+                ]
+            }
+            new_account = gerrit.accounts.create('john.doe', input_)
+
         :param username: account username
-        :param input_: the AccountInput entity
+        :param input_: the AccountInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#account-input
         :return:
         """
         endpoint = "/accounts/%s" % username

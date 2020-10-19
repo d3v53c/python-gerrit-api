@@ -36,7 +36,16 @@ class GerritConfig:
         """
         Runs consistency checks and returns detected problems.
 
-        :param input_: the ConsistencyCheckInput entity
+        .. code-block:: python
+
+            input_ = {
+                "check_accounts": {},
+                "check_account_external_ids": {}
+            }
+            result = gerrit.config.check_consistency(input_)
+
+        :param input_: the ConsistencyCheckInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-config.html#consistency-check-input
         :return:
         """
         endpoint = "/config/server/check.consistency"
@@ -61,8 +70,17 @@ class GerritConfig:
     def confirm_email(self, input_: dict):
         """
         Confirms that the user owns an email address.
+        If the token is invalid or if it's the token of another user the request fails and the response is “422 Unprocessable Entity”.
 
-        :param input_: the EmailConfirmationInput entity
+        .. code-block:: python
+
+            input_ = {
+                "token": "Enim+QNbAo6TV8Hur8WwoUypI6apG7qBPvF+bw==$MTAwMDAwNDp0ZXN0QHRlc3QuZGU="
+            }
+            result = gerrit.config.confirm_email(input_)
+
+        :param input_: the EmailConfirmationInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-config.html#email-confirmation-input
         :return:
         """
         endpoint = "/config/server/email.confirm"
@@ -129,7 +147,15 @@ class GerritConfig:
         """
         Sets the default user preferences for the server.
 
-        :param input_: the PreferencesInput entity
+        .. code-block:: python
+
+            input_ = {
+                "changes_per_page": 50
+            }
+            result = gerrit.config.set_default_user_preferences(input_)
+
+        :param input_: the PreferencesInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-accounts.html#preferences-input
         :return:
         """
         endpoint = "/config/server/preferences"
@@ -156,7 +182,26 @@ class GerritConfig:
         """
         Sets the default diff preferences for the server.
 
-        :param input_: the DiffPreferencesInput entity
+        .. code-block:: python
+
+            input_ = {
+                "context": 10,
+                "tab_size": 8,
+                "line_length": 80,
+                "cursor_blink_rate": 0,
+                "intraline_difference": true,
+                "show_line_endings": true,
+                "show_tabs": true,
+                "show_whitespace_errors": true,
+                "syntax_highlighting": true,
+                "auto_hide_diff_table_header": true,
+                "theme": "DEFAULT",
+                "ignore_whitespace": "IGNORE_NONE"
+            }
+            result = gerrit.config.set_default_diff_preferences(input_)
+
+        :param input_: the DiffPreferencesInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-accounts.html#diff-preferences-input
         :return:
         """
         endpoint = "/config/server/preferences.diff"
@@ -183,7 +228,24 @@ class GerritConfig:
         """
         Sets the default edit preferences for the server.
 
-        :param input_: the EditPreferencesInfo entity
+        .. code-block:: python
+
+            input_ = {
+                "tab_size": 8,
+                "line_length": 80,
+                "indent_unit": 2,
+                "cursor_blink_rate": 0,
+                "show_tabs": true,
+                "syntax_highlighting": true,
+                "match_brackets": true,
+                "auto_close_brackets": true,
+                "theme": "DEFAULT",
+                "key_map_type": "DEFAULT"
+            }
+            result = gerrit.config.set_default_edit_preferences(input_)
+
+        :param input_: the EditPreferencesInfo entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-accounts.html#edit-preferences-input
         :return:
         """
         endpoint = "/config/server/preferences.edit"
@@ -198,7 +260,13 @@ class GerritConfig:
         """
         Index a set of changes
 
-        :param input_: the IndexChangesInput entity
+        .. code-block:: python
+
+            input_ = {changes: ["foo~101", "bar~202"]}
+            gerrit.config.index_changes(input_)
+
+        :param input_: the IndexChangesInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-config.html#index-changes-input
         :return:
         """
         endpoint = "/config/server/index.changes"

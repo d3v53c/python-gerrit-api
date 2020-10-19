@@ -37,7 +37,19 @@ class GerritChanges:
         """
         create a change
 
-        :param input_: the ChangeInput entity
+        .. code-block:: python
+
+            input_ = {
+                "project": "myProject",
+                "subject": "Let's support 100% Gerrit workflow direct in browser",
+                "branch": "stable",
+                "topic": "create-change-in-browser",
+                "status": "NEW"
+            }
+            result = gerrit.changes.create(input_)
+
+        :param input_: the ChangeInput entity,
+          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#change-input
         :return:
         """
         endpoint = "/changes/"

@@ -81,8 +81,17 @@ class GerritPlugins:
         """
         Installs a new plugin on the Gerrit server.
 
+        .. code-block:: python
+
+            input_ = {
+                "url": "file:///gerrit/plugins/delete-project/delete-project-2.8.jar"
+            }
+
+            plugin = gerrit.plugins.install(input_)
+
         :param id_: plugin id
-        :param input_: the PluginInput entity
+        :param input_: the PluginInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-plugins.html#plugin-input
         :return:
         """
         endpoint = "/plugins/%s.jar" % id_

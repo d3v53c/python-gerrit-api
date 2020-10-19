@@ -56,8 +56,19 @@ class GerritGroups:
         """
         Creates a new Gerrit internal group.
 
+        .. code-block:: python
+
+            input_ = {
+                "description": "contains all committers for MyProject2",
+                "visible_to_all": 'true',
+                "owner": "Administrators",
+                "owner_id": "af01a8cb8cbd8ee7be072b98b1ee882867c0cf06"
+            }
+            new_group = gerrit.groups.create('My-Project2-Committers', input_)
+
         :param name: group name
-        :param input_: the GroupInput entity
+        :param input_: the GroupInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-groups.html#group-input
         :return:
         """
         endpoint = "/groups/%s" % name

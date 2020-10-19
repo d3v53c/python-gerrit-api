@@ -29,7 +29,16 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param input_: the GroupNameInput entity
+        .. code-block:: python
+
+            input_ = {
+                "name": "My Project Committers"
+            }
+
+            group = gerrit.groups.get('0017af503a22f7b3fa6ce2cd3b551734d90701b4')
+            result = group.rename(input_)
+
+        :param input_:
         :return:
         """
         endpoint = "/groups/%s/name" % self.id
@@ -50,7 +59,15 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param input_: the GroupDescriptionInput entity
+        .. code-block:: python
+
+            input_ = {
+                "description": "The committers of MyProject."
+            }
+            group = gerrit.groups.get('0017af503a22f7b3fa6ce2cd3b551734d90701b4')
+            result = group.set_description(input_)
+
+        :param input_:
         :return:
         """
         endpoint = "/groups/%s/description" % self.id
@@ -85,7 +102,17 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param input_: the GroupOptionsInput entity
+        .. code-block:: python
+
+            input_ = {
+                "visible_to_all": true
+            }
+            group = gerrit.groups.get('0017af503a22f7b3fa6ce2cd3b551734d90701b4')
+            result = group.set_options(input_)
+
+
+        :param input_: the GroupOptionsInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-groups.html#group-options-input
         :return:
         """
         endpoint = "/groups/%s/options" % self.id
@@ -106,7 +133,15 @@ class GerritGroup(BaseModel):
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param input_: the GroupOwnerInput entity
+        .. code-block:: python
+
+            input_ = {
+                "owner": "6a1e70e1a88782771a91808c8af9bbb7a9871389"
+            }
+            group = gerrit.groups.get('0017af503a22f7b3fa6ce2cd3b551734d90701b4')
+            result = group.set_owner(input_)
+
+        :param input_:
         :return:
         """
         endpoint = "/groups/%s/owner" % self.id

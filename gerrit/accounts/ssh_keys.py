@@ -71,12 +71,3 @@ class SSHKeys:
         )
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
-
-    def delete(self, seq: int):
-        """
-        Deletes an SSH key of a user.
-
-        :param seq: SSH key id
-        :return:
-        """
-        self.get(seq).delete()

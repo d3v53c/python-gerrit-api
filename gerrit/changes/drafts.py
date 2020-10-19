@@ -25,7 +25,20 @@ class Draft(BaseModel):
         """
         Updates a draft comment on a revision.
 
-        :param input_: the CommentInput entity
+        .. code-block:: python
+
+            input_ = {
+                "path": "sonarqube/cloud/duplications.py",
+                "line": 25,
+                "message": "[nit] trailing whitespace"
+            }
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            draft = revision.drafts.get('89f04e8c_9b7fd51d')
+            result = draft.update(input_)
+
+        :param input_: the CommentInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#comment-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/drafts/%s" % (
@@ -104,7 +117,19 @@ class Drafts:
         """
         Creates a draft comment on a revision.
 
-        :param input_: the CommentInput entity
+        .. code-block:: python
+
+            input_ = {
+                "path": "sonarqube/cloud/duplications.py",
+                "line": 15,
+                "message": "[nit] trailing whitespace"
+            }
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            new_draft = revision.drafts.create(input_)
+
+        :param input_: the CommentInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#comment-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/drafts" % (self.change, self.revision)

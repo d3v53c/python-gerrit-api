@@ -150,8 +150,19 @@ class Tags:
         """
         Creates a new tag on the project.
 
+        .. code-block:: python
+
+            input_ = {
+                "message": "annotation",
+                'revision': 'c83117624b5b5d8a7f86093824e2f9c1ed309d63'
+            }
+
+            project = gerrit.projects.get('myproject')
+            new_tag = project.tags.create('1.1.8', input_)
+
         :param name: the tag name
-        :param input_: the TagInput entity
+        :param input_: the TagInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#tag-input
         :return:
         """
         ref = self.tag_prefix + name

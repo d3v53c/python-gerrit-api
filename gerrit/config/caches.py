@@ -64,7 +64,15 @@ class Caches:
         """
         Cache Operations
 
-        :param input_: the CacheOperationInput entity
+        .. code-block:: python
+
+            input_ = {
+                "operation": "FLUSH_ALL"
+            }
+            gerrit.config.caches.operation(input_)
+
+        :param input_: the CacheOperationInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-config.html#cache-operation-input
         :return:
         """
         endpoint = "/config/server/caches/"

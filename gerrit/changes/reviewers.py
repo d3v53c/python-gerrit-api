@@ -23,7 +23,18 @@ class Reviewer(BaseModel):
         """
         Deletes a reviewer from a change.
 
-        :param input_: the DeleteReviewerInput entity
+        .. code-block:: python
+
+            input_ = {
+                "notify": "NONE"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            reviewer = change.reviewers.get('john.doe')
+            reviewer.delete(input_)
+
+        :param input_: the DeleteReviewerInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#delete-reviewer-input
         :return:
         """
         if input_ is None:
@@ -53,8 +64,19 @@ class Reviewer(BaseModel):
         Deletes a single vote from a change.
         Note, that even when the last vote of a reviewer is removed the reviewer itself is still listed on the change.
 
+        .. code-block:: python
+
+            input_ = {
+                "notify": "NONE"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            reviewer = change.reviewers.get('john.doe')
+            reviewer.delete_vote('Code-Review', input_)
+
         :param label:
-        :param input_: the DeleteVoteInput entity.
+        :param input_: the DeleteVoteInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#delete-vote-input
         :return:
         """
         if input_ is None:
@@ -110,7 +132,17 @@ class Reviewers:
         """
         Adds one user or all members of one group as reviewer to the change.
 
-        :param input_: the ReviewerInput entity
+        .. code-block:: python
+
+            input_ = {
+                "reviewer": "john.doe"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            new_reviewer = change.reviewers.add(input_)
+
+        :param input_: the ReviewerInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#reviewer-input
         :return:
         """
         endpoint = "/changes/%s/reviewers" % self.change

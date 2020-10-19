@@ -41,7 +41,18 @@ class Revision:
         """
         Sets the description of a patch set.
 
-        :param input_: the DescriptionInput entity
+        .. code-block:: python
+
+            input_ = {
+                "description": "Added Documentation"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            result = revision.set_description(input_)
+
+        :param input_: the DescriptionInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#description-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/description" % (self.change, self.revision)
@@ -108,7 +119,43 @@ class Revision:
         and modifying the work in progress property.
         A review cannot be set on a change edit. Trying to post a review for a change edit fails with 409 Conflict.
 
-        :param input_: the ReviewInput entity
+        .. code-block:: python
+
+            input_ = {
+                "tag": "jenkins",
+                "message": "Some nits need to be fixed.",
+                "labels": {
+                    "Code-Review": -1
+                },
+                "comments": {
+                      "sonarqube/cloud/project_badges.py": [
+                            {
+                                "line": 23,
+                                "message": "[nit] trailing whitespace"
+                            },
+                            {
+                                "line": 49,
+                                "message": "[nit] s/conrtol/control"
+                            },
+                            {
+                                "range": {
+                                    "start_line": 50,
+                                    "start_character": 0,
+                                    "end_line": 55,
+                                    "end_character": 20
+                                },
+                                "message": "Incorrect indentation"
+                            }
+                      ]
+                }
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            result = revision.set_review(input_)
+
+        :param input_: the ReviewInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#review-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/review" % (self.change, self.revision)
@@ -124,7 +171,18 @@ class Revision:
         Rebases a revision.
         Optionally, the parent revision can be changed to another patch set through the RebaseInput entity.
 
-        :param input_: the RebaseInput entity
+        .. code-block:: python
+
+            input_ = {
+                "base" : "1234"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            result = revision.rebase(input_)
+
+        :param input_: the RebaseInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#rebase-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/rebase" % (self.change, self.revision)
@@ -269,7 +327,19 @@ class Revision:
         """
         Cherry picks a revision to a destination branch.
 
-        :param input_: the CherryPickInput entity
+        .. code-block:: python
+
+            input_ = {
+                "message" : "Implementing Feature X",
+                "destination" : "release-branch"
+            }
+
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
+            result = revision.cherry_pick(input_)
+
+        :param input_: the CherryPickInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-projects.html#cherry-pick-commit
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/cherrypick" % (self.change, self.revision)

@@ -32,7 +32,17 @@ class GerritProject(BaseModel):
         """
         Sets the description of a project.
 
-        :param input_: the ProjectDescriptionInput entity.
+        .. code-block:: python
+
+            input_ = {
+                "description": "Plugin for Gerrit that handles the replication.",,
+                "commit_message": "Update the project description"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.set_description(input_)
+
+        :param input_: the ProjectDescriptionInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-description-input
         :return:
         """
         endpoint = "/projects/%s/description" % self.id
@@ -73,7 +83,17 @@ class GerritProject(BaseModel):
         """
         Sets the parent project for a project.
 
-        :param input_: The ProjectParentInput entity.
+        .. code-block:: python
+
+            input_ = {
+                "parent": "Public-Plugins",
+                "commit_message": "Update the project parent"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.set_parent(input_)
+
+        :param input_: The ProjectParentInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-parent-input
         :return:
         """
         endpoint = "/projects/%s/parent" % self.id
@@ -101,7 +121,16 @@ class GerritProject(BaseModel):
         """
         Sets HEAD for a project.
 
-        :param input_: The HeadInput entity.
+        .. code-block:: python
+
+            input_ = {
+                "ref": "refs/heads/stable"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.set_HEAD(input_)
+
+        :param input_: The HeadInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#head-input
         :return:
         """
         endpoint = "/projects/%s/HEAD" % self.id
@@ -131,7 +160,27 @@ class GerritProject(BaseModel):
         """
         Sets the configuration of a project.
 
-        :param input_: the ConfigInput entity.
+        .. code-block:: python
+
+            input_ = {
+                "description": "demo project",
+                "use_contributor_agreements": "FALSE",
+                "use_content_merge": "INHERIT",
+                "use_signed_off_by": "INHERIT",
+                "create_new_change_for_all_not_in_target": "INHERIT",
+                "enable_signed_push": "INHERIT",
+                "require_signed_push": "INHERIT",
+                "reject_implicit_merges": "INHERIT",
+                "require_change_id": "TRUE",
+                "max_object_size_limit": "10m",
+                "submit_type": "REBASE_IF_NECESSARY",
+                "state": "ACTIVE"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.set_config(input_)
+
+        :param input_: the ConfigInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#config-info
         :return:
         """
         endpoint = "/projects/%s/config" % self.id
@@ -158,7 +207,16 @@ class GerritProject(BaseModel):
         """
         Run the Git garbage collection for the repository of a project.
 
-        :param input_: the GCInput entity
+        .. code-block:: python
+
+            input_ = {
+                "show_progress": "true"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.run_garbage_collection(input_)
+
+        :param input_: the GCInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#gc-input
         :return:
         """
         endpoint = "/projects/%s/gc" % self.id
@@ -174,7 +232,20 @@ class GerritProject(BaseModel):
         """
         Marks commits as banned for the project.
 
-        :param input_: the BanInput entity.
+        .. code-block:: python
+
+            input_ = {
+                "commits": [
+                  "a8a477efffbbf3b44169bb9a1d3a334cbbd9aa96",
+                  "cf5b56541f84b8b57e16810b18daca9c3adc377b"
+                ],
+                "reason": "Violates IP"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.ban_commits(input_)
+
+        :param input_: the BanInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#ban-input
         :return:
         """
         endpoint = "/projects/%s/ban" % self.id
@@ -201,8 +272,11 @@ class GerritProject(BaseModel):
     def set_access_rights(self, input_: dict) -> dict:
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
+        https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#set-access
 
-        :param input_: the ProjectAccessInput entity
+
+        :param input_: the ProjectAccessInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-access-input
         :return:
         """
         endpoint = "/projects/%s/access" % self.id
@@ -218,11 +292,12 @@ class GerritProject(BaseModel):
         runs access checks for other users.
 
         :param options:
-        Check Access Options
-          * Account(account): The account for which to check access. Mandatory.
-          * Permission(perm): The ref permission for which to check access.
-            If not specified, read access to at least branch is checked.
-          * Ref(ref): The branch for which to check access. This must be given if perm is specified.
+          Check Access Options
+            * Account(account): The account for which to check access. Mandatory.
+            * Permission(perm): The ref permission for which to check access.
+              If not specified, read access to at least branch is checked.
+            * Ref(ref): The branch for which to check access. This must be given if perm is specified.
+
         :return:
         """
         endpoint = "/projects/%s/check.access?%s" % (self.id, options)
@@ -237,7 +312,17 @@ class GerritProject(BaseModel):
         The indexing task is executed asynchronously in background and this command returns immediately
         if async is specified in the input.
 
-        :param input_: the IndexProjectInput entity
+        .. code-block:: python
+
+            input_ = {
+                "index_children": "true"
+                "async": "true"
+            }
+            project = gerrit.projects.get('myproject')
+            result = project.index(input_)
+
+        :param input_: the IndexProjectInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#index-project-input
         :return:
         """
         endpoint = "/projects/%s/index" % self.id
@@ -262,7 +347,21 @@ class GerritProject(BaseModel):
         """
         Performs consistency checks on the project.
 
-        :param input_: the CheckProjectInput entity
+        .. code-block:: python
+
+            input_ = {
+                "auto_closeable_changes_check": {
+                    "fix": 'true',
+                    "branch": "refs/heads/master",
+                    "max_commits": 100
+                }
+            }
+
+            project = gerrit.projects.get('myproject')
+            result = project.check_consistency(input_)
+
+        :param input_: the CheckProjectInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#check-project-input
         :return:
         """
         endpoint = "/projects/%s/check" % self.id

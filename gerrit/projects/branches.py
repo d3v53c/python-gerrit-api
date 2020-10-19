@@ -47,7 +47,17 @@ class Branch(BaseModel):
         """
         Gets whether the source is mergeable with the target branch.
 
-        :param input_: the MergeInput entity
+        .. code-block:: python
+
+            input_ = {
+                'source': 'testbranch',
+                'strategy': 'recursive'
+            }
+            result = stable.is_mergeable(input_)
+            pprint(result)
+
+        :param input_: the MergeInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-changes.html#merge-input
         :return:
         """
         endpoint = "/projects/%s/branches/%s/mergeable" % (self.project, self.name)
@@ -196,8 +206,18 @@ class Branches:
         """
         Creates a new branch.
 
+        .. code-block:: python
+
+            input_ = {
+                'revision': '76016386a0d8ecc7b6be212424978bb45959d668'
+            }
+            project = gerrit.projects.get('myproject')
+            new_branch = project.branches.create('stable', input_)
+
+
         :param name: the branch name
-        :param input_: the BranchInput entity
+        :param input_: the BranchInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#branch-info
         :return:
         """
         ref = self.branch_prefix + name

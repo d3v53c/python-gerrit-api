@@ -50,8 +50,18 @@ class Commit(BaseModel):
     @check
     def cherry_pick(self, input_: dict) -> dict:
         """
+        Cherry-picks a commit of a project to a destination branch.
 
-        :param input_: the CherryPickInput entity
+        .. code-block:: python
+
+            input_ = {
+                "message": "Implementing Feature X",
+                "destination": "release-branch"
+            }
+            result = commit.cherry_pick(input_)
+
+        :param input_: the CherryPickInput entity,
+          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-changes.html#cherrypick-input
         :return:
         """
         endpoint = "/projects/%s/commits/%s/cherrypick" % (self.project, self.commit)
