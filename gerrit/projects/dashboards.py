@@ -8,8 +8,18 @@ from gerrit.utils.models import BaseModel
 class Dashboard(BaseModel):
     def __init__(self, **kwargs):
         super(Dashboard, self).__init__(**kwargs)
-        self.attributes = ['id', 'ref', 'path', 'description', 'url', 'is_default', 'title', 'sections', 'project',
-                           'gerrit']
+        self.attributes = [
+            "id",
+            "ref",
+            "path",
+            "description",
+            "url",
+            "is_default",
+            "title",
+            "sections",
+            "project",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -17,7 +27,7 @@ class Dashboard(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/dashboards/%s' % (self.project, self.id)
+        endpoint = "/projects/%s/dashboards/%s" % (self.project, self.id)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -32,7 +42,7 @@ class Dashboards:
 
         :return:
         """
-        endpoint = '/projects/%s/dashboards/' % self.project
+        endpoint = "/projects/%s/dashboards/" % self.project
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Dashboard.parse_list(result, project=self.project, gerrit=self.gerrit)
@@ -46,9 +56,11 @@ class Dashboards:
         :param input_: the DashboardInput entity
         :return:
         """
-        endpoint = '/projects/%s/dashboards/%s' % (self.project, name)
+        endpoint = "/projects/%s/dashboards/%s" % (self.project, name)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
@@ -59,7 +71,7 @@ class Dashboards:
         :param id_: dashboard id
         :return:
         """
-        endpoint = '/projects/%s/dashboards/%s' % (self.project, id_)
+        endpoint = "/projects/%s/dashboards/%s" % (self.project, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)

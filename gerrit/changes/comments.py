@@ -8,8 +8,18 @@ from gerrit.utils.models import BaseModel
 class Comment(BaseModel):
     def __init__(self, **kwargs):
         super(Comment, self).__init__(**kwargs)
-        self.attributes = ["id", "path", "line", "in_reply_to", "message", "updated", "author", "change", "revision",
-                           "gerrit"]
+        self.attributes = [
+            "id",
+            "path",
+            "line",
+            "in_reply_to",
+            "message",
+            "updated",
+            "author",
+            "change",
+            "revision",
+            "gerrit",
+        ]
 
     @check
     def delete(self, input_: dict = None):
@@ -22,14 +32,26 @@ class Comment(BaseModel):
         :return:
         """
         if input_ is None:
-            endpoint = '/changes/%s/revisions/%s/comments/%s' % (self.change, self.revision, self.id)
-            response = self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+            endpoint = "/changes/%s/revisions/%s/comments/%s" % (
+                self.change,
+                self.revision,
+                self.id,
+            )
+            response = self.gerrit.requester.delete(
+                self.gerrit.get_endpoint_url(endpoint)
+            )
             result = self.gerrit.decode_response(response)
             return result
         else:
-            endpoint = '/changes/%s/revisions/%s/comments/%s/delete' % (self.change, self.revision, self.id)
+            endpoint = "/changes/%s/revisions/%s/comments/%s/delete" % (
+                self.change,
+                self.revision,
+                self.id,
+            )
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+            response = self.gerrit.requester.post(
+                base_url, json=input_, headers=self.gerrit.default_headers
+            )
             result = self.gerrit.decode_response(response)
             return result
 
@@ -46,7 +68,7 @@ class Comments:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/comments' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/comments" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         comments = []
@@ -55,7 +77,9 @@ class Comments:
                 comment = item
                 comment.update({"path": key})
                 comments.append(comment)
-        return Comment.parse_list(comments, change=self.change, revision=self.revision, gerrit=self.gerrit)
+        return Comment.parse_list(
+            comments, change=self.change, revision=self.revision, gerrit=self.gerrit
+        )
 
     def get(self, id_: str):
         """
@@ -63,7 +87,13 @@ class Comments:
         :param id_:
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/comments/%s' % (self.change, self.revision, id_)
+        endpoint = "/changes/%s/revisions/%s/comments/%s" % (
+            self.change,
+            self.revision,
+            id_,
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return Comment.parse(result, change=self.change, revision=self.revision, gerrit=self.gerrit)
+        return Comment.parse(
+            result, change=self.change, revision=self.revision, gerrit=self.gerrit
+        )

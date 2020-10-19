@@ -16,7 +16,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/version'
+        endpoint = "/config/server/version"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -27,7 +27,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/info'
+        endpoint = "/config/server/info"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -39,9 +39,11 @@ class GerritConfig:
         :param input_: the ConsistencyCheckInput entity
         :return:
         """
-        endpoint = '/config/server/check.consistency'
+        endpoint = "/config/server/check.consistency"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -51,7 +53,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/reload'
+        endpoint = "/config/server/reload"
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -63,9 +65,11 @@ class GerritConfig:
         :param input_: the EmailConfirmationInput entity
         :return:
         """
-        endpoint = '/config/server/email.confirm'
+        endpoint = "/config/server/email.confirm"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
 
     @property
     def caches(self) -> Caches:
@@ -77,7 +81,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/summary'
+        endpoint = "/config/server/summary"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -89,7 +93,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/capabilities'
+        endpoint = "/config/server/capabilities"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -104,7 +108,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/top-menus'
+        endpoint = "/config/server/top-menus"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -115,7 +119,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/preferences'
+        endpoint = "/config/server/preferences"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -128,9 +132,11 @@ class GerritConfig:
         :param input_: the PreferencesInput entity
         :return:
         """
-        endpoint = '/config/server/preferences'
+        endpoint = "/config/server/preferences"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -140,7 +146,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/preferences.diff'
+        endpoint = "/config/server/preferences.diff"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -153,9 +159,11 @@ class GerritConfig:
         :param input_: the DiffPreferencesInput entity
         :return:
         """
-        endpoint = '/config/server/preferences.diff'
+        endpoint = "/config/server/preferences.diff"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -165,7 +173,7 @@ class GerritConfig:
 
         :return:
         """
-        endpoint = '/config/server/preferences.edit'
+        endpoint = "/config/server/preferences.edit"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -178,9 +186,11 @@ class GerritConfig:
         :param input_: the EditPreferencesInfo entity
         :return:
         """
-        endpoint = '/config/server/preferences.edit'
+        endpoint = "/config/server/preferences.edit"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -191,6 +201,8 @@ class GerritConfig:
         :param input_: the IndexChangesInput entity
         :return:
         """
-        endpoint = '/config/server/index.changes'
+        endpoint = "/config/server/index.changes"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )

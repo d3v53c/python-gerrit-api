@@ -7,7 +7,15 @@ from gerrit.utils.models import BaseModel
 class Task(BaseModel):
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
-        self.attributes = ['id', 'state', 'command', 'start_time', 'queue_name', 'delay', 'gerrit']
+        self.attributes = [
+            "id",
+            "state",
+            "command",
+            "start_time",
+            "queue_name",
+            "delay",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -16,7 +24,7 @@ class Task(BaseModel):
 
         :return:
         """
-        endpoint = '/config/server/tasks/%s' % self.id
+        endpoint = "/config/server/tasks/%s" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -31,7 +39,7 @@ class Tasks:
 
         :return:
         """
-        endpoint = '/config/server/tasks/'
+        endpoint = "/config/server/tasks/"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Task.parse_list(result, gerrit=self.gerrit)
@@ -44,7 +52,7 @@ class Tasks:
         :param id_: task id
         :return:
         """
-        endpoint = '/config/server/tasks/%s' % id_
+        endpoint = "/config/server/tasks/%s" % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Task.parse(result, gerrit=self.gerrit)

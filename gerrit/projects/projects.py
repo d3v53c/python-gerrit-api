@@ -15,7 +15,7 @@ class GerritProjects:
 
         :return:
         """
-        endpoint = '/projects/?all'
+        endpoint = "/projects/?all"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritProject.parse_list(list(result.values()), gerrit=self.gerrit)
@@ -35,7 +35,7 @@ class GerritProjects:
         :param query:
         :return:
         """
-        endpoint = '/projects/?query=%s' % query
+        endpoint = "/projects/?query=%s" % query
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritProject.parse_list(result, gerrit=self.gerrit)
@@ -47,7 +47,7 @@ class GerritProjects:
         :param project_name: the name of the project
         :return:
         """
-        endpoint = '/projects/%s' % project_name
+        endpoint = "/projects/%s" % project_name
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritProject.parse(result, gerrit=self.gerrit)
@@ -61,8 +61,10 @@ class GerritProjects:
         :param input_: the ProjectInput entity
         :return:
         """
-        endpoint = '/projects/%s' % project_name
+        endpoint = "/projects/%s" % project_name
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return GerritProject.parse(result, gerrit=self.gerrit)

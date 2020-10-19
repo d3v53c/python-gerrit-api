@@ -7,7 +7,14 @@ from gerrit.utils.models import BaseModel
 class Cache(BaseModel):
     def __init__(self, **kwargs):
         super(Cache, self).__init__(**kwargs)
-        self.attributes = ['name', 'type', 'entries', 'average_get', 'hit_ratio', 'gerrit']
+        self.attributes = [
+            "name",
+            "type",
+            "entries",
+            "average_get",
+            "hit_ratio",
+            "gerrit",
+        ]
 
     def flush(self):
         """
@@ -15,7 +22,7 @@ class Cache(BaseModel):
 
         :return:
         """
-        endpoint = '/config/server/caches/%s/flush' % self.name
+        endpoint = "/config/server/caches/%s/flush" % self.name
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -29,14 +36,14 @@ class Caches:
 
         :return:
         """
-        endpoint = '/config/server/caches/'
+        endpoint = "/config/server/caches/"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
         caches = []
         for key, value in result.items():
             cache = value
-            cache.update({'name': key})
+            cache.update({"name": key})
             caches.append(cache)
 
         return Cache.parse_list(caches, gerrit=self.gerrit)
@@ -48,7 +55,7 @@ class Caches:
         :param name: cache name
         :return:
         """
-        endpoint = '/config/server/caches/%s' % name
+        endpoint = "/config/server/caches/%s" % name
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Cache.parse(result, gerrit=self.gerrit)
@@ -60,6 +67,8 @@ class Caches:
         :param input_: the CacheOperationInput entity
         :return:
         """
-        endpoint = '/config/server/caches/'
+        endpoint = "/config/server/caches/"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )

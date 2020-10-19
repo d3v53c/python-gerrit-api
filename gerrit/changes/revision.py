@@ -20,10 +20,10 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/commit' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/commit" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.projects.get(self.project).get_commit(result.get('commit'))
+        return self.gerrit.projects.get(self.project).get_commit(result.get("commit"))
 
     def get_description(self) -> str:
         """
@@ -32,7 +32,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/description' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/description" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -44,9 +44,11 @@ class Revision:
         :param input_: the DescriptionInput entity
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/description' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/description" % (self.change, self.revision)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -58,10 +60,13 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/mergelist' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/mergelist" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return [self.gerrit.projects.get(self.project).get_commit(item.get('commit')) for item in result]
+        return [
+            self.gerrit.projects.get(self.project).get_commit(item.get("commit"))
+            for item in result
+        ]
 
     def get_revision_actions(self) -> dict:
         """
@@ -69,7 +74,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/actions' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/actions" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -80,7 +85,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/review' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/review" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -92,7 +97,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/related' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/related" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -106,9 +111,11 @@ class Revision:
         :param input_: the ReviewInput entity
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/review' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/review" % (self.change, self.revision)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -120,9 +127,11 @@ class Revision:
         :param input_: the RebaseInput entity
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/rebase' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/rebase" % (self.change, self.revision)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -135,7 +144,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/submit' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/submit" % (self.change, self.revision)
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -156,7 +165,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/patch' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/patch" % (self.change, self.revision)
 
         if zip:
             endpoint += endpoint + "?zip"
@@ -165,7 +174,7 @@ class Revision:
             endpoint += endpoint + "?download"
 
         if path:
-            endpoint += endpoint + "?path=%s" % quote(path, safe='')
+            endpoint += endpoint + "?path=%s" % quote(path, safe="")
 
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
@@ -173,12 +182,15 @@ class Revision:
 
     def submit_preview(self):
         """
-        有问题
+        need fix bug
         Gets a file containing thin bundles of all modified projects if this change was submitted.
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/preview_submit' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/preview_submit" % (
+            self.change,
+            self.revision,
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -189,7 +201,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/mergeable' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/mergeable" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -200,7 +212,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/submit_type' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/submit_type" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -212,9 +224,14 @@ class Revision:
         :param input_: the Prolog code
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/test.submit_type' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/test.submit_type" % (
+            self.change,
+            self.revision,
+        )
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, data=input_, headers={'Content-Type': 'plain/text'})
+        response = self.gerrit.requester.post(
+            base_url, data=input_, headers={"Content-Type": "plain/text"}
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -225,9 +242,14 @@ class Revision:
         :param input_: the Prolog code
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/test.submit_rule' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/test.submit_rule" % (
+            self.change,
+            self.revision,
+        )
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, data=input_, headers={'Content-Type': 'plain/text'})
+        response = self.gerrit.requester.post(
+            base_url, data=input_, headers={"Content-Type": "plain/text"}
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -250,9 +272,11 @@ class Revision:
         :param input_: the CherryPickInput entity
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/cherrypick' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/cherrypick" % (self.change, self.revision)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -262,7 +286,7 @@ class Revision:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/reviewers' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/reviewers" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result

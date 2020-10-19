@@ -7,7 +7,7 @@ from gerrit.utils.models import BaseModel
 class Email(BaseModel):
     def __init__(self, **kwargs):
         super(Email, self).__init__(**kwargs)
-        self.attributes = ['email', 'preferred', 'username', 'gerrit']
+        self.attributes = ["email", "preferred", "username", "gerrit"]
 
     def delete(self):
         """
@@ -15,7 +15,7 @@ class Email(BaseModel):
 
         :return:
         """
-        endpoint = '/accounts/%s/emails/%s' % (self.username, self.email)
+        endpoint = "/accounts/%s/emails/%s" % (self.username, self.email)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def set_preferred(self):
@@ -24,7 +24,7 @@ class Email(BaseModel):
 
         :return:
         """
-        endpoint = '/accounts/%s/emails/%s/preferred' % (self.username, self.email)
+        endpoint = "/accounts/%s/emails/%s/preferred" % (self.username, self.email)
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -39,7 +39,7 @@ class Emails:
 
         :return:
         """
-        endpoint = '/accounts/%s/emails' % self.username
+        endpoint = "/accounts/%s/emails" % self.username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Email.parse_list(result, username=self.username, gerrit=self.gerrit)
@@ -50,11 +50,10 @@ class Emails:
 
         :return:
         """
-        endpoint = '/accounts/%s/emails/%s' % (self.username, email)
+        endpoint = "/accounts/%s/emails/%s" % (self.username, email)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Email.parse(result, username=self.username, gerrit=self.gerrit)
-
 
     def set_preferred(self, email: str):
         """

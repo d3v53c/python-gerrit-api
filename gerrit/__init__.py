@@ -17,18 +17,20 @@ class GerritClient:
     Python wrapper for the Gerrit V3.x REST API.
 
     """
-    GERRIT_AUTH_SUFFIX = '/a'
-    default_headers = {'Content-Type': 'application/json; charset=UTF-8'}
+
+    GERRIT_AUTH_SUFFIX = "/a"
+    default_headers = {"Content-Type": "application/json; charset=UTF-8"}
 
     def __init__(
-            self,
-            base_url: str,
-            username: str,
-            password: str,
-            ssl_verify: bool = True,
-            cert: str = None,
-            timeout: int = 60,
-            max_retries: int = None):
+        self,
+        base_url: str,
+        username: str,
+        password: str,
+        ssl_verify: bool = True,
+        cert: str = None,
+        timeout: int = 60,
+        max_retries: int = None,
+    ):
         self._base_url = self.strip_trailing_slash(base_url)
 
         self.requester = Requester(
@@ -37,7 +39,7 @@ class GerritClient:
             ssl_verify=ssl_verify,
             cert=cert,
             timeout=timeout,
-            max_retries=max_retries
+            max_retries=max_retries,
         )
 
     @classmethod
@@ -47,7 +49,7 @@ class GerritClient:
         :param url: url
         :return:
         """
-        while url.endswith('/'):
+        while url.endswith("/"):
             url = url[:-1]
         return url
 
@@ -57,7 +59,7 @@ class GerritClient:
         :param endpoint: service endpoint as str
         :return: complete url (including host and port) as str
         """
-        return '{}{}{}'.format(self._base_url, self.GERRIT_AUTH_SUFFIX, endpoint)
+        return "{}{}{}".format(self._base_url, self.GERRIT_AUTH_SUFFIX, endpoint)
 
     @staticmethod
     def decode_response(response):

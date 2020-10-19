@@ -18,13 +18,21 @@ class Entity:
 
         for item in self.required:
             if item not in kwargs.keys():
-                logger.warning("*** Warning! {} missing a required keyword argument \'{}\' ***".format(self.__class__.__name__, item))
+                logger.warning(
+                    "*** Warning! {} missing a required keyword argument '{}' ***".format(
+                        self.__class__.__name__, item
+                    )
+                )
 
         for (k, v) in kwargs.items():
             if k in self.attributes:
                 setattr(self, k, v)
             else:
-                logger.warning("*** Warning! {} got an unexpected keyword argument: \'{}\' ***".format(self.__class__.__name__, k))
+                logger.warning(
+                    "*** Warning! {} got an unexpected keyword argument: '{}' ***".format(
+                        self.__class__.__name__, k
+                    )
+                )
 
     def __getattr__(self, key):
         return self.__dict__.get(key, None)

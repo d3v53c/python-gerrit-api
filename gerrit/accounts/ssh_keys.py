@@ -7,7 +7,16 @@ from gerrit.utils.models import BaseModel
 class SSHKey(BaseModel):
     def __init__(self, **kwargs):
         super(SSHKey, self).__init__(**kwargs)
-        self.attributes = ['seq', 'ssh_public_key', 'encoded_key', 'algorithm', 'comment', 'valid', 'username', 'gerrit']
+        self.attributes = [
+            "seq",
+            "ssh_public_key",
+            "encoded_key",
+            "algorithm",
+            "comment",
+            "valid",
+            "username",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -15,7 +24,7 @@ class SSHKey(BaseModel):
 
         :return:
         """
-        endpoint = '/accounts/%s/sshkeys/%s' % (self.username, self.seq)
+        endpoint = "/accounts/%s/sshkeys/%s" % (self.username, self.seq)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -30,7 +39,7 @@ class SSHKeys:
 
         :return:
         """
-        endpoint = '/accounts/%s/sshkeys' % self.username
+        endpoint = "/accounts/%s/sshkeys" % self.username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return SSHKey.parse_list(result, username=self.username, gerrit=self.gerrit)
@@ -42,7 +51,7 @@ class SSHKeys:
         :param seq: SSH key id
         :return:
         """
-        endpoint = '/accounts/%s/sshkeys/%s' % (self.username, seq)
+        endpoint = "/accounts/%s/sshkeys/%s" % (self.username, seq)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
@@ -55,9 +64,11 @@ class SSHKeys:
         :param ssh_key: SSH key raw content
         :return:
         """
-        endpoint = '/accounts/%s/sshkeys' % self.username
+        endpoint = "/accounts/%s/sshkeys" % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, data=ssh_key, headers={'Content-Type': 'plain/text'})
+        response = self.gerrit.requester.post(
+            base_url, data=ssh_key, headers={"Content-Type": "plain/text"}
+        )
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
 

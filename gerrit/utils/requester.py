@@ -10,7 +10,7 @@ from gerrit.utils.exceptions import (
     NotFoundError,
     ConflictError,
     ClientError,
-    ServerError
+    ServerError,
 )
 
 
@@ -23,7 +23,9 @@ class Requester:
     This default class can handle simple authentication only.
     """
 
-    VALID_STATUS_CODES = [200, ]
+    VALID_STATUS_CODES = [
+        200,
+    ]
     AUTH_COOKIE = None
 
     def __init__(self, **kwargs):
@@ -31,20 +33,22 @@ class Requester:
         :param kwargs:
         """
         timeout = 10
-        self.username = kwargs.get('username')
-        self.password = kwargs.get('password')
-        self.ssl_verify = kwargs.get('ssl_verify')
-        self.cert = kwargs.get('cert')
-        self.timeout = kwargs.get('timeout', timeout)
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.ssl_verify = kwargs.get("ssl_verify")
+        self.cert = kwargs.get("cert")
+        self.timeout = kwargs.get("timeout", timeout)
         self.session = Session()
 
-        self.max_retries = kwargs.get('max_retries')
+        self.max_retries = kwargs.get("max_retries")
         if self.max_retries is not None:
             retry_adapter = HTTPAdapter(max_retries=self.max_retries)
-            self.session.mount('http://', retry_adapter)
-            self.session.mount('https://', retry_adapter)
+            self.session.mount("http://", retry_adapter)
+            self.session.mount("https://", retry_adapter)
 
-    def get_request_dict(self, params=None, data=None, json=None, headers=None, **kwargs):
+    def get_request_dict(
+        self, params=None, data=None, json=None, headers=None, **kwargs
+    ):
         """
         :param params:
         :param data:
@@ -55,34 +59,38 @@ class Requester:
         """
         request_kwargs = kwargs
         if self.username and self.password:
-            request_kwargs['auth'] = (self.username, self.password)
+            request_kwargs["auth"] = (self.username, self.password)
 
         if params:
-            assert isinstance(params, dict), 'Params must be a dict, got %s' % repr(params)
-            request_kwargs['params'] = params
+            assert isinstance(params, dict), "Params must be a dict, got %s" % repr(
+                params
+            )
+            request_kwargs["params"] = params
 
         if headers:
-            assert isinstance(headers, dict), 'headers must be a dict, got %s' % repr(headers)
-            request_kwargs['headers'] = headers
+            assert isinstance(headers, dict), "headers must be a dict, got %s" % repr(
+                headers
+            )
+            request_kwargs["headers"] = headers
 
         if self.AUTH_COOKIE:
-            currentheaders = request_kwargs.get('headers', {})
-            currentheaders.update({'Cookie': self.AUTH_COOKIE})
-            request_kwargs['headers'] = currentheaders
+            currentheaders = request_kwargs.get("headers", {})
+            currentheaders.update({"Cookie": self.AUTH_COOKIE})
+            request_kwargs["headers"] = currentheaders
 
-        request_kwargs['verify'] = self.ssl_verify
-        request_kwargs['cert'] = self.cert
+        request_kwargs["verify"] = self.ssl_verify
+        request_kwargs["cert"] = self.cert
 
         if data and json:
             raise ValueError("Cannot use data and json together")
 
         if data:
-            request_kwargs['data'] = data
+            request_kwargs["data"] = data
 
         if json:
-            request_kwargs['json'] = json
+            request_kwargs["json"] = json
 
-        request_kwargs['timeout'] = self.timeout
+        request_kwargs["timeout"] = self.timeout
 
         return request_kwargs
 
@@ -99,11 +107,21 @@ class Requester:
             params=params,
             headers=headers,
             allow_redirects=allow_redirects,
-            stream=stream
+            stream=stream,
         )
         return self.confirm_status(self.session.get(url, **request_kwargs))
 
-    def post(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
+    def post(
+        self,
+        url,
+        params=None,
+        data=None,
+        json=None,
+        files=None,
+        headers=None,
+        allow_redirects=True,
+        **kwargs
+    ):
         """
         :param url:
         :param params:
@@ -122,10 +140,21 @@ class Requester:
             files=files,
             headers=headers,
             allow_redirects=allow_redirects,
-            **kwargs)
+            **kwargs
+        )
         return self.confirm_status(self.session.post(url, **request_kwargs))
 
-    def put(self, url, params=None, data=None, json=None, files=None, headers=None, allow_redirects=True, **kwargs):
+    def put(
+        self,
+        url,
+        params=None,
+        data=None,
+        json=None,
+        files=None,
+        headers=None,
+        allow_redirects=True,
+        **kwargs
+    ):
         """
         :param url:
         :param params:
@@ -144,7 +173,8 @@ class Requester:
             files=files,
             headers=headers,
             allow_redirects=allow_redirects,
-            **kwargs)
+            **kwargs
+        )
         return self.confirm_status(self.session.put(url, **request_kwargs))
 
     def delete(self, url, headers=None, allow_redirects=True, **kwargs):
@@ -156,9 +186,8 @@ class Requester:
         :return:
         """
         request_kwargs = self.get_request_dict(
-            headers=headers,
-            allow_redirects=allow_redirects,
-            **kwargs)
+            headers=headers, allow_redirects=allow_redirects, **kwargs
+        )
         return self.confirm_status(self.session.delete(url, **request_kwargs))
 
     @staticmethod
@@ -168,24 +197,32 @@ class Requester:
         :param res:
         :return:
         """
-        http_error_msg = ''
+        http_error_msg = ""
         if isinstance(res.reason, bytes):
             # We attempt to decode utf-8 first because some servers
             # choose to localize their reason strings. If the string
             # isn't utf-8, we fall back to iso-8859-1 for all other
             # encodings. (See PR #3538)
             try:
-                reason = res.reason.decode('utf-8')
+                reason = res.reason.decode("utf-8")
             except UnicodeDecodeError:
-                reason = res.reason.decode('iso-8859-1')
+                reason = res.reason.decode("iso-8859-1")
         else:
             reason = res.reason
 
         if 400 <= res.status_code < 500:
-            http_error_msg = u'%s Client Error: %s for url: %s' % (res.status_code, reason, res.url)
+            http_error_msg = u"%s Client Error: %s for url: %s" % (
+                res.status_code,
+                reason,
+                res.url,
+            )
 
         elif 500 <= res.status_code < 600:
-            http_error_msg = u'%s Server Error: %s for url: %s' % (res.status_code, reason, res.url)
+            http_error_msg = u"%s Server Error: %s for url: %s" % (
+                res.status_code,
+                reason,
+                res.url,
+            )
 
         if res.status_code < 300:
             # OK, return http response

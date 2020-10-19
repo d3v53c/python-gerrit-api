@@ -7,7 +7,15 @@ from gerrit.utils.models import BaseModel
 class GerritPlugin(BaseModel):
     def __init__(self, **kwargs):
         super(GerritPlugin, self).__init__(**kwargs)
-        self.attributes = ['id', 'index_url', 'filename', 'api_version', 'disabled', 'version', 'gerrit']
+        self.attributes = [
+            "id",
+            "index_url",
+            "filename",
+            "api_version",
+            "disabled",
+            "version",
+            "gerrit",
+        ]
 
     def enable(self):
         """
@@ -15,10 +23,10 @@ class GerritPlugin(BaseModel):
 
         :return:
         """
-        endpoint = '/plugins/%s/gerrit~enable' % self.id
+        endpoint = "/plugins/%s/gerrit~enable" % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.plugins.get(result.get('id'))
+        return self.gerrit.plugins.get(result.get("id"))
 
     def disable(self):
         """
@@ -26,10 +34,10 @@ class GerritPlugin(BaseModel):
 
         :return:
         """
-        endpoint = '/plugins/%s/gerrit~disable' % self.id
+        endpoint = "/plugins/%s/gerrit~disable" % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.plugins.get(result.get('id'))
+        return self.gerrit.plugins.get(result.get("id"))
 
     def reload(self):
         """
@@ -37,10 +45,10 @@ class GerritPlugin(BaseModel):
 
         :return:
         """
-        endpoint = '/plugins/%s/gerrit~reload' % self.id
+        endpoint = "/plugins/%s/gerrit~reload" % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.plugins.get(result.get('id'))
+        return self.gerrit.plugins.get(result.get("id"))
 
 
 class GerritPlugins:
@@ -53,7 +61,7 @@ class GerritPlugins:
 
         :return:
         """
-        endpoint = '/plugins/?all'
+        endpoint = "/plugins/?all"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritPlugin.parse_list(list(result.values()), gerrit=self.gerrit)
@@ -64,7 +72,7 @@ class GerritPlugins:
         :param id_: plugin id
         :return:
         """
-        endpoint = '/plugins/%s/gerrit~status' % id_
+        endpoint = "/plugins/%s/gerrit~status" % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritPlugin.parse(result, gerrit=self.gerrit)
@@ -77,8 +85,10 @@ class GerritPlugins:
         :param input_: the PluginInput entity
         :return:
         """
-        endpoint = '/plugins/%s.jar' % id_
+        endpoint = "/plugins/%s.jar" % id_
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return GerritPlugin.parse(result, gerrit=self.gerrit)

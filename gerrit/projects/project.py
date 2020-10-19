@@ -13,7 +13,7 @@ from gerrit.utils.models import BaseModel
 class GerritProject(BaseModel):
     def __init__(self, **kwargs):
         super(GerritProject, self).__init__(**kwargs)
-        self.attributes = ['id', 'name', 'state', 'labels', 'web_links', 'gerrit']
+        self.attributes = ["id", "name", "state", "labels", "web_links", "gerrit"]
 
     @property
     def description(self) -> str:
@@ -22,7 +22,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/description' % self.id
+        endpoint = "/projects/%s/description" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -35,14 +35,16 @@ class GerritProject(BaseModel):
         :param input_: the ProjectDescriptionInput entity.
         :return:
         """
-        endpoint = '/projects/%s/description' % self.id
+        endpoint = "/projects/%s/description" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
     def delete_description(self):
-        endpoint = '/projects/%s/description' % self.id
+        endpoint = "/projects/%s/description" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def delete(self):
@@ -51,7 +53,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/delete-project~delete' % self.id
+        endpoint = "/projects/%s/delete-project~delete" % self.id
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @property
@@ -61,7 +63,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/parent' % self.id
+        endpoint = "/projects/%s/parent" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -74,9 +76,11 @@ class GerritProject(BaseModel):
         :param input_: The ProjectParentInput entity.
         :return:
         """
-        endpoint = '/projects/%s/parent' % self.id
+        endpoint = "/projects/%s/parent" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -87,7 +91,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/HEAD' % self.id
+        endpoint = "/projects/%s/HEAD" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -100,9 +104,11 @@ class GerritProject(BaseModel):
         :param input_: The HeadInput entity.
         :return:
         """
-        endpoint = '/projects/%s/HEAD' % self.id
+        endpoint = "/projects/%s/HEAD" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -115,7 +121,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/config' % self.id
+        endpoint = "/projects/%s/config" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -128,9 +134,11 @@ class GerritProject(BaseModel):
         :param input_: the ConfigInput entity.
         :return:
         """
-        endpoint = '/projects/%s/config' % self.id
+        endpoint = "/projects/%s/config" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -140,7 +148,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/statistics.git' % self.id
+        endpoint = "/projects/%s/statistics.git" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -153,9 +161,11 @@ class GerritProject(BaseModel):
         :param input_: the GCInput entity
         :return:
         """
-        endpoint = '/projects/%s/gc' % self.id
+        endpoint = "/projects/%s/gc" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -167,9 +177,11 @@ class GerritProject(BaseModel):
         :param input_: the BanInput entity.
         :return:
         """
-        endpoint = '/projects/%s/ban' % self.id
+        endpoint = "/projects/%s/ban" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -180,7 +192,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/access' % self.id
+        endpoint = "/projects/%s/access" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -193,9 +205,11 @@ class GerritProject(BaseModel):
         :param input_: the ProjectAccessInput entity
         :return:
         """
-        endpoint = '/projects/%s/access' % self.id
+        endpoint = "/projects/%s/access" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -211,7 +225,7 @@ class GerritProject(BaseModel):
           * Ref(ref): The branch for which to check access. This must be given if perm is specified.
         :return:
         """
-        endpoint = '/projects/%s/check.access?%s' % (self.id, options)
+        endpoint = "/projects/%s/check.access?%s" % (self.id, options)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -226,9 +240,11 @@ class GerritProject(BaseModel):
         :param input_: the IndexProjectInput entity
         :return:
         """
-        endpoint = '/projects/%s/index' % self.id
+        endpoint = "/projects/%s/index" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
 
     def index_change(self):
         """
@@ -238,7 +254,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/index.changes' % self.id
+        endpoint = "/projects/%s/index.changes" % self.id
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @check
@@ -249,9 +265,11 @@ class GerritProject(BaseModel):
         :param input_: the CheckProjectInput entity
         :return:
         """
-        endpoint = '/projects/%s/check' % self.id
+        endpoint = "/projects/%s/check" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -271,10 +289,10 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/children/' % self.id
+        endpoint = "/projects/%s/children/" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return [self.gerrit.projects.get(item.get('id')) for item in result]
+        return [self.gerrit.projects.get(item.get("id")) for item in result]
 
     @property
     def tags(self) -> Tags:
@@ -291,7 +309,7 @@ class GerritProject(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s' % (self.id, commit)
+        endpoint = "/projects/%s/commits/%s" % (self.id, commit)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Commit.parse(result, project=self.id, gerrit=self.gerrit)

@@ -8,7 +8,15 @@ from gerrit.utils.models import BaseModel
 class Reviewer(BaseModel):
     def __init__(self, **kwargs):
         super(Reviewer, self).__init__(**kwargs)
-        self.attributes = ['username', '_account_id', 'name', 'email', 'approvals', 'change', 'gerrit']
+        self.attributes = [
+            "username",
+            "_account_id",
+            "name",
+            "email",
+            "approvals",
+            "change",
+            "gerrit",
+        ]
 
     @check
     def delete(self, input_: dict = None):
@@ -19,12 +27,14 @@ class Reviewer(BaseModel):
         :return:
         """
         if input_ is None:
-            endpoint = '/changes/%s/reviewers/%s' % (self.change, self.username)
+            endpoint = "/changes/%s/reviewers/%s" % (self.change, self.username)
             self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
-            endpoint = '/changes/%s/reviewers/%s/delete' % (self.change, self.username)
+            endpoint = "/changes/%s/reviewers/%s/delete" % (self.change, self.username)
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+            self.gerrit.requester.post(
+                base_url, json=input_, headers=self.gerrit.default_headers
+            )
 
     def list_votes(self) -> dict:
         """
@@ -32,7 +42,7 @@ class Reviewer(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/reviewers/%s/votes/' % (self.change, self.username)
+        endpoint = "/changes/%s/reviewers/%s/votes/" % (self.change, self.username)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -48,12 +58,22 @@ class Reviewer(BaseModel):
         :return:
         """
         if input_ is None:
-            endpoint = '/changes/%s/reviewers/%s/votes/%s' % (self.change, self.username, label)
+            endpoint = "/changes/%s/reviewers/%s/votes/%s" % (
+                self.change,
+                self.username,
+                label,
+            )
             self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
         else:
-            endpoint = '/changes/%s/reviewers/%s/votes/%s/delete' % (self.change, self.username, label)
+            endpoint = "/changes/%s/reviewers/%s/votes/%s/delete" % (
+                self.change,
+                self.username,
+                label,
+            )
             base_url = self.gerrit.get_endpoint_url(endpoint)
-            self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+            self.gerrit.requester.post(
+                base_url, json=input_, headers=self.gerrit.default_headers
+            )
 
 
 class Reviewers:
@@ -67,7 +87,7 @@ class Reviewers:
 
         :return:
         """
-        endpoint = '/changes/%s/reviewers/' % self.change
+        endpoint = "/changes/%s/reviewers/" % self.change
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Reviewer.parse_list(result, change=self.change, gerrit=self.gerrit)
@@ -79,7 +99,7 @@ class Reviewers:
         :param query: _account_id, name, username or email
         :return:
         """
-        endpoint = '/changes/%s/reviewers/%s' % (self.change, query)
+        endpoint = "/changes/%s/reviewers/%s" % (self.change, query)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         if result:
@@ -93,8 +113,10 @@ class Reviewers:
         :param input_: the ReviewerInput entity
         :return:
         """
-        endpoint = '/changes/%s/reviewers' % self.change
+        endpoint = "/changes/%s/reviewers" % self.change
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result

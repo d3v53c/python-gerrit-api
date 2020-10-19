@@ -17,28 +17,39 @@ def check(fn):
         for i, p in enumerate(args):
             arg_type = fn.__annotations__.get(argspec[i], None)
             if arg_type and not isinstance(p, arg_type):
-                raise TypeError("{} should be {}, not {}".format(argspec[i], arg_type.__name__, type(p).__name__))
+                raise TypeError(
+                    "{} should be {}, not {}".format(
+                        argspec[i], arg_type.__name__, type(p).__name__
+                    )
+                )
         for k, v in kwargs.items():
             kwarg_type = fn.__annotations__.get(k, None)
             if kwarg_type and not isinstance(v, kwarg_type):
-                raise TypeError("{} should be {}, not {}".format(k, kwarg_type.__name__, type(v).__name__))
+                raise TypeError(
+                    "{} should be {}, not {}".format(
+                        k, kwarg_type.__name__, type(v).__name__
+                    )
+                )
 
         result = fn(*args, **kwargs)
 
         # check return type
-        return_type = fn.__annotations__.get('return', None)
+        return_type = fn.__annotations__.get("return", None)
         if return_type and not isinstance(result, return_type):
-            raise TypeError("{} should return {}, not {}".format(fn.__name__,
-                                                                 return_type.__name__,
-                                                                 type(result).__name__))
+            raise TypeError(
+                "{} should return {}, not {}".format(
+                    fn.__name__, return_type.__name__, type(result).__name__
+                )
+            )
 
         return result
+
     return wrapper
 
 
 # create logger
 logger = logging.getLogger("pygerrit3")
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)
 console.setFormatter(formatter)

@@ -15,14 +15,14 @@ class GerritGroups:
 
         :return:
         """
-        endpoint = '/groups/'
+        endpoint = "/groups/"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
         groups = []
         for key, value in result.items():
             group = value
-            group.update({'name': key})
+            group.update({"name": key})
             groups.append(group)
 
         return GerritGroup.parse_list(groups, gerrit=self.gerrit)
@@ -34,7 +34,7 @@ class GerritGroups:
         :param name: group name
         :return:
         """
-        endpoint = '/groups/?query2=inname:%s' % name
+        endpoint = "/groups/?query2=inname:%s" % name
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse_list(result, gerrit=self.gerrit)
@@ -46,7 +46,7 @@ class GerritGroups:
         :param id_: group id
         :return:
         """
-        endpoint = '/groups/%s' % id_
+        endpoint = "/groups/%s" % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse(result, gerrit=self.gerrit)
@@ -60,8 +60,10 @@ class GerritGroups:
         :param input_: the GroupInput entity
         :return:
         """
-        endpoint = '/groups/%s' % name
+        endpoint = "/groups/%s" % name
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse(result, gerrit=self.gerrit)

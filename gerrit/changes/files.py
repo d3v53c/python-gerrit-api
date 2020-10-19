@@ -10,8 +10,18 @@ from gerrit.utils.exceptions import UnknownFile
 class File(BaseModel):
     def __init__(self, **kwargs):
         super(File, self).__init__(**kwargs)
-        self.attributes = ["path", "lines_deleted", "lines_inserted", "size", "size_delta", "status", "old_path",
-                           "change", "revision", "gerrit"]
+        self.attributes = [
+            "path",
+            "lines_deleted",
+            "lines_inserted",
+            "size",
+            "size_delta",
+            "status",
+            "old_path",
+            "change",
+            "revision",
+            "gerrit",
+        ]
 
     def get_content(self):
         """
@@ -20,8 +30,11 @@ class File(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/content' % (
-            self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/content" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -37,8 +50,11 @@ class File(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/download' % (
-            self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/download" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -50,8 +66,11 @@ class File(BaseModel):
         :param intraline: If the intraline parameter is specified, intraline differences are included in the diff.
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/diff' % (
-        self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/diff" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
 
         if intraline:
             endpoint += endpoint + "?intraline"
@@ -65,8 +84,11 @@ class File(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/blame' % (
-            self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/blame" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -77,8 +99,11 @@ class File(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/reviewed' % (
-            self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/reviewed" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
     def delete_reviewed(self):
@@ -86,8 +111,11 @@ class File(BaseModel):
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files/%s/reviewed' % (
-            self.change, self.revision, quote(self.path, safe=''))
+        endpoint = "/changes/%s/revisions/%s/files/%s/reviewed" % (
+            self.change,
+            self.revision,
+            quote(self.path, safe=""),
+        )
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -103,7 +131,7 @@ class Files:
 
         :return:
         """
-        endpoint = '/changes/%s/revisions/%s/files' % (self.change, self.revision)
+        endpoint = "/changes/%s/revisions/%s/files" % (self.change, self.revision)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
@@ -123,7 +151,7 @@ class Files:
             self._data = self.poll()
 
         for file in self._data:
-            yield file['path']
+            yield file["path"]
 
     def keys(self):
         """
@@ -139,9 +167,7 @@ class Files:
         return len(self.keys())
 
     def __contains__(self, ref):
-        """
-
-        """
+        """"""
         return ref in self.keys()
 
     def __iter__(self):
@@ -153,7 +179,9 @@ class Files:
             self._data = self.poll()
 
         for file in self._data:
-            yield File.parse(file, change=self.change, revision=self.revision, gerrit=self.gerrit)
+            yield File.parse(
+                file, change=self.change, revision=self.revision, gerrit=self.gerrit
+            )
 
     def __getitem__(self, path):
         """
@@ -165,9 +193,14 @@ class Files:
         if not self._data:
             self._data = self.poll()
 
-        result = [file for file in self._data if file['path'] == path]
+        result = [file for file in self._data if file["path"] == path]
         if result:
-            return File.parse(result[0], change=self.change, revision=self.revision, gerrit=self.gerrit)
+            return File.parse(
+                result[0],
+                change=self.change,
+                revision=self.revision,
+                gerrit=self.gerrit,
+            )
         else:
             raise UnknownFile(path)
 

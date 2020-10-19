@@ -9,8 +9,18 @@ from gerrit.utils.common import check
 class GerritGroup(BaseModel):
     def __init__(self, **kwargs):
         super(GerritGroup, self).__init__(**kwargs)
-        self.attributes = ['name', 'url', 'options', 'description',
-                           'id', 'group_id', 'owner', 'owner_id', 'created_on', 'gerrit']
+        self.attributes = [
+            "name",
+            "url",
+            "options",
+            "description",
+            "id",
+            "group_id",
+            "owner",
+            "owner_id",
+            "created_on",
+            "gerrit",
+        ]
 
     @check
     def rename(self, input_: dict):
@@ -22,9 +32,11 @@ class GerritGroup(BaseModel):
         :param input_: the GroupNameInput entity
         :return:
         """
-        endpoint = '/groups/%s/name' % self.id
+        endpoint = "/groups/%s/name" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
 
         # update group model's name
@@ -41,9 +53,11 @@ class GerritGroup(BaseModel):
         :param input_: the GroupDescriptionInput entity
         :return:
         """
-        endpoint = '/groups/%s/description' % self.id
+        endpoint = "/groups/%s/description" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
 
         # update group model's description
@@ -58,7 +72,7 @@ class GerritGroup(BaseModel):
 
         :return:
         """
-        endpoint = '/groups/%s/description' % self.id
+        endpoint = "/groups/%s/description" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
         # update group model's description
@@ -74,9 +88,11 @@ class GerritGroup(BaseModel):
         :param input_: the GroupOptionsInput entity
         :return:
         """
-        endpoint = '/groups/%s/options' % self.id
+        endpoint = "/groups/%s/options" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
 
         # update group model's options
@@ -93,16 +109,18 @@ class GerritGroup(BaseModel):
         :param input_: the GroupOwnerInput entity
         :return:
         """
-        endpoint = '/groups/%s/owner' % self.id
+        endpoint = "/groups/%s/owner" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
 
         # update group model's owner and owner_id
-        self.owner = result.get('owner')
-        self.owner_id = result.get('owner_id')
+        self.owner = result.get("owner")
+        self.owner_id = result.get("owner_id")
 
-        return self.gerrit.groups.get(result.get('owner_id'))
+        return self.gerrit.groups.get(result.get("owner_id"))
 
     def get_audit_log(self):
         """
@@ -112,7 +130,7 @@ class GerritGroup(BaseModel):
 
         :return:
         """
-        endpoint = '/groups/%s/log.audit' % self.id
+        endpoint = "/groups/%s/log.audit" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -123,7 +141,7 @@ class GerritGroup(BaseModel):
 
         :return:
         """
-        endpoint = '/groups/%s/index' % self.id
+        endpoint = "/groups/%s/index" % self.id
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     def list_members(self):
@@ -134,10 +152,10 @@ class GerritGroup(BaseModel):
 
         :return:
         """
-        endpoint = '/groups/%s/members/' % self.id
+        endpoint = "/groups/%s/members/" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return [self.gerrit.accounts.get(member.get('username')) for member in result]
+        return [self.gerrit.accounts.get(member.get("username")) for member in result]
 
     def get_member(self, username: str):
         """
@@ -149,10 +167,10 @@ class GerritGroup(BaseModel):
         :return:
         """
         account = self.gerrit.accounts.get(username)
-        endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
+        endpoint = "/groups/%s/members/%s" % (self.id, str(account._account_id))
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.accounts.get(result.get('username'))
+        return self.gerrit.accounts.get(result.get("username"))
 
     def add_member(self, account: GerritAccount):
         """
@@ -163,10 +181,10 @@ class GerritGroup(BaseModel):
         :param account: gerrit account
         :return:
         """
-        endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
+        endpoint = "/groups/%s/members/%s" % (self.id, str(account._account_id))
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.accounts.get(result.get('username'))
+        return self.gerrit.accounts.get(result.get("username"))
 
     def remove_member(self, account: GerritAccount):
         """
@@ -177,7 +195,7 @@ class GerritGroup(BaseModel):
         :param account: gerrit account
         :return:
         """
-        endpoint = '/groups/%s/members/%s' % (self.id, str(account._account_id))
+        endpoint = "/groups/%s/members/%s" % (self.id, str(account._account_id))
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def list_subgroups(self):
@@ -188,10 +206,10 @@ class GerritGroup(BaseModel):
 
         :return:
         """
-        endpoint = '/groups/%s/groups/' % self.id
+        endpoint = "/groups/%s/groups/" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return [self.gerrit.groups.get(item.get('id')) for item in result]
+        return [self.gerrit.groups.get(item.get("id")) for item in result]
 
     def get_subgroup(self, id_: str):
         """
@@ -202,10 +220,10 @@ class GerritGroup(BaseModel):
         :param id_: sub group id
         :return:
         """
-        endpoint = '/groups/%s/groups/%s' % (self.id, id_)
+        endpoint = "/groups/%s/groups/%s" % (self.id, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.groups.get(result.get('id'))
+        return self.gerrit.groups.get(result.get("id"))
 
     def add_subgroup(self, subgroup):
         """
@@ -216,10 +234,10 @@ class GerritGroup(BaseModel):
         :param subgroup: gerrit subgroup
         :return:
         """
-        endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
+        endpoint = "/groups/%s/groups/%s" % (self.id, subgroup.id)
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.gerrit.groups.get(result.get('id'))
+        return self.gerrit.groups.get(result.get("id"))
 
     def remove_subgroup(self, subgroup):
         """
@@ -230,5 +248,5 @@ class GerritGroup(BaseModel):
         :param subgroup: gerrit subgroup
         :return:
         """
-        endpoint = '/groups/%s/groups/%s' % (self.id, subgroup.id)
+        endpoint = "/groups/%s/groups/%s" % (self.id, subgroup.id)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

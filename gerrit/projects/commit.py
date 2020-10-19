@@ -9,7 +9,16 @@ from gerrit.utils.models import BaseModel
 class Commit(BaseModel):
     def __init__(self, **kwargs):
         super(Commit, self).__init__(**kwargs)
-        self.attributes = ['commit', 'author', 'committer', 'message', 'parents', 'subject', 'project', 'gerrit']
+        self.attributes = [
+            "commit",
+            "author",
+            "committer",
+            "message",
+            "parents",
+            "subject",
+            "project",
+            "gerrit",
+        ]
 
     def get_include_in(self) -> dict:
         """
@@ -17,7 +26,7 @@ class Commit(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/in' % (self.project, self.commit)
+        endpoint = "/projects/%s/commits/%s/in" % (self.project, self.commit)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -29,7 +38,11 @@ class Commit(BaseModel):
         :param file: the file path
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/%s/content' % (self.project, self.commit, quote(file, safe=''))
+        endpoint = "/projects/%s/commits/%s/files/%s/content" % (
+            self.project,
+            self.commit,
+            quote(file, safe=""),
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
@@ -41,9 +54,11 @@ class Commit(BaseModel):
         :param input_: the CherryPickInput entity
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/cherrypick' % (self.project, self.commit)
+        endpoint = "/projects/%s/commits/%s/cherrypick" % (self.project, self.commit)
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 
@@ -53,7 +68,7 @@ class Commit(BaseModel):
 
         :return:
         """
-        endpoint = '/projects/%s/commits/%s/files/' % (self.project, self.commit)
+        endpoint = "/projects/%s/commits/%s/files/" % (self.project, self.commit)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result

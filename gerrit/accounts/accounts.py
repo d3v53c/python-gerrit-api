@@ -16,7 +16,7 @@ class GerritAccounts:
         :param query:
         :return:
         """
-        endpoint = '/accounts/?suggest&q=%s' % query
+        endpoint = "/accounts/?suggest&q=%s" % query
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse_list(result, gerrit=self.gerrit)
@@ -27,10 +27,10 @@ class GerritAccounts:
 
         :return:
         """
-        endpoint = '/accounts/self'
+        endpoint = "/accounts/self"
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
-        return self.get(result.get('username'))
+        return self.get(result.get("username"))
 
     def get(self, username: str) -> GerritAccount:
         """
@@ -39,7 +39,7 @@ class GerritAccounts:
         :param username:
         :return:
         """
-        endpoint = '/accounts/%s/detail' % username
+        endpoint = "/accounts/%s/detail" % username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse(result, gerrit=self.gerrit)
@@ -53,8 +53,10 @@ class GerritAccounts:
         :param input_: the AccountInput entity
         :return:
         """
-        endpoint = '/accounts/%s' % username
+        endpoint = "/accounts/%s" % username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse(result, gerrit=self.gerrit)

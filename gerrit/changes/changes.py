@@ -15,7 +15,7 @@ class GerritChanges:
 
         :return:
         """
-        endpoint = '/changes/?%s' % query
+        endpoint = "/changes/?%s" % query
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritChange.parse_list(result, gerrit=self.gerrit)
@@ -27,7 +27,7 @@ class GerritChanges:
         :param id_: change id
         :return:
         """
-        endpoint = '/changes/%s' % id_
+        endpoint = "/changes/%s" % id_
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
@@ -40,8 +40,10 @@ class GerritChanges:
         :param input_: the ChangeInput entity
         :return:
         """
-        endpoint = '/changes/'
+        endpoint = "/changes/"
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)

@@ -8,7 +8,16 @@ from gerrit.utils.common import check
 class GPGKey(BaseModel):
     def __init__(self, **kwargs):
         super(GPGKey, self).__init__(**kwargs)
-        self.attributes = ['id', 'fingerprint', 'user_ids', 'key', 'status', 'problems', 'username', 'gerrit']
+        self.attributes = [
+            "id",
+            "fingerprint",
+            "user_ids",
+            "key",
+            "status",
+            "problems",
+            "username",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -16,7 +25,7 @@ class GPGKey(BaseModel):
 
         :return:
         """
-        endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, self.id)
+        endpoint = "/accounts/%s/gpgkeys/%s" % (self.username, self.id)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -31,13 +40,13 @@ class GPGKeys:
 
         :return:
         """
-        endpoint = '/accounts/%s/gpgkeys' % self.username
+        endpoint = "/accounts/%s/gpgkeys" % self.username
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         keys = []
         for key, value in result.items():
             gpg_key = value
-            gpg_key.update({'id': key})
+            gpg_key.update({"id": key})
             keys.append(gpg_key)
 
         return GPGKey.parse_list(keys, username=self.username, gerrit=self.gerrit)
@@ -49,7 +58,7 @@ class GPGKeys:
         :param gpg_key_id: GPG key id
         :return:
         """
-        endpoint = '/accounts/%s/gpgkeys/%s' % (self.username, gpg_key_id)
+        endpoint = "/accounts/%s/gpgkeys/%s" % (self.username, gpg_key_id)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
@@ -62,9 +71,11 @@ class GPGKeys:
         :param input_: the GpgKeysInput entity
         :return:
         """
-        endpoint = '/accounts/%s/gpgkeys' % self.username
+        endpoint = "/accounts/%s/gpgkeys" % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.post(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return result
 

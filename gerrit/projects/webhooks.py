@@ -8,7 +8,15 @@ from gerrit.utils.models import BaseModel
 class Webhook(BaseModel):
     def __init__(self, **kwargs):
         super(Webhook, self).__init__(**kwargs)
-        self.attributes = ['name', 'url', 'maxTries', 'sslVerify', 'events', 'project', 'gerrit']
+        self.attributes = [
+            "name",
+            "url",
+            "maxTries",
+            "sslVerify",
+            "events",
+            "project",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -16,7 +24,10 @@ class Webhook(BaseModel):
 
         :return:
         """
-        endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, self.name)
+        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (
+            self.project,
+            self.name,
+        )
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
@@ -31,14 +42,14 @@ class Webhooks:
 
         :return:
         """
-        endpoint = '/config/server/webhooks~projects/%s/remotes/' % self.project
+        endpoint = "/config/server/webhooks~projects/%s/remotes/" % self.project
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
 
         webhooks = []
         for key, value in result.items():
             webhook = value
-            webhook.update({'name': key})
+            webhook.update({"name": key})
             webhooks.append(webhook)
 
         return Webhook.parse_list(webhooks, project=self.project, gerrit=self.gerrit)
@@ -52,9 +63,14 @@ class Webhooks:
         :param input_: the RemoteInfo entity
         :return:
         """
-        endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, name)
+        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (
+            self.project,
+            name,
+        )
         base_url = self.gerrit.get_endpoint_url(endpoint)
-        response = self.gerrit.requester.put(base_url, json=input_, headers=self.gerrit.default_headers)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
         result = self.gerrit.decode_response(response)
         return Webhook.parse(result, project=self.project, gerrit=self.gerrit)
 
@@ -65,7 +81,10 @@ class Webhooks:
         :param name: the webhook name
         :return:
         """
-        endpoint = '/config/server/webhooks~projects/%s/remotes/%s' % (self.project, name)
+        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (
+            self.project,
+            name,
+        )
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         result.update({"name": name})

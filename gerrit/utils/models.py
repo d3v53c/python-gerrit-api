@@ -42,4 +42,4 @@ class BaseModel:
     def __repr__(self):
         key = self.attributes[0]
         value = getattr(self, key)
-        return '%s(%s=%s)' % (self.__class__.__name__, key, value)
+        return "%s(%s=%s)" % (self.__class__.__name__, key, value)
