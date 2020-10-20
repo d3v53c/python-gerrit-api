@@ -49,7 +49,7 @@ class GerritChange(BaseModel):
             result = change.update(input_)
 
         :param input_: the MergePatchSetInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#merge-patch-set-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#merge-patch-set-input
         :return:
         """
         endpoint = "/changes/%s/merge" % self.id
@@ -75,7 +75,7 @@ class GerritChange(BaseModel):
             result = change.set_commit_message(input_)
 
         :param input_: the CommitMessageInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#commit-message-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#commit-message-input
         :return:
         """
         endpoint = "/changes/%s/message" % self.id
@@ -150,7 +150,7 @@ class GerritChange(BaseModel):
             result = change.set_assignee(input_)
 
         :param input_: the AssigneeInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#assignee-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#assignee-input
         :return:
         """
         endpoint = "/changes/%s/assignee" % self.id
@@ -236,7 +236,7 @@ class GerritChange(BaseModel):
             result = change.rebase(input_)
 
         :param input_: the RebaseInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#rebase-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#rebase-input
         :return:
         """
         endpoint = "/changes/%s/rebase" % self.id
@@ -264,7 +264,7 @@ class GerritChange(BaseModel):
             result = change.move(input_)
 
         :param input_: the MoveInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#move-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#move-input
         :return:
         """
         endpoint = "/changes/%s/move" % self.id
@@ -293,7 +293,7 @@ class GerritChange(BaseModel):
             result = change.revert()
 
         :param input_: the RevertInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#revert-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#revert-input
         :return:
         """
         endpoint = "/changes/%s/revert" % self.id
@@ -321,7 +321,7 @@ class GerritChange(BaseModel):
             result = change.submit(input_)
 
         :param input_: the SubmitInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#submit-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#submit-input
         :return:
         """
         endpoint = "/changes/%s/submit" % self.id
@@ -424,7 +424,7 @@ class GerritChange(BaseModel):
             result = change.fix()
 
         :param input_: the FixInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#fix-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#fix-input
         :return:
         """
         endpoint = "/changes/%s/check" % self.id
@@ -456,7 +456,7 @@ class GerritChange(BaseModel):
             result = change.set_work_in_progress(input_)
 
         :param input_: the WorkInProgressInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#work-in-progress-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#work-in-progress-input
         :return:
         """
         endpoint = "/changes/%s/wip" % self.id
@@ -505,7 +505,7 @@ class GerritChange(BaseModel):
             change.mark_private(input_)
 
         :param input_: the PrivateInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#private-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#private-input
         :return:
         """
         endpoint = "/changes/%s/private" % self.id

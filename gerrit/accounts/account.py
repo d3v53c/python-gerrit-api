@@ -38,7 +38,7 @@ class GerritAccount(BaseModel):
 
 
         :param input_: the AccountNameInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#account-name-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#account-name-input
         :return:
         """
         endpoint = "/accounts/%s/name" % self.username
@@ -111,7 +111,7 @@ class GerritAccount(BaseModel):
             result = account.set_username(input_)
 
         :param input_: the UsernameInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#username-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#username-input
         :return:
         """
         endpoint = "/accounts/%s/username" % self.username
@@ -173,7 +173,7 @@ class GerritAccount(BaseModel):
             result = account.set_http_password(input_)
 
         :param input_: the HttpPasswordInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#http-password-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#http-password-input
         :return:
         """
         endpoint = "/accounts/%s/password.http" % self.username
@@ -309,7 +309,7 @@ class GerritAccount(BaseModel):
             result = account.set_user_preferences(input_)
 
         :param input_: the PreferencesInput entity，
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#preferences-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#preferences-input
         :return:
         """
         endpoint = "/accounts/%s/preferences" % self.username
@@ -357,7 +357,7 @@ class GerritAccount(BaseModel):
             result = account.set_diff_preferences(input_)
 
         :param input_: the DiffPreferencesInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#diff-preferences-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#diff-preferences-input
         :return:
         """
         endpoint = "/accounts/%s/preferences.diff" % self.username
@@ -407,7 +407,7 @@ class GerritAccount(BaseModel):
             result = account.set_edit_preferences(input_)
 
         :param input_: the EditPreferencesInfo entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#edit-preferences-info
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#edit-preferences-info
         :return:
         """
         endpoint = "/accounts/%s/preferences.edit" % self.username
@@ -505,7 +505,7 @@ class GerritAccount(BaseModel):
             result = account.sign_contributor_agreement(input_)
 
         :param input_: the ContributorAgreementInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#contributor-agreement-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#contributor-agreement-input
         :return:
         """
         endpoint = "/accounts/%s/agreements" % self.username

@@ -42,7 +42,7 @@ class GerritProject(BaseModel):
             result = project.set_description(input_)
 
         :param input_: the ProjectDescriptionInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-description-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-description-input
         :return:
         """
         endpoint = "/projects/%s/description" % self.id
@@ -93,7 +93,7 @@ class GerritProject(BaseModel):
             result = project.set_parent(input_)
 
         :param input_: The ProjectParentInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-parent-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-parent-input
         :return:
         """
         endpoint = "/projects/%s/parent" % self.id
@@ -130,7 +130,7 @@ class GerritProject(BaseModel):
             result = project.set_HEAD(input_)
 
         :param input_: The HeadInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#head-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#head-input
         :return:
         """
         endpoint = "/projects/%s/HEAD" % self.id
@@ -180,7 +180,7 @@ class GerritProject(BaseModel):
             result = project.set_config(input_)
 
         :param input_: the ConfigInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#config-info
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#config-info
         :return:
         """
         endpoint = "/projects/%s/config" % self.id
@@ -216,7 +216,7 @@ class GerritProject(BaseModel):
             result = project.run_garbage_collection(input_)
 
         :param input_: the GCInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#gc-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#gc-input
         :return:
         """
         endpoint = "/projects/%s/gc" % self.id
@@ -245,7 +245,7 @@ class GerritProject(BaseModel):
             result = project.ban_commits(input_)
 
         :param input_: the BanInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#ban-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#ban-input
         :return:
         """
         endpoint = "/projects/%s/ban" % self.id
@@ -272,11 +272,11 @@ class GerritProject(BaseModel):
     def set_access_rights(self, input_: dict) -> dict:
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
-        https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#set-access
+        https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#set-access
 
 
         :param input_: the ProjectAccessInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-access-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-access-input
         :return:
         """
         endpoint = "/projects/%s/access" % self.id
@@ -322,7 +322,7 @@ class GerritProject(BaseModel):
             result = project.index(input_)
 
         :param input_: the IndexProjectInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#index-project-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#index-project-input
         :return:
         """
         endpoint = "/projects/%s/index" % self.id
@@ -361,7 +361,7 @@ class GerritProject(BaseModel):
             result = project.check_consistency(input_)
 
         :param input_: the CheckProjectInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#check-project-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#check-project-input
         :return:
         """
         endpoint = "/projects/%s/check" % self.id

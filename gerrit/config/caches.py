@@ -72,7 +72,7 @@ class Caches:
             gerrit.config.caches.operation(input_)
 
         :param input_: the CacheOperationInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-config.html#cache-operation-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-config.html#cache-operation-input
         :return:
         """
         endpoint = "/config/server/caches/"

@@ -63,7 +63,7 @@ class Dashboards:
 
         :param name: the dashboard name
         :param input_: the DashboardInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#dashboard-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#dashboard-input
         :return:
         """
         endpoint = "/projects/%s/dashboards/%s" % (self.project, name)
@@ -85,4 +85,3 @@ class Dashboards:
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
-

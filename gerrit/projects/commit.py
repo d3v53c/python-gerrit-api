@@ -61,7 +61,7 @@ class Commit(BaseModel):
             result = commit.cherry_pick(input_)
 
         :param input_: the CherryPickInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-changes.html#cherrypick-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#cherrypick-input
         :return:
         """
         endpoint = "/projects/%s/commits/%s/cherrypick" % (self.project, self.commit)

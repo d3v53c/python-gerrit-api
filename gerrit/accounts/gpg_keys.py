@@ -82,7 +82,7 @@ class GPGKeys:
             result = account.gpg_keys.modify(input_)
 
         :param input_: the GpgKeysInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#gpg-keys-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#gpg-keys-input
         :return:
         """
         endpoint = "/accounts/%s/gpgkeys" % self.username

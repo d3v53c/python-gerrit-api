@@ -91,7 +91,7 @@ class GerritPlugins:
 
         :param id_: plugin id
         :param input_: the PluginInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-plugins.html#plugin-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-plugins.html#plugin-input
         :return:
         """
         endpoint = "/plugins/%s.jar" % id_

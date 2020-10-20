@@ -57,7 +57,7 @@ class Branch(BaseModel):
             pprint(result)
 
         :param input_: the MergeInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-changes.html#merge-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#merge-input
         :return:
         """
         endpoint = "/projects/%s/branches/%s/mergeable" % (self.project, self.name)
@@ -217,7 +217,7 @@ class Branches:
 
         :param name: the branch name
         :param input_: the BranchInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#branch-info
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#branch-info
         :return:
         """
         ref = self.branch_prefix + name

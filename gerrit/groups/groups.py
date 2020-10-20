@@ -68,7 +68,7 @@ class GerritGroups:
 
         :param name: group name
         :param input_: the GroupInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-groups.html#group-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-groups.html#group-input
         :return:
         """
         endpoint = "/groups/%s" % name

@@ -162,7 +162,7 @@ class Tags:
 
         :param name: the tag name
         :param input_: the TagInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#tag-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#tag-input
         :return:
         """
         ref = self.tag_prefix + name

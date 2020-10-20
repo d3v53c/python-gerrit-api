@@ -64,7 +64,7 @@ class GerritAccounts:
 
         :param username: account username
         :param input_: the AccountInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-accounts.html#account-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#account-input
         :return:
         """
         endpoint = "/accounts/%s" % username

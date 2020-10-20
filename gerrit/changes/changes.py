@@ -49,7 +49,7 @@ class GerritChanges:
             result = gerrit.changes.create(input_)
 
         :param input_: the ChangeInput entity,
-          http://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#change-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-input
         :return:
         """
         endpoint = "/changes/"

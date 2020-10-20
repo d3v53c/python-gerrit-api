@@ -70,7 +70,7 @@ class GerritProjects:
 
         :param project_name: the name of the project
         :param input_: the ProjectInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-projects.html#project-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-input
 
         :return:
         """

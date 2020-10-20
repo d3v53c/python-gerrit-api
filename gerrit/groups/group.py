@@ -112,7 +112,7 @@ class GerritGroup(BaseModel):
 
 
         :param input_: the GroupOptionsInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.2.3/rest-api-groups.html#group-options-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-groups.html#group-options-input
         :return:
         """
         endpoint = "/groups/%s/options" % self.id
