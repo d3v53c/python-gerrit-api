@@ -48,7 +48,7 @@ def check(fn):
 
 
 # create logger
-logger = logging.getLogger("pygerrit3")
+logger = logging.getLogger("gerrit")
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 console = logging.StreamHandler()
 console.setLevel(logging.INFO)

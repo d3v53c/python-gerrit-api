@@ -74,5 +74,5 @@ html_static_path = ['_static']
 master_doc = 'index'
 
 man_pages = [
-    (master_doc, 'pygerrit3', 'Gerrit Client with Python', [author], 1)
+    (master_doc, 'python-gerrit-api', 'Gerrit Client with Python', [author], 1)
 ]

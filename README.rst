@@ -1,10 +1,10 @@
-.. image:: https://img.shields.io/pypi/pyversions/pygerrit3.svg
-    :target: https://pypi.python.org/pypi/pygerrit3
-.. image:: https://img.shields.io/pypi/v/pygerrit3.svg
-    :target: https://pypi.python.org/pypi/pygerrit3
-.. image:: https://sonarcloud.io/api/project_badges/measure?project=shijl0925_pygerrit3&metric=alert_status
-    :target: https://sonarcloud.io/dashboard?id=shijl0925_python-sonarqube-api
-.. image:: https://img.shields.io/github/license/shijl0925/python-sonarqube-api.svg
+.. image:: https://img.shields.io/pypi/pyversions/python-gerrit-api.svg
+    :target: https://pypi.python.org/pypi/python-gerrit-api
+.. image:: https://img.shields.io/pypi/v/python-gerrit-api.svg
+    :target: https://pypi.python.org/pypi/python-gerrit-api
+.. image:: https://sonarcloud.io/api/project_badges/measure?project=shijl0925_python-gerrit-api&metric=alert_status
+    :target: https://sonarcloud.io/dashboard?id=shijl0925_python-gerrit-api
+.. image:: https://img.shields.io/github/license/shijl0925/python-gerrit-api.svg
     :target: LICENSE
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/psf/black
@@ -19,12 +19,12 @@ Installation
 
 The easiest way to install the latest version is by using pip to pull it from PyPI::
 
-    pip install  --upgrade pygerrit3
+    pip install  --upgrade python-gerrit-api
 
 You may also use Git to clone the repository from Github and install it manually::
 
-    git clone https://github.com/shijl0925/pygerrit3.git
-    cd pygerrit3
+    git clone https://github.com/shijl0925/python-gerrit-api.git
+    cd python-gerrit-api
     python setup.py install
 
 
@@ -32,13 +32,13 @@ Documentation
 =============
 
 The full documentation for API is available on `readthedocs
-<https://pygerrit3.readthedocs.io/en/latest/>`_.
+<https://python-gerrit-api.readthedocs.io/en/latest/>`_.
 
 Compatibility
 =============
 
 * This package is compatible Python versions 3.5+.
-* Tested with Gerrit Code Review (3.1.8).
+* Tested with Gerrit Code Review (V3.3.0).
 
 Usage
 =====
