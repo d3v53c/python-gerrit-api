@@ -70,7 +70,8 @@ class GerritConfig:
     def confirm_email(self, input_: dict):
         """
         Confirms that the user owns an email address.
-        If the token is invalid or if it's the token of another user the request fails and the response is “422 Unprocessable Entity”.
+        If the token is invalid or if it's the token of another user the request fails and the response is
+        '422 Unprocessable Entity'.
 
         .. code-block:: python
 

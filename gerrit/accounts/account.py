@@ -25,7 +25,7 @@ class GerritAccount(BaseModel):
         """
         Sets the full name of an account.
         Some realms may not allow to modify the account name.
-        In this case the request is rejected with “405 Method Not Allowed”.
+        In this case the request is rejected with '405 Method Not Allowed'.
 
         .. code-block:: python
 
@@ -56,7 +56,7 @@ class GerritAccount(BaseModel):
         """
         Deletes the name of an account.
         Some realms may not allow to delete the account name.
-        In this case the request is rejected with “405 Method Not Allowed”.
+        In this case the request is rejected with '405 Method Not Allowed'.
 
         :return:
         """
@@ -99,7 +99,7 @@ class GerritAccount(BaseModel):
         """
         Sets the username of an account.
         Some realms may not allow to modify the account username.
-        In this case the request is rejected with “405 Method Not Allowed”.
+        In this case the request is rejected with '405 Method Not Allowed'.
 
         .. code-block:: python
 
@@ -149,7 +149,7 @@ class GerritAccount(BaseModel):
     def delete_active(self):
         """
         Sets the account state to inactive.
-        If the account was already inactive the response is “409 Conflict”.
+        If the account was already inactive the response is '409 Conflict'.
 
         :param status: account status
         :return:
@@ -196,8 +196,8 @@ class GerritAccount(BaseModel):
     def get_oauth_token(self) -> dict:
         """
         Returns a previously obtained OAuth access token.
-        If there is no token available, or the token has already expired, “404 Not Found” is returned as response.
-        Requests to obtain an access token of another user are rejected with “403 Forbidden”.
+        If there is no token available, or the token has already expired, '404 Not Found' is returned as response.
+        Requests to obtain an access token of another user are rejected with '403 Forbidden'.
 
         :return:
         """

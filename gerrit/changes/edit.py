@@ -160,8 +160,8 @@ class Edit(BaseModel):
     def rebase(self):
         """
         Rebases change edit on top of latest patch set.
-        When change was rebased on top of latest patch set, response “204 No Content” is returned.
-        When change edit is already based on top of the latest patch set, the response “409 Conflict” is returned.
+        When change was rebased on top of latest patch set, response '204 No Content' is returned.
+        When change edit is already based on top of the latest patch set, the response '409 Conflict' is returned.
 
         :return:
         """

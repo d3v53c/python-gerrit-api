@@ -223,7 +223,7 @@ class GerritChange(BaseModel):
     def rebase(self, input_: dict):
         """
         Rebases a change.
-        If the change cannot be rebased, e.g. due to conflicts, the response is “409 Conflict”
+        If the change cannot be rebased, e.g. due to conflicts, the response is '409 Conflict'
         and the error message is contained in the response body.
 
         .. code-block:: python
@@ -252,7 +252,7 @@ class GerritChange(BaseModel):
         """
         Move a change.
         If the change cannot be moved because the change state doesn't allow moving the change,
-        the response is “409 Conflict” and the error message is contained in the response body.
+        the response is '409 Conflict' and the error message is contained in the response body.
 
         .. code-block:: python
 
@@ -518,7 +518,7 @@ class GerritChange(BaseModel):
     def unmark_private(self, input_: dict = None):
         """
         Marks the change to be non-private. Note users can only unmark own private changes.
-        If the change was already not private, the response is “409 Conflict”.
+        If the change was already not private, the response is '409 Conflict'.
 
         .. code-block:: python
 
