@@ -20,6 +20,22 @@ gerrit.changes.changes module
    :undoc-members:
    :show-inheritance:
 
+gerrit.changes.comments module
+------------------------------
+
+.. automodule:: gerrit.changes.comments
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gerrit.changes.drafts module
+----------------------------
+
+.. automodule:: gerrit.changes.drafts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gerrit.changes.edit module
 --------------------------
 
@@ -28,10 +44,26 @@ gerrit.changes.edit module
    :undoc-members:
    :show-inheritance:
 
+gerrit.changes.files module
+---------------------------
+
+.. automodule:: gerrit.changes.files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gerrit.changes.reviewers module
 -------------------------------
 
 .. automodule:: gerrit.changes.reviewers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gerrit.changes.revision module
+------------------------------
+
+.. automodule:: gerrit.changes.revision
    :members:
    :undoc-members:
    :show-inheritance:

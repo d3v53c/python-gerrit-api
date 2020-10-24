@@ -36,6 +36,14 @@ gerrit.projects.entities module
    :undoc-members:
    :show-inheritance:
 
+gerrit.projects.labels module
+-----------------------------
+
+.. automodule:: gerrit.projects.labels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gerrit.projects.project module
 ------------------------------
 
