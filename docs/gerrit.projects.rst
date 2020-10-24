@@ -28,14 +28,6 @@ gerrit.projects.dashboards module
    :undoc-members:
    :show-inheritance:
 
-gerrit.projects.entities module
--------------------------------
-
-.. automodule:: gerrit.projects.entities
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 gerrit.projects.labels module
 -----------------------------
 
