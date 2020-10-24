@@ -17,7 +17,7 @@ class Label(BaseModel):
             "copy_min_score",
             "copy_all_scores_if_no_change",
             "copy_all_scores_on_trivial_rebase",
-            "allow_post_submit"
+            "allow_post_submit",
             "project",
             "gerrit",
         ]
