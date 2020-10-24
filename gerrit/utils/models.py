@@ -21,9 +21,9 @@ class BaseModel:
     def parse(cls, data, **kwargs):
         """Parse a JSON object into a model instance."""
         data = data or {}
-        data.update(kwargs)
-
         item = cls() if data else None
+        # setattr(item, "json", data)
+        data.update(kwargs)
         for key, value in data.items():
             if key in item.attributes:
                 setattr(item, key, value)

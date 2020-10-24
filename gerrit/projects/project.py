@@ -5,7 +5,9 @@ from gerrit.projects.branches import Branches
 from gerrit.projects.tags import Tags
 from gerrit.projects.commit import Commit
 from gerrit.projects.dashboards import Dashboards
+from gerrit.projects.labels import Labels
 from gerrit.projects.webhooks import Webhooks
+from gerrit.changes.change import GerritChange
 from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
 
@@ -13,7 +15,7 @@ from gerrit.utils.models import BaseModel
 class GerritProject(BaseModel):
     def __init__(self, **kwargs):
         super(GerritProject, self).__init__(**kwargs)
-        self.attributes = ["id", "name", "state", "labels", "web_links", "gerrit"]
+        self.attributes = ["id", "name", "state", "web_links", "gerrit"]
 
     @property
     def description(self) -> str:
@@ -274,7 +276,6 @@ class GerritProject(BaseModel):
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
         https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#set-access
 
-
         :param input_: the ProjectAccessInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-access-input
         :return:
@@ -286,6 +287,53 @@ class GerritProject(BaseModel):
         )
         result = self.gerrit.decode_response(response)
         return result
+
+    def create_change(self, input_: dict):
+        """
+        Create Change for review.
+
+        .. code-block:: python
+
+            input_ = {
+                "subject": "Let's support 100% Gerrit workflow direct in browser",
+                "branch": "stable",
+                "topic": "create-change-in-browser",
+                "status": "NEW"
+            }
+
+            project = gerrit.projects.get('myproject')
+            result = project.create_change(input_)
+
+        :param input_:
+        :return:
+        """
+        endpoint = "/projects/%s/create.change" % self.id
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
+        result = self.gerrit.decode_response(response)
+        return GerritChange.parse(result, gerrit=self.gerrit)
+
+    @check
+    def create_access_change(self, input_: dict) -> dict:
+        """
+        Sets access rights for the project using the diff schema provided by ProjectAccessInput
+        This takes the same input as Update Access Rights, but creates a pending change for review. Like Create Change,
+        it returns a ChangeInfo entity describing the resulting change.
+        https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#create-access-change
+
+        :param input_: the ProjectAccessInput entity,
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#project-access-input
+        :return:
+        """
+        endpoint = "/projects/%s/access:review" % self.id
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
+        result = self.gerrit.decode_response(response)
+        return GerritChange.parse(result, gerrit=self.gerrit)
 
     def check_access(self, options: str) -> dict:
         """
@@ -421,6 +469,15 @@ class GerritProject(BaseModel):
         :return:
         """
         return Dashboards(project=self.id, gerrit=self.gerrit)
+
+    @property
+    def labels(self) -> Labels:
+        """
+        gerrit labels operations
+
+        :return:
+        """
+        return Labels(project=self.id, gerrit=self.gerrit)
 
     @property
     def webhooks(self) -> Webhooks:

@@ -22,6 +22,7 @@ class Reviewer(BaseModel):
     def delete(self, input_: dict = None):
         """
         Deletes a reviewer from a change.
+        Deleting a reviewer also removes that user from the attention set.
 
         .. code-block:: python
 
@@ -131,6 +132,13 @@ class Reviewers:
     def add(self, input_: dict) -> dict:
         """
         Adds one user or all members of one group as reviewer to the change.
+
+        Users can be moved from reviewer to CC and vice versa. This means if a user is added as CC that is already a
+        reviewer on the change, the reviewer state of that user is updated to CC. If a user that is already a CC on the
+        change is added as reviewer, the reviewer state of that user is updated to reviewer.
+
+        Adding a new reviewer also adds that reviewer to the attention set, unless the change is work in progress.
+        Also, moving a reviewer to CC removes that user from the attention set.
 
         .. code-block:: python
 

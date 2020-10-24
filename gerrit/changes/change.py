@@ -16,6 +16,7 @@ class GerritChange(BaseModel):
             "id",
             "project",
             "branch",
+            "attention_set",
             "change_id",
             "subject",
             "status",
@@ -200,6 +201,7 @@ class GerritChange(BaseModel):
     def abandon(self):
         """
         Abandons a change.
+        Abandoning a change also removes all users from the attention set.
 
         :return:
         """
@@ -280,6 +282,10 @@ class GerritChange(BaseModel):
         """
         Reverts a change.
         The request body does not need to include a RevertInput entity if no review comment is added.
+
+        If the user doesn’t have revert permission on the change or upload permission on the destination branch,
+        the response is '403 Forbidden', and the error message is contained in the response body.
+
         If the change cannot be reverted because the change state doesn't allow reverting the change,
         the response is 409 Conflict and the error message is contained in the response body.
 
@@ -304,10 +310,29 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
+    def revert_submission(self):
+        """
+        Creates open revert changes for all of the changes of a certain submission.
+
+        If the user doesn’t have revert permission on the change or upload permission on the destination,
+        the response is '403 Forbidden', and the error message is contained in the response body.
+
+        If the change cannot be reverted because the change state doesn’t allow reverting the change
+        the response is '409 Conflict', and the error message is contained in the response body.
+
+        :return:
+        """
+        endpoint = "/changes/%s/revert_submission" % self.id
+        response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return result
+
     @check
     def submit(self, input_: dict):
         """
         Submits  a change.
+        Submitting a change also removes all users from the attention set.
+
         If the change cannot be submitted because the submit rule doesn't allow submitting the change,
         the response is 409 Conflict and the error message is contained in the response body.
 
@@ -443,6 +468,7 @@ class GerritChange(BaseModel):
         """
         Marks the change as not ready for review yet.
         Changes may only be marked not ready by the owner, project owners or site administrators.
+        Marking a change work in progress also removes all users from the attention set.
 
         The request body does not need to include a WorkInProgressInput entity if no review comment is added.
 
@@ -470,6 +496,7 @@ class GerritChange(BaseModel):
         """
         Marks the change as ready for review (set WIP property to false).
         Changes may only be marked ready by the owner, project owners or site administrators.
+        Marking a change ready for review also adds all of the reviewers of the change to the attention set.
 
         .. code-block:: python
 
@@ -713,3 +740,75 @@ class GerritChange(BaseModel):
             revision=revision_id,
             gerrit=self.gerrit,
         )
+
+    def get_attention_set(self):
+        """
+        Returns all users that are currently in the attention set.
+
+        :return:
+        """
+        endpoint = "/changes/%s/attention" % self.id
+        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+        result = self.gerrit.decode_response(response)
+        return result
+
+    @check
+    def add_to_attention_set(self, input_: dict):
+        """
+        Adds a single user to the attention set of a change.
+
+        A user can only be added if they are not in the attention set.
+        If a user is added while already in the attention set, the request is silently ignored.
+
+        .. code-block:: python
+
+            input_ = {
+                "user": "John Doe",
+                "reason": "reason"
+            }
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            result = change.add_to_attention_set(input_)
+
+        :param input_: the AttentionSetInput entity,
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#attention-set-input
+        :return:
+        """
+        endpoint = "/changes/%s/attention" % self.id
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.post(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
+        result = self.gerrit.decode_response(response)
+        return result
+
+    def remove_from_attention_set(self, id_: str, input_: dict = None):
+        """
+        Deletes a single user from the attention set of a change.
+
+        A user can only be removed from the attention set.
+        if they are currently in the attention set. Otherwise, the request is silently ignored.
+
+        .. code-block:: python
+
+            input_ = {
+                "reason": "reason"
+            }
+            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
+            change.remove_from_attention_set('kevin.shi', input_)
+
+        :param id_: account id
+        :param input_: the AttentionSetInput entity,
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#attention-set-input
+        :return:
+        """
+        if input_ is None:
+            endpoint = "/changes/%s/attention/%s" % (self.id, id_)
+            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
+        else:
+            endpoint = "/changes/%s/attention/%s/delete" % (self.id, id_)
+            base_url = self.gerrit.get_endpoint_url(endpoint)
+            response = self.gerrit.requester.post(
+                base_url, json=input_, headers=self.gerrit.default_headers
+            )
+            result = self.gerrit.decode_response(response)
+            return result

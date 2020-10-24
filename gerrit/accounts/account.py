@@ -17,6 +17,7 @@ class GerritAccount(BaseModel):
             "_account_id",
             "name",
             "email",
+            "display_name",
             "gerrit",
         ]
 
@@ -123,6 +124,35 @@ class GerritAccount(BaseModel):
 
         # update account model's username
         self.username = result
+        return result
+
+    @check
+    def set_displayname(self, input_: dict):
+        """
+        Sets the display name of an account.
+
+        .. code-block:: python
+
+            input_ = {
+                "display_name": "Kevin"
+            }
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.set_displayname(input_)
+
+        :param input_: the DisplayNameInput entity,
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#display-name-input
+        :return:
+        """
+        endpoint = "/accounts/%s/displayname" % self.username
+        base_url = self.gerrit.get_endpoint_url(endpoint)
+        response = self.gerrit.requester.put(
+            base_url, json=input_, headers=self.gerrit.default_headers
+        )
+        result = self.gerrit.decode_response(response)
+
+        # update account model's displayname
+        self.displayname = result
         return result
 
     def get_active(self) -> str:
@@ -460,6 +490,8 @@ class GerritAccount(BaseModel):
     def get_external_ids(self) -> list:
         """
         Retrieves the external ids of a user account.
+        Only external ids belonging to the caller may be requested. Users that have Modify Account can request external
+        ids that belong to other accounts.
 
         :return:
         """
@@ -471,6 +503,8 @@ class GerritAccount(BaseModel):
     def delete_external_ids(self, input_: list):
         """
         Delete a list of external ids for a user account.
+        Only external ids belonging to the caller may be deleted. Users that have Modify Account can delete external
+        ids that belong to other accounts.
 
         :param input_: the external ids as list
         :return:
