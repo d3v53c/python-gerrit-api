@@ -100,3 +100,13 @@ class Webhooks:
         result = self.gerrit.decode_response(response)
         result.update({"name": name})
         return Webhook.parse(result, project=self.project, gerrit=self.gerrit)
+
+    def delete(self, name: str):
+        """
+        Delete a webhook for a project.
+
+        :param name: the webhook name
+        :return:
+        """
+        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (self.project, name)
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

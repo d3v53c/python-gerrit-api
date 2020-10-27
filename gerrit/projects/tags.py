@@ -180,3 +180,15 @@ class Tags:
         self._data = []
 
         return Tag.parse(result, project=self.project, gerrit=self.gerrit)
+
+    def delete(self, name: str):
+        """
+        Delete a tag.
+
+        :param name: the tag ref
+        :return:
+        """
+        self[name].delete()
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []

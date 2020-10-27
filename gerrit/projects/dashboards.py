@@ -48,7 +48,7 @@ class Dashboards:
         return Dashboard.parse_list(result, project=self.project, gerrit=self.gerrit)
 
     @check
-    def create(self, name: str, input_: dict) -> Dashboard:
+    def create(self, id_: str, input_: dict) -> Dashboard:
         """
         Creates a project dashboard, if a project dashboard with the given dashboard ID doesn't exist yet.
 
@@ -61,12 +61,12 @@ class Dashboards:
             new_dashboard = project.dashboards.create('master:closed', input_)
 
 
-        :param name: the dashboard name
+        :param id_: the dashboard id
         :param input_: the DashboardInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#dashboard-input
         :return:
         """
-        endpoint = "/projects/%s/dashboards/%s" % (self.project, name)
+        endpoint = "/projects/%s/dashboards/%s" % (self.project, id_)
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.put(
             base_url, json=input_, headers=self.gerrit.default_headers
@@ -78,10 +78,20 @@ class Dashboards:
         """
         Retrieves a project dashboard. The dashboard can be defined on that project or be inherited from a parent project.
 
-        :param id_: dashboard id
+        :param id_: the dashboard id
         :return:
         """
         endpoint = "/projects/%s/dashboards/%s" % (self.project, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
+
+    def delete(self, id_: str):
+        """
+        Deletes a project dashboard.
+
+        :param id_: the dashboard id
+        :return:
+        """
+        endpoint = "/projects/%s/dashboards/%s" % (self.project, id_)
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

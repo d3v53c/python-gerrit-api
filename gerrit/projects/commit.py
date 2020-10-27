@@ -62,7 +62,7 @@ class Commit(BaseModel):
 
         :param input_: the CherryPickInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#cherrypick-input
-        :return:
+        :return:  the resulting cherry-picked change
         """
         endpoint = "/projects/%s/commits/%s/cherrypick" % (self.project, self.commit)
         base_url = self.gerrit.get_endpoint_url(endpoint)
@@ -70,7 +70,7 @@ class Commit(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
         result = self.gerrit.decode_response(response)
-        return result
+        return self.gerrit.changes.get(result.get("id"))
 
     def list_change_files(self) -> dict:
         """

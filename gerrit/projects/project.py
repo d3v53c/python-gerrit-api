@@ -56,6 +56,11 @@ class GerritProject(BaseModel):
         return result
 
     def delete_description(self):
+        """
+        Deletes the description of a project.
+
+        :return:
+        """
         endpoint = "/projects/%s/description" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
@@ -316,7 +321,7 @@ class GerritProject(BaseModel):
         return GerritChange.parse(result, gerrit=self.gerrit)
 
     @check
-    def create_access_change(self, input_: dict) -> dict:
+    def create_access_rights_change(self, input_: dict) -> dict:
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput
         This takes the same input as Update Access Rights, but creates a pending change for review. Like Create Change,
@@ -379,7 +384,7 @@ class GerritProject(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    def index_change(self):
+    def index_all_changes(self):
         """
         Adds or updates the current project (and children, if specified) in the secondary index.
         The indexing task is executed asynchronously in background and this command returns immediately

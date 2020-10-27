@@ -124,3 +124,14 @@ class Labels:
         )
         result = self.gerrit.decode_response(response)
         return Label.parse(result, gerrit=self.gerrit)
+
+    def delete(self, name: str):
+        """
+        Deletes the definition of a label that is defined in this project.
+        The calling user must have write access to the refs/meta/config branch of the project.
+
+        :param name: label name
+        :return:
+        """
+        endpoint = "/projects/%s/labels/%s" % (self.project, name)
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

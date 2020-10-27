@@ -81,3 +81,13 @@ class GerritProjects:
         )
         result = self.gerrit.decode_response(response)
         return GerritProject.parse(result, gerrit=self.gerrit)
+
+    def delete(self, project_name: str):
+        """
+        Delete the project, requires delete-project plugin
+
+        :param project_name: project name
+        :return:
+        """
+        endpoint = "/projects/%s/delete-project~delete" % project_name
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))

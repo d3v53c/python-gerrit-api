@@ -235,3 +235,15 @@ class Branches:
         self._data = []
 
         return Branch.parse(result, project=self.project, gerrit=self.gerrit)
+
+    def delete(self, name: str):
+        """
+        Delete a branch.
+
+        :param name: branch ref name
+        :return:
+        """
+        self[name].delete()
+
+        # Reset to get it refreshed from Gerrit
+        self._data = []
