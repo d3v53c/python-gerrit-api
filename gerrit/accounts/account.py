@@ -73,6 +73,10 @@ class GerritAccount(BaseModel):
         Retrieves the status of an account.
         If the account does not have a status an empty string is returned.
 
+        :getter: Retrieves the status of an account.
+        :setter: Sets the status of an account
+        :type: string
+
         :return:
         """
         endpoint = "/accounts/%s/status" % self.username

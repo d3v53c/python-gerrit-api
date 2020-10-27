@@ -91,6 +91,11 @@ class GerritChange(BaseModel):
         """
         Retrieves the topic of a change.
 
+        :getter: Retrieves the topic of a change.
+        :setter: Sets the topic of a change.
+        :deleter: Deletes the topic of a change.
+        :type: string
+
         :return:
         """
         endpoint = "/changes/%s/topic" % self.id
