@@ -59,3 +59,13 @@ class GerritChanges:
         )
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
+
+    def delete(self, id_: str):
+        """
+        Deletes a change.
+
+        :param id_: change id
+        :return:
+        """
+        endpoint = "/changes/%s" % id_
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

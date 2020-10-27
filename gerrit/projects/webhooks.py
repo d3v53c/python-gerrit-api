@@ -108,5 +108,8 @@ class Webhooks:
         :param name: the webhook name
         :return:
         """
-        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (self.project, name)
+        endpoint = "/config/server/webhooks~projects/%s/remotes/%s" % (
+            self.project,
+            name,
+        )
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

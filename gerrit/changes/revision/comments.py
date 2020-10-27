@@ -40,7 +40,7 @@ class Comment(BaseModel):
             result = comment.delete(input_)
 
         :param input_: the DeleteCommentInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#delete-comment-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#delete-comment-input
         :return:
         """
         if input_ is None:

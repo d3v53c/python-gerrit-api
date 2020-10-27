@@ -112,7 +112,7 @@ class Edit(BaseModel):
             edit.change_commit_message(input_)
 
         :param input_: the ChangeEditMessageInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#change-edit-message-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#change-edit-message-input
         :return:
         """
         endpoint = "/changes/%s/edit:message" % self.change
@@ -148,7 +148,7 @@ class Edit(BaseModel):
             edit.publish(input_)
 
         :param input_: the PublishChangeEditInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#publish-change-edit-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#publish-change-edit-input
         :return:
         """
         endpoint = "/changes/%s/edit:publish" % self.change

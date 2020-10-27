@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.utils.common import check
 from gerrit.utils.models import BaseModel
 from gerrit.utils.exceptions import UnknownFile
 

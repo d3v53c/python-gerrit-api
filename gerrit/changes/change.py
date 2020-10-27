@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.common import check
-from gerrit.accounts.account import GerritAccount
 from gerrit.changes.reviewers import Reviewers
 from gerrit.changes.revision import Revision
 from gerrit.changes.edit import Edit
@@ -126,7 +125,7 @@ class GerritChange(BaseModel):
         endpoint = "/changes/%s/topic" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_assignee(self) -> GerritAccount:
+    def get_assignee(self):
         """
         Retrieves the account of the user assigned to a change.
 
@@ -138,7 +137,7 @@ class GerritChange(BaseModel):
         return self.gerrit.accounts.get(result.get("username"))
 
     @check
-    def set_assignee(self, input_: dict) -> GerritAccount:
+    def set_assignee(self, input_: dict):
         """
 
         .. code-block:: python
@@ -360,6 +359,7 @@ class GerritChange(BaseModel):
     @check
     def delete(self):
         """
+        Deletes a change.
 
         :return:
         """
@@ -508,7 +508,7 @@ class GerritChange(BaseModel):
             change.set_ready_for_review(input_)
 
         :param input_: the WorkInProgressInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#work-in-progress-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#work-in-progress-input
         :return:
         """
         endpoint = "/changes/%s/ready" % self.id
@@ -556,7 +556,7 @@ class GerritChange(BaseModel):
             change.unmark_private(input_)
 
         :param input_: the PrivateInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#private-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#private-input
         :return:
         """
         if input_ is None:
@@ -637,7 +637,7 @@ class GerritChange(BaseModel):
             result = change.set_hashtags(input_)
 
         :param input_: the HashtagsInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#hashtags-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#hashtags-input
         :return:
         """
         endpoint = "/changes/%s/hashtags" % self.id
@@ -686,7 +686,7 @@ class GerritChange(BaseModel):
 
         :param id_: change message id
         :param input_: the DeleteChangeMessageInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#delete-change-message-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#delete-change-message-input
         :return:
         """
         if input_ is None:

@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from urllib.parse import quote
-from gerrit.changes.drafts import Drafts
-from gerrit.changes.comments import Comments
-from gerrit.changes.files import Files
+from gerrit.changes.revision.drafts import Drafts
+from gerrit.changes.revision.comments import Comments
+from gerrit.changes.revision.files import Files
 
 
 class Revision:
@@ -52,7 +52,7 @@ class Revision:
             result = revision.set_description(input_)
 
         :param input_: the DescriptionInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#description-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#description-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/description" % (self.change, self.revision)
@@ -155,7 +155,7 @@ class Revision:
             result = revision.set_review(input_)
 
         :param input_: the ReviewInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#review-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#review-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/review" % (self.change, self.revision)
@@ -182,7 +182,7 @@ class Revision:
             result = revision.rebase(input_)
 
         :param input_: the RebaseInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#rebase-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#rebase-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/rebase" % (self.change, self.revision)
@@ -339,7 +339,7 @@ class Revision:
             result = revision.cherry_pick(input_)
 
         :param input_: the CherryPickInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-projects.html#cherry-pick-commit
+          https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#cherry-pick-commit
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/cherrypick" % (self.change, self.revision)

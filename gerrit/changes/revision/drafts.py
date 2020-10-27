@@ -38,7 +38,7 @@ class Draft(BaseModel):
             result = draft.update(input_)
 
         :param input_: the CommentInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#comment-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/drafts/%s" % (
@@ -98,7 +98,7 @@ class Drafts:
         """
         Retrieves a draft comment of a revision that belongs to the calling user.
 
-        :param id_:
+        :param id_: the draft comment id
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/drafts/%s" % (
@@ -129,7 +129,7 @@ class Drafts:
             new_draft = revision.drafts.create(input_)
 
         :param input_: the CommentInput entity,
-          https://gerrit-documentation.storage.googleapis.com/Documentation/3.1.8/rest-api-changes.html#comment-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#comment-input
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/drafts" % (self.change, self.revision)
@@ -141,3 +141,17 @@ class Drafts:
         return Draft.parse(
             result, change=self.change, revision=self.revision, gerrit=self.gerrit
         )
+
+    def delete(self, id_: str):
+        """
+        Deletes a draft comment from a revision.
+
+        :param id_: the draft comment id
+        :return:
+        """
+        endpoint = "/changes/%s/revisions/%s/drafts/%s" % (
+            self.change,
+            self.revision,
+            id_,
+        )
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
