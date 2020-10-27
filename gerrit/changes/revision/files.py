@@ -80,6 +80,7 @@ class File(BaseModel):
 
     def get_blame(self):
         """
+        Gets the blame of a file from a certain revision.
 
         :return:
         """
@@ -107,6 +108,7 @@ class File(BaseModel):
 
     def delete_reviewed(self):
         """
+        Deletes the reviewed flag of the calling user from a file of a revision.
 
         :return:
         """
@@ -145,6 +147,8 @@ class Files:
     def iterkeys(self):
         """
         Iterate over the paths of all files
+
+        :return:
         """
         if not self._data:
             self._data = self.poll()
@@ -155,6 +159,8 @@ class Files:
     def keys(self):
         """
         Return a list of the file paths
+
+        :return:
         """
         return list(self.iterkeys())
 
@@ -166,7 +172,11 @@ class Files:
         return len(self.keys())
 
     def __contains__(self, ref):
-        """"""
+        """
+
+        :param ref:
+        :return:
+        """
         return ref in self.keys()
 
     def __iter__(self):
@@ -205,6 +215,7 @@ class Files:
 
     def get(self, path: str):
         """
+        get a file by path
 
         :param path: file path
         :return:

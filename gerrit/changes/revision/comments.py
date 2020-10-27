@@ -95,6 +95,7 @@ class Comments:
 
     def get(self, id_: str):
         """
+        Retrieves a published comment of a revision.
 
         :param id_:
         :return:

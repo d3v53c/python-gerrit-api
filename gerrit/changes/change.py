@@ -730,6 +730,7 @@ class GerritChange(BaseModel):
 
     def get_revision(self, revision_id: str):
         """
+        get one revision by revision id
 
         :param revision_id:
         :return:
