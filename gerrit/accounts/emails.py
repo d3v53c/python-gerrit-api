@@ -62,4 +62,15 @@ class Emails:
         :param email: account email
         :return:
         """
-        self.get(email).set_preferred()
+        endpoint = "/accounts/%s/emails/%s/preferred" % (self.username, email)
+        self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
+
+    def delete(self, email: str):
+        """
+        Deletes an email address of an account.
+
+        :param email: account email
+        :return:
+        """
+        endpoint = "/accounts/%s/emails/%s" % (self.username, email)
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

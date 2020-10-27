@@ -462,6 +462,21 @@ class GerritAccount(BaseModel):
     def modify_watched_projects(self, input_: list) -> list:
         """
         Add new projects to watch or update existing watched projects.
+        Projects that are already watched by a user will be updated with the provided configuration.
+
+        .. code-block:: python
+
+            input_ = [
+                {
+                    "project": "Test Project 1",
+                    "notify_new_changes": true,
+                    "notify_new_patch_sets": true,
+                    "notify_all_comments": true,
+                }
+            ]
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.modify_watched_projects(input_)
 
         :param input_: the ProjectWatchInfo entities as list
         :return:
@@ -477,6 +492,18 @@ class GerritAccount(BaseModel):
     def delete_watched_projects(self, input_: list):
         """
         Projects posted to this endpoint will no longer be watched.
+
+        .. code-block:: python
+
+            input_ = [
+                {
+                    "project": "Test Project 1",
+                    "filter": "branch:master"
+                }
+            ]
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.delete_watched_projects(input_)
 
         :param input_: the watched projects as list
         :return:
@@ -505,6 +532,15 @@ class GerritAccount(BaseModel):
         Delete a list of external ids for a user account.
         Only external ids belonging to the caller may be deleted. Users that have Modify Account can delete external
         ids that belong to other accounts.
+
+        .. code-block:: python
+
+            input_ = [
+                "mailto:john.doe@example.com"
+            ]
+
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.delete_external_ids(input_)
 
         :param input_: the external ids as list
         :return:
@@ -554,7 +590,16 @@ class GerritAccount(BaseModel):
         """
         Deletes some or all of a user’s draft comments.
 
-        :param input_: the DeleteDraftCommentsInput entity
+        .. code-block:: python
+
+            input_ = {
+                "query": "is:abandoned"
+            }
+            account = gerrit.accounts.get('kevin.shi')
+            result = account.delete_draft_comments(input_)
+
+        :param input_: the DeleteDraftCommentsInput entity,
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#delete-draft-comments-input
         :return:
         """
         endpoint = "/accounts/%s/drafts:delete" % self.username
@@ -585,24 +630,24 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.changes.get(item.get("id")) for item in result]
 
-    def put_default_star_on_change(self, change):
+    def put_default_star_on_change(self, id_: str):
         """
         Star a change with the default label.
 
-        :param change:
+        :param id_: change id
         :return:
         """
-        endpoint = "/accounts/%s/starred.changes/%s" % (self.username, change.id)
+        endpoint = "/accounts/%s/starred.changes/%s" % (self.username, id_)
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
-    def remove_default_star_from_change(self, change):
+    def remove_default_star_from_change(self, id_: str):
         """
         Remove the default star label from a change. This stops notifications.
 
-        :param change:
+        :param id_: change id
         :return:
         """
-        endpoint = "/accounts/%s/starred.changes/%s" % (self.username, change.id)
+        endpoint = "/accounts/%s/starred.changes/%s" % (self.username, id_)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def get_starred_changes(self) -> list:
@@ -616,19 +661,19 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.changes.get(item.get("id")) for item in result]
 
-    def get_star_labels_from_change(self, change) -> list:
+    def get_star_labels_from_change(self, id_: str) -> list:
         """
         Get star labels from a change.
 
-        :param change:
+        :param id_: change id
         :return:
         """
-        endpoint = "/accounts/%s/stars.changes/%s" % (self.username, change.id)
+        endpoint = "/accounts/%s/stars.changes/%s" % (self.username, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result
 
-    def update_star_labels_on_change(self, change, input_: dict):
+    def update_star_labels_on_change(self, id_: str, input_: dict):
         """
         Update star labels on a change.
 
@@ -640,15 +685,16 @@ class GerritAccount(BaseModel):
             }
 
             account = gerrit.accounts.get('kevin.shi')
-            result = account.update_star_labels_on_change(change, input_)
+            change_id = "myProject~master~I8473b95934b5732ac55d26311a706c9c2bde9940"
+            result = account.update_star_labels_on_change(change_id, input_)
 
 
-        :param change:
+        :param id_: change id
         :param input_: the StarsInput entity,
-          http://172.16.212.117:8080/Documentation/rest-api-accounts.html#stars-input
+          https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#stars-input
         :return:
         """
-        endpoint = "/accounts/%s/stars.changes/%s" % (self.username, change.id)
+        endpoint = "/accounts/%s/stars.changes/%s" % (self.username, id_)
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.post(
             base_url, json=input_, headers=self.gerrit.default_headers

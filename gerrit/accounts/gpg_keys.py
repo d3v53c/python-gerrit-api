@@ -51,14 +51,14 @@ class GPGKeys:
 
         return GPGKey.parse_list(keys, username=self.username, gerrit=self.gerrit)
 
-    def get(self, gpg_key_id: str) -> GPGKey:
+    def get(self, id_: str) -> GPGKey:
         """
         Retrieves a GPG key of a user.
 
-        :param gpg_key_id: GPG key id
+        :param id_: GPG key id
         :return:
         """
-        endpoint = "/accounts/%s/gpgkeys/%s" % (self.username, gpg_key_id)
+        endpoint = "/accounts/%s/gpgkeys/%s" % (self.username, id_)
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
@@ -92,3 +92,13 @@ class GPGKeys:
         )
         result = self.gerrit.decode_response(response)
         return result
+
+    def delete(self, id_: str):
+        """
+        Deletes a GPG key of a user.
+
+        :param id_: GPG key id
+        :return:
+        """
+        endpoint = "/accounts/%s/gpgkeys/%s" % (self.username, id_)
+        self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

@@ -60,6 +60,16 @@ class Caches:
         result = self.gerrit.decode_response(response)
         return Cache.parse(result, gerrit=self.gerrit)
 
+    def flush(self, name):
+        """
+        Flushes a cache.
+
+        :param name: cache name
+        :return:
+        """
+        endpoint = "/config/server/caches/%s/flush" % name
+        self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
+
     def operation(self, input_: dict):
         """
         Cache Operations

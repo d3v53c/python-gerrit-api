@@ -140,3 +140,21 @@ class GerritClient:
         :return:
         """
         return GerritPlugins(gerrit=self)
+
+    @property
+    def version(self):
+        """
+        get the version of the Gerrit server.
+
+        :return:
+        """
+        return self.config.get_version()
+
+    @property
+    def server(self):
+        """
+        get the information about the Gerrit server configuration.
+
+        :return:
+        """
+        return self.config.get_server_info()

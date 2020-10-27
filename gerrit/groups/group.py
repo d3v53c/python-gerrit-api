@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.accounts.account import GerritAccount
 from gerrit.utils.common import check
 
 
@@ -207,30 +206,30 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    def add_member(self, account: GerritAccount):
+    def add_member(self, username: str):
         """
         Adds a user as member to a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param account: gerrit account
+        :param username: account username
         :return:
         """
-        endpoint = "/groups/%s/members/%s" % (self.id, str(account._account_id))
+        endpoint = "/groups/%s/members/%s" % (self.id, username)
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    def remove_member(self, account: GerritAccount):
+    def remove_member(self, username: str):
         """
         Removes a user from a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param account: gerrit account
+        :param username: account username
         :return:
         """
-        endpoint = "/groups/%s/members/%s" % (self.id, str(account._account_id))
+        endpoint = "/groups/%s/members/%s" % (self.id, username)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
     def list_subgroups(self):
@@ -260,28 +259,28 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.groups.get(result.get("id"))
 
-    def add_subgroup(self, subgroup):
+    def add_subgroup(self, id_: str):
         """
         Adds an internal or external group as subgroup to a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param subgroup: gerrit subgroup
+        :param id_: subgroup id
         :return:
         """
-        endpoint = "/groups/%s/groups/%s" % (self.id, subgroup.id)
+        endpoint = "/groups/%s/groups/%s" % (self.id, id_)
         response = self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return self.gerrit.groups.get(result.get("id"))
 
-    def remove_subgroup(self, subgroup):
+    def remove_subgroup(self, id_: str):
         """
         Removes a subgroup from a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
-        :param subgroup: gerrit subgroup
+        :param id_: subgroup id
         :return:
         """
-        endpoint = "/groups/%s/groups/%s" % (self.id, subgroup.id)
+        endpoint = "/groups/%s/groups/%s" % (self.id, id_)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
