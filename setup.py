@@ -20,7 +20,7 @@ setup(
     name='python-gerrit-api',
 
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.9',
+    version='1.0.0',
 
     description='Python wrapper for the Gerrit REST API.',
     long_description=long_description,
