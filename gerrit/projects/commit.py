@@ -16,6 +16,7 @@ class Commit(BaseModel):
             "message",
             "parents",
             "subject",
+            "web_links",
             "project",
             "gerrit",
         ]

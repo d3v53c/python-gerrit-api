@@ -13,6 +13,9 @@ class Webhook(BaseModel):
             "url",
             "maxTries",
             "sslVerify",
+            "retryInterval",
+            "socketTimeout",
+            "connectionTimeout"
             "events",
             "project",
             "gerrit",

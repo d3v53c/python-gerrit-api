@@ -12,7 +12,8 @@ class Task(BaseModel):
             "state",
             "command",
             "start_time",
-            "queue_name",
+            "remote_name",
+            "project"
             "delay",
             "gerrit",
         ]

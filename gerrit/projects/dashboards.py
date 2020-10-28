@@ -17,6 +17,8 @@ class Dashboard(BaseModel):
             "is_default",
             "title",
             "sections",
+            "defining_project",
+            "foreach",
             "project",
             "gerrit",
         ]

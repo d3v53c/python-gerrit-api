@@ -17,6 +17,9 @@ class Tag(BaseModel):
             "message",
             "revision",
             "tagger",
+            "created",
+            "can_delete",
+            "web_links",
             "project",
             "gerrit",
         ]

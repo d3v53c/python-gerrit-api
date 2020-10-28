@@ -7,7 +7,7 @@ from gerrit.utils.models import BaseModel
 class Email(BaseModel):
     def __init__(self, **kwargs):
         super(Email, self).__init__(**kwargs)
-        self.attributes = ["email", "preferred", "username", "gerrit"]
+        self.attributes = ["email", "preferred", "pending_confirmation", "username", "gerrit"]
 
     def delete(self):
         """

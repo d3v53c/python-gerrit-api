@@ -17,6 +17,11 @@ class GerritAccount(BaseModel):
             "_account_id",
             "name",
             "email",
+            "secondary_emails",
+            "avatars",
+            "_more_accounts",
+            "inactive",
+            "tags",
             "display_name",
             "gerrit",
         ]
