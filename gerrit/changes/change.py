@@ -5,6 +5,7 @@ from gerrit.utils.common import check
 from gerrit.changes.reviewers import Reviewers
 from gerrit.changes.revision import Revision
 from gerrit.changes.edit import Edit
+from gerrit.changes.messages import Messages
 from gerrit.utils.models import BaseModel
 
 
@@ -653,58 +654,9 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_messages(self) -> list:
-        """
-        Lists all the messages of a change including detailed account information.
-
-        :return:
-        """
-        endpoint = "/changes/%s/messages" % self.id
-        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def get_message(self, id_: str):
-        """
-        Retrieves a change message including detailed account information.
-
-        :param id_: change message id
-        :return:
-        """
-        endpoint = "/changes/%s/messages/%s" % (self.id, id_)
-        response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
-        result = self.gerrit.decode_response(response)
-        return result
-
-    def delete_message(self, id_: str, input_: dict = None):
-        """
-        Deletes a change message.
-        Note that only users with the Administrate Server global capability are permitted to delete a change message.
-
-        .. code-block:: python
-
-            input_ = {
-                "reason": "spam"
-            }
-            change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
-            result = change.delete_message(id_='babf4c5dd53d7a11080696efa78830d0a07762e6', input_=input_)
-
-        :param id_: change message id
-        :param input_: the DeleteChangeMessageInput entity,
-          https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#delete-change-message-input
-        :return:
-        """
-        if input_ is None:
-            endpoint = "/changes/%s/messages/%s" % (self.id, id_)
-            self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
-        else:
-            endpoint = "/changes/%s/messages/%s/delete" % (self.id, id_)
-            base_url = self.gerrit.get_endpoint_url(endpoint)
-            response = self.gerrit.requester.post(
-                base_url, json=input_, headers=self.gerrit.default_headers
-            )
-            result = self.gerrit.decode_response(response)
-            return result
+    @property
+    def messages(self):
+        return Messages(change=self.id, gerrit=self.gerrit)
 
     def get_edit(self):
         """

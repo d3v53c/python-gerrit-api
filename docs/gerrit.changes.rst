@@ -36,6 +36,14 @@ gerrit.changes.edit module
    :undoc-members:
    :show-inheritance:
 
+gerrit.changes.messages module
+------------------------------
+
+.. automodule:: gerrit.changes.messages
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gerrit.changes.reviewers module
 -------------------------------
 
