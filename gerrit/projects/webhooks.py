@@ -15,7 +15,7 @@ class Webhook(BaseModel):
             "sslVerify",
             "retryInterval",
             "socketTimeout",
-            "connectionTimeout"
+            "connectionTimeout",
             "events",
             "project",
             "gerrit",

@@ -13,7 +13,7 @@ class Task(BaseModel):
             "command",
             "start_time",
             "remote_name",
-            "project"
+            "project",
             "delay",
             "gerrit",
         ]
