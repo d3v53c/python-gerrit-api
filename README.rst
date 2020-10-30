@@ -180,11 +180,55 @@ Example 3: operate gerrit change::
     # Retrieves a change.
     change = gerrit.changes.get('python-sonarqube-api~stable3~I60c3bf10a5b0daf62a0f7c38bdf90b15026bbc2e')
 
+    # Marks a change as reviewed.
+    change.mark_as_reviewed()
+
+    # Adds and removes hashtags from a change.
+    input_ = {
+        "add" : [
+            "hashtag3"
+        ],
+        "remove" : [
+            "hashtag2"
+        ]
+    }
+    result = change.set_hashtags(input_)
+
     # get one revision by revision id
     revision = change.get_revision('534b3ce21655a092eccf72680f2ad16b8fecf119')
 
     # get a file by path
     file = revision.files.get('sonarqube/community/favorites.py')
-    # Gets the diff of a file from a certain revision.
 
+    # Gets the diff of a file from a certain revision.
     file_diff = file.get_diff()
+
+Example 4: operate gerrit account::
+
+    # Retrieves an account
+    account = gerrit.accounts.get('kevin.shi')
+
+    # Sets the full name of an account.
+    input_ = {
+        "name": "Keven Shi"
+    }
+    result = account.set_name(input_)
+
+    # Adds an SSH key for a user.
+    ssh_key = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCveH5xMGXWr7kowaD+hKvYDGoa5c1u40r8OvtexPRVaXmQtGZwzHR4BGWh57SToH9JiizzzwAQaBbiHWTDw0ibKN5WSkLoQa3zdcqP1nMQHPTAe3+eBeKvLFnh9zUlkB+jypVKAxkU/RwRASj+/OxneD8MsyPNOMzm6fDmRVzlIG4ZKQCnK81MUdY3fMZt2cIMpSu7Vo1dnxN2V5lgiB0hw6NAX++/PMUS85GqbkUiEpQluTHL1x6YN3mf/SgL+EamVvkdyAjAtklC9GhcvD5az3cg+3yAvj6B42N1GJpSF+37oWFxhgpBeGO3mU5UYzlx0n50GH66ZPSQNeHhibx7 root@jenkinsdmz-vbj01dmz-1'
+    result = account.ssh_keys.add(ssh_key)
+
+Example 5: operate gerrit group::
+
+    # Retrieves a group.
+    group = gerrit.groups.get('af01a8cb8cbd8ee7be072b98b1ee882867c0cf06')
+
+    # Adds a user as member to a Gerrit internal group.
+    result = group.add_member("ci_jenkins")
+
+    # Sets the owner group of a Gerrit internal group.
+    input_ = {
+        "owner": "6a1e70e1a88782771a91808c8af9bbb7a9871389"
+    }
+    result = group.set_owner(input_)
+
