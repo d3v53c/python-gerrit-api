@@ -145,6 +145,7 @@ class GerritChange(BaseModel):
     @check
     def set_assignee(self, input_: dict):
         """
+        Sets the assignee of a change.
 
         .. code-block:: python
 

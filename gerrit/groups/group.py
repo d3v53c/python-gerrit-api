@@ -82,7 +82,7 @@ class GerritGroup(BaseModel):
 
     def delete_description(self):
         """
-        Sets the description of a Gerrit internal group.
+        Deletes the description of a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
         attempting to call on a non-internal group will return 405 Method Not Allowed.
 
