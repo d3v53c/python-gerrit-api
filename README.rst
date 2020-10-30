@@ -117,7 +117,9 @@ Or:
 	easy_install python-gerrit-api
 
 
-You may also use Git to clone the repository from Github and install it manually::
+You may also use Git to clone the repository from Github and install it manually.
+
+.. code-block:: bash
 
     git clone https://github.com/shijl0925/python-gerrit-api.git
     cd python-gerrit-api
@@ -131,9 +133,58 @@ Compatibility
 
 Usage
 =====
-Example::
+Example 1: setup gerrit client::
 
     from gerrit import GerritClient
-    gerrit_client = GerritClient(gerrit_url="https://yourgerrit", username='******', password='xxxxx')
+    gerrit = GerritClient(gerrit_url="https://yourgerrit", username='******', password='xxxxx')
+
+Example 2: operate gerrit project::
+
+    # Retrieves a project.
+    project = gerrit.projects.get('MyProject')
+
+    # Creates a new project.
+    input_ = {
+        "description": "This is a demo project.",
+        "submit_type": "INHERIT",
+        "owners": [
+          "MyProject-Owners"
+        ]
+    }
+    gerrit.projects.create('MyProject', input_)
+
+    # Sets the description of a project.
+    project = gerrit.projects.get('MyProject')
+    input_ = {
+        "description": "Plugin for Gerrit that handles the replication.",,
+        "commit_message": "Update the project description"
+    }
+    result = project.set_description(input_)
+
+    # Deletes the description of a project.
+    project = gerrit.projects.get('MyProject')
+    project.delete_description()
+
+    # get a branch of th project by ref
+    branch = project.branches.get('refs/heads/stable')
+
+    # Creates a new branch.
+    input_ = {
+        'revision': '76016386a0d8ecc7b6be212424978bb45959d668'
+    }
+    new_branch = project.branches.create('stable', input_)
 
 
+Example 3: operate gerrit change::
+
+    # Retrieves a change.
+    change = gerrit.changes.get('python-sonarqube-api~stable3~I60c3bf10a5b0daf62a0f7c38bdf90b15026bbc2e')
+
+    # get one revision by revision id
+    revision = change.get_revision('534b3ce21655a092eccf72680f2ad16b8fecf119')
+
+    # get a file by path
+    file = revision.files.get('sonarqube/community/favorites.py')
+    # Gets the diff of a file from a certain revision.
+
+    file_diff = file.get_diff()
