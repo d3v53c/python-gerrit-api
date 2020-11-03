@@ -128,7 +128,7 @@ You may also use Git to clone the repository from Github and install it manually
 Compatibility
 =============
 
-* This package is compatible Python versions 3.5+.
+* This package is compatible Python versions 2.7 3.5+.
 * Tested with Gerrit Code Review (V3.3.0).
 
 Usage
@@ -231,4 +231,3 @@ Example 5: operate gerrit group::
         "owner": "6a1e70e1a88782771a91808c8af9bbb7a9871389"
     }
     result = group.set_owner(input_)
-

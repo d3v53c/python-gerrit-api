@@ -14,7 +14,7 @@ from gerrit.utils.exceptions import (
 )
 
 
-class Requester:
+class Requester(object):
 
     """
     A class which carries out HTTP requests. You can replace this

@@ -7,7 +7,7 @@ class ResultSet(list):
     """A list like object that holds results from a Gerrit API query."""
 
 
-class BaseModel:
+class BaseModel(object):
     def __init__(self, **kwargs):
         self.attributes = ["id"]
 

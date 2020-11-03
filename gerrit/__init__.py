@@ -12,7 +12,7 @@ from gerrit.changes.changes import GerritChanges
 from gerrit.utils.common import logger
 
 
-class GerritClient:
+class GerritClient(object):
     """
     Python wrapper for the Gerrit V3.x REST API.
 
@@ -23,13 +23,13 @@ class GerritClient:
 
     def __init__(
         self,
-        base_url: str,
-        username: str,
-        password: str,
-        ssl_verify: bool = True,
-        cert: str = None,
-        timeout: int = 60,
-        max_retries: int = None,
+        base_url,
+        username,
+        password,
+        ssl_verify = True,
+        cert=None,
+        timeout=60,
+        max_retries=None,
     ):
         self._base_url = self.strip_trailing_slash(base_url)
 

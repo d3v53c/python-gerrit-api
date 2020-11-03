@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -34,7 +34,7 @@ class Webhook(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Webhooks:
+class Webhooks(object):
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
@@ -57,8 +57,7 @@ class Webhooks:
 
         return Webhook.parse_list(webhooks, project=self.project, gerrit=self.gerrit)
 
-    @check
-    def create(self, name: str, input_: dict) -> Webhook:
+    def create(self, name, input_):
         """
         Create or update a webhook for a project.
 
@@ -88,7 +87,7 @@ class Webhooks:
         result = self.gerrit.decode_response(response)
         return Webhook.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def get(self, name: str) -> Webhook:
+    def get(self, name):
         """
         Get information about one webhook.
 
@@ -104,7 +103,7 @@ class Webhooks:
         result.update({"name": name})
         return Webhook.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def delete(self, name: str):
+    def delete(self, name):
         """
         Delete a webhook for a project.
 

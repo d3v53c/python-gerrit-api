@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from urllib.parse import quote
-from gerrit.utils.common import check
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from gerrit.utils.models import BaseModel
 from gerrit.utils.exceptions import UnknownBranch
 
@@ -25,7 +28,7 @@ class Branch(BaseModel):
     def name(self):
         return self.ref.replace(self.branch_prefix, "")
 
-    def get_file_content(self, file: str) -> str:
+    def get_file_content(self, file):
         """
         Gets the content of a file from the HEAD revision of a certain branch.
         The content is returned as base64 encoded string.
@@ -42,8 +45,7 @@ class Branch(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def is_mergeable(self, input_: dict) -> dict:
+    def is_mergeable(self, input_):
         """
         Gets whether the source is mergeable with the target branch.
 
@@ -67,7 +69,7 @@ class Branch(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_reflog(self) -> list:
+    def get_reflog(self):
         """
         Gets the reflog of a certain branch.
 
@@ -88,7 +90,7 @@ class Branch(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Branches:
+class Branches(object):
     branch_prefix = "refs/heads/"
 
     def __init__(self, project, gerrit):
@@ -192,7 +194,7 @@ class Branches:
         for row in self._data:
             yield Branch.parse(row, project=self.project, gerrit=self.gerrit)
 
-    def get(self, name: str):
+    def get(self, name):
         """
         get a branch by ref
 
@@ -201,8 +203,7 @@ class Branches:
         """
         return self[name]
 
-    @check
-    def create(self, name: str, input_: dict) -> Branch:
+    def create(self, name, input_):
         """
         Creates a new branch.
 
@@ -236,7 +237,7 @@ class Branches:
 
         return Branch.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def delete(self, name: str):
+    def delete(self, name):
         """
         Delete a branch.
 

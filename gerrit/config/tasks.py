@@ -29,11 +29,11 @@ class Task(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Tasks:
+class Tasks(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the tasks from the background work queues that the Gerrit daemon is currently performing,
         or will perform in the near future.
@@ -45,7 +45,7 @@ class Tasks:
         result = self.gerrit.decode_response(response)
         return Task.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, id_: str) -> Task:
+    def get(self, id_):
         """
         Retrieves a task from the background work queue that the Gerrit daemon is currently performing,
         or will perform in the near future.
@@ -58,7 +58,7 @@ class Tasks:
         result = self.gerrit.decode_response(response)
         return Task.parse(result, gerrit=self.gerrit)
 
-    def delete(self, id_: str):
+    def delete(self, id_):
         """
         Kills a task from the background work queue that the Gerrit daemon is currently performing,
         or will perform in the near future.

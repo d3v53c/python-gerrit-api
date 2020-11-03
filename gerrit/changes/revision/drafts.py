@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -20,8 +20,7 @@ class Draft(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def update(self, input_: dict):
+    def update(self, input_):
         """
         Updates a draft comment on a revision.
 
@@ -69,7 +68,7 @@ class Draft(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Drafts:
+class Drafts(object):
     def __init__(self, change, revision, gerrit):
         self.change = change
         self.revision = revision
@@ -94,7 +93,7 @@ class Drafts:
             drafts, change=self.change, revision=self.revision, gerrit=self.gerrit
         )
 
-    def get(self, id_: str):
+    def get(self, id_):
         """
         Retrieves a draft comment of a revision that belongs to the calling user.
 
@@ -112,8 +111,7 @@ class Drafts:
             result, change=self.change, revision=self.revision, gerrit=self.gerrit
         )
 
-    @check
-    def create(self, input_: dict):
+    def create(self, input_):
         """
         Creates a draft comment on a revision.
 
@@ -142,7 +140,7 @@ class Drafts:
             result, change=self.change, revision=self.revision, gerrit=self.gerrit
         )
 
-    def delete(self, id_: str):
+    def delete(self, id_):
         """
         Deletes a draft comment from a revision.
 

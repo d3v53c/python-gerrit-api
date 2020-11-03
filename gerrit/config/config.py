@@ -3,14 +3,13 @@
 # @Author: Jialiang Shi
 from gerrit.config.caches import Caches
 from gerrit.config.tasks import Tasks
-from gerrit.utils.common import check
 
 
-class GerritConfig:
+class GerritConfig(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def get_version(self) -> str:
+    def get_version(self):
         """
         get the version of the Gerrit server.
 
@@ -21,7 +20,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_server_info(self) -> dict:
+    def get_server_info(self):
         """
         get the information about the Gerrit server configuration.
 
@@ -32,7 +31,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def check_consistency(self, input_: dict) -> dict:
+    def check_consistency(self, input_):
         """
         Runs consistency checks and returns detected problems.
 
@@ -56,7 +55,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def reload_config(self) -> dict:
+    def reload_config(self):
         """
         Reloads the gerrit.config configuration.
 
@@ -67,7 +66,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def confirm_email(self, input_: dict):
+    def confirm_email(self, input_):
         """
         Confirms that the user owns an email address.
         If the token is invalid or if it's the token of another user the request fails and the response is
@@ -91,10 +90,10 @@ class GerritConfig:
         )
 
     @property
-    def caches(self) -> Caches:
+    def caches(self):
         return Caches(gerrit=self.gerrit)
 
-    def get_summary(self) -> dict:
+    def get_summary(self):
         """
         Retrieves a summary of the current server state.
 
@@ -105,7 +104,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_capabilities(self) -> dict:
+    def list_capabilities(self):
         """
         Lists the capabilities that are available in the system.
         There are two kinds of capabilities: core and plugin-owned capabilities.
@@ -118,10 +117,10 @@ class GerritConfig:
         return result
 
     @property
-    def tasks(self) -> Tasks:
+    def tasks(self):
         return Tasks(gerrit=self.gerrit)
 
-    def get_top_menus(self) -> list:
+    def get_top_menus(self):
         """
         Returns the list of additional top menu entries.
 
@@ -132,7 +131,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_default_user_preferences(self) -> dict:
+    def get_default_user_preferences(self):
         """
         Returns the default user preferences for the server.
 
@@ -143,8 +142,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_default_user_preferences(self, input_: dict) -> dict:
+    def set_default_user_preferences(self, input_):
         """
         Sets the default user preferences for the server.
 
@@ -167,7 +165,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_default_diff_preferences(self) -> dict:
+    def get_default_diff_preferences(self):
         """
         Returns the default diff preferences for the server.
 
@@ -178,8 +176,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_default_diff_preferences(self, input_: dict) -> dict:
+    def set_default_diff_preferences(self, input_):
         """
         Sets the default diff preferences for the server.
 
@@ -213,7 +210,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_default_edit_preferences(self) -> dict:
+    def get_default_edit_preferences(self):
         """
         Returns the default edit preferences for the server.
 
@@ -224,8 +221,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_default_edit_preferences(self, input_: dict) -> dict:
+    def set_default_edit_preferences(self, input_):
         """
         Sets the default edit preferences for the server.
 
@@ -257,7 +253,7 @@ class GerritConfig:
         result = self.gerrit.decode_response(response)
         return result
 
-    def index_changes(self, input_: dict):
+    def index_changes(self, input_):
         """
         Index a set of changes
 

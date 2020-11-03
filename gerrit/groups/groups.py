@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.groups.group import GerritGroup
-from gerrit.utils.common import check
 
 
-class GerritGroups:
+class GerritGroups(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the groups accessible by the caller.
 
@@ -27,7 +26,7 @@ class GerritGroups:
 
         return GerritGroup.parse_list(groups, gerrit=self.gerrit)
 
-    def search(self, name: str) -> list:
+    def search(self, name):
         """
         Query Groups
 
@@ -39,7 +38,7 @@ class GerritGroups:
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, id_: str) -> GerritGroup:
+    def get(self, id_):
         """
         Retrieves a group.
 
@@ -51,8 +50,7 @@ class GerritGroups:
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create(self, name: str, input_: dict) -> GerritGroup:
+    def create(self, name, input_):
         """
         Creates a new Gerrit internal group.
 

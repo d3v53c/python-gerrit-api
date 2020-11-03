@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.projects.project import GerritProject
-from gerrit.utils.common import check
 
 
-class GerritProjects:
+class GerritProjects(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the projects accessible by the caller.
 
@@ -20,7 +19,7 @@ class GerritProjects:
         result = self.gerrit.decode_response(response)
         return GerritProject.parse_list(list(result.values()), gerrit=self.gerrit)
 
-    def search(self, query: str) -> list:
+    def search(self, query):
         """
         Queries projects visible to the caller. The query string must be provided by the query parameter.
         The start and limit parameters can be used to skip/limit results.
@@ -40,7 +39,7 @@ class GerritProjects:
         result = self.gerrit.decode_response(response)
         return GerritProject.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, project_name: str) -> GerritProject:
+    def get(self, project_name):
         """
         Retrieves a project.
 
@@ -52,8 +51,7 @@ class GerritProjects:
         result = self.gerrit.decode_response(response)
         return GerritProject.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create(self, project_name: str, input_: dict) -> GerritProject:
+    def create(self, project_name, input_):
         """
         Creates a new project.
 
@@ -82,7 +80,7 @@ class GerritProjects:
         result = self.gerrit.decode_response(response)
         return GerritProject.parse(result, gerrit=self.gerrit)
 
-    def delete(self, project_name: str):
+    def delete(self, project_name):
         """
         Delete the project, requires delete-project plugin
 

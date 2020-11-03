@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 from gerrit.utils.exceptions import UnknownTag
 
@@ -38,7 +38,7 @@ class Tag(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Tags:
+class Tags(object):
     tag_prefix = "refs/tags/"
 
     def __init__(self, project, gerrit):
@@ -139,7 +139,7 @@ class Tags:
         for row in self._data:
             yield Tag.parse(row, project=self.project, gerrit=self.gerrit)
 
-    def get(self, name: str):
+    def get(self, name):
         """
         get a tag by ref
 
@@ -148,8 +148,7 @@ class Tags:
         """
         return self[name]
 
-    @check
-    def create(self, name: str, input_: dict) -> Tag:
+    def create(self, name, input_):
         """
         Creates a new tag on the project.
 
@@ -184,7 +183,7 @@ class Tags:
 
         return Tag.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def delete(self, name: str):
+    def delete(self, name):
         """
         Delete a tag.
 

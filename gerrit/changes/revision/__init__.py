@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from urllib.parse import quote
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from gerrit.changes.revision.drafts import Drafts
 from gerrit.changes.revision.comments import Comments
 from gerrit.changes.revision.files import Files
 
 
-class Revision:
+class Revision(object):
     def __init__(self, project, change, revision, gerrit):
         self.project = project
         self.change = change
@@ -25,7 +29,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return self.gerrit.projects.get(self.project).get_commit(result.get("commit"))
 
-    def get_description(self) -> str:
+    def get_description(self):
         """
         Retrieves the description of a patch set.
         If the patch set does not have a description an empty string is returned.
@@ -37,7 +41,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_description(self, input_: dict) -> str:
+    def set_description(self, input_):
         """
         Sets the description of a patch set.
 
@@ -63,7 +67,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_merge_list(self) -> list:
+    def get_merge_list(self):
         """
         Returns the list of commits that are being integrated into a target branch by a merge commit.
         By default the first parent is assumed to be uninteresting. By using the parent option another
@@ -79,7 +83,7 @@ class Revision:
             for item in result
         ]
 
-    def get_revision_actions(self) -> dict:
+    def get_revision_actions(self):
         """
         Retrieves revision actions of the revision of a change.
 
@@ -90,7 +94,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_review(self) -> dict:
+    def get_review(self):
         """
         Retrieves a review of a revision.
 
@@ -101,7 +105,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_related_changes(self) -> dict:
+    def get_related_changes(self):
         """
         Retrieves related changes of a revision. Related changes are changes that either depend on,
         or are dependencies of the revision.
@@ -113,7 +117,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def set_review(self, input_: dict) -> dict:
+    def set_review(self, input_):
         """
         Sets a review on a revision, optionally also publishing draft comments, setting labels, adding reviewers or CCs,
         and modifying the work in progress property.
@@ -166,7 +170,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def rebase(self, input_: dict) -> dict:
+    def rebase(self, input_):
         """
         Rebases a revision.
         Optionally, the parent revision can be changed to another patch set through the RebaseInput entity.
@@ -193,7 +197,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def submit(self) -> dict:
+    def submit(self):
         """
         Submits a revision.
         If the revision cannot be submitted, e.g. because the submit rule doesn’t allow submitting the revision or the
@@ -253,7 +257,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def is_mergeable(self) -> dict:
+    def is_mergeable(self):
         """
         Gets the method the server will use to submit (merge) the change and an indicator if the change is currently mergeable.
 
@@ -264,7 +268,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_submit_type(self) -> str:
+    def get_submit_type(self):
         """
         Gets the method the server will use to submit (merge) the change.
 
@@ -275,7 +279,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def test_submit_type(self, input_: str):
+    def test_submit_type(self, input_):
         """
         Tests the submit_type Prolog rule in the project, or the one given.
 
@@ -293,7 +297,7 @@ class Revision:
         result = self.gerrit.decode_response(response)
         return result
 
-    def test_submit_rule(self, input_: str):
+    def test_submit_rule(self, input_):
         """
         Tests the submit_rule Prolog rule in the project, or the one given.
 
@@ -323,7 +327,7 @@ class Revision:
     def files(self):
         return Files(change=self.change, revision=self.revision, gerrit=self.gerrit)
 
-    def cherry_pick(self, input_: dict):
+    def cherry_pick(self, input_):
         """
         Cherry picks a revision to a destination branch.
 

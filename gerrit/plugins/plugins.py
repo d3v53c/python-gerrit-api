@@ -51,11 +51,11 @@ class GerritPlugin(BaseModel):
         return self.gerrit.plugins.get(result.get("id"))
 
 
-class GerritPlugins:
+class GerritPlugins(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the plugins installed on the Gerrit server.
 
@@ -66,7 +66,7 @@ class GerritPlugins:
         result = self.gerrit.decode_response(response)
         return GerritPlugin.parse_list(list(result.values()), gerrit=self.gerrit)
 
-    def get(self, id_: str) -> GerritPlugin:
+    def get(self, id_):
         """
 
         :param id_: plugin id
@@ -77,7 +77,7 @@ class GerritPlugins:
         result = self.gerrit.decode_response(response)
         return GerritPlugin.parse(result, gerrit=self.gerrit)
 
-    def install(self, id_: str, input_: dict) -> GerritPlugin:
+    def install(self, id_, input_):
         """
         Installs a new plugin on the Gerrit server.
 

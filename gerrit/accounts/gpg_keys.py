@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.utils.common import check
 
 
 class GPGKey(BaseModel):
@@ -29,12 +28,12 @@ class GPGKey(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class GPGKeys:
+class GPGKeys(object):
     def __init__(self, username, gerrit):
         self.username = username
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Returns the GPG keys of an account.
 
@@ -51,7 +50,7 @@ class GPGKeys:
 
         return GPGKey.parse_list(keys, username=self.username, gerrit=self.gerrit)
 
-    def get(self, id_: str) -> GPGKey:
+    def get(self, id_):
         """
         Retrieves a GPG key of a user.
 
@@ -63,8 +62,7 @@ class GPGKeys:
         result = self.gerrit.decode_response(response)
         return GPGKey.parse(result, username=self.username, gerrit=self.gerrit)
 
-    @check
-    def modify(self, input_: dict):
+    def modify(self, input_):
         """
         Add or delete one or more GPG keys for a user.
 
@@ -93,7 +91,7 @@ class GPGKeys:
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete(self, id_: str):
+    def delete(self, id_):
         """
         Deletes a GPG key of a user.
 

@@ -5,7 +5,7 @@ import json
 from gerrit.utils.common import logger
 
 
-class Entity:
+class Entity(object):
     required = ()
     optional = ()
 

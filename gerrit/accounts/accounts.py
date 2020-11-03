@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.accounts.account import GerritAccount
-from gerrit.utils.common import check
 
 
-class GerritAccounts:
+class GerritAccounts(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def search(self, query: str):
+    def search(self, query):
         """
         Queries accounts visible to the caller.
 
@@ -32,7 +31,7 @@ class GerritAccounts:
         result = self.gerrit.decode_response(response)
         return self.get(result.get("username"))
 
-    def get(self, username: str) -> GerritAccount:
+    def get(self, username):
         """
         Returns an account
 
@@ -44,8 +43,7 @@ class GerritAccounts:
         result = self.gerrit.decode_response(response)
         return GerritAccount.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create(self, username: str, input_: dict) -> GerritAccount:
+    def create(self, username, input_):
         """
         Creates a new account.
 

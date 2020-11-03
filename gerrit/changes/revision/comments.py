@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -21,8 +21,7 @@ class Comment(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def delete(self, input_: dict = None):
+    def delete(self, input_=None):
         """
         Deletes a published comment of a revision. Instead of deleting the whole comment, this endpoint just replaces
         the comment’s message with a new message, which contains the name of the user who deletes the comment and the
@@ -68,7 +67,7 @@ class Comment(BaseModel):
             return result
 
 
-class Comments:
+class Comments(object):
     def __init__(self, change, revision, gerrit):
         self.change = change
         self.revision = revision
@@ -93,7 +92,7 @@ class Comments:
             comments, change=self.change, revision=self.revision, gerrit=self.gerrit
         )
 
-    def get(self, id_: str):
+    def get(self, id_):
         """
         Retrieves a published comment of a revision.
 

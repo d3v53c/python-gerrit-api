@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -18,8 +18,7 @@ class Reviewer(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def delete(self, input_: dict = None):
+    def delete(self, input_=None):
         """
         Deletes a reviewer from a change.
         Deleting a reviewer also removes that user from the attention set.
@@ -48,7 +47,7 @@ class Reviewer(BaseModel):
                 base_url, json=input_, headers=self.gerrit.default_headers
             )
 
-    def list_votes(self) -> dict:
+    def list_votes(self):
         """
         Lists the votes for a specific reviewer of the change.
 
@@ -59,8 +58,7 @@ class Reviewer(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def delete_vote(self, label: str, input_: dict = None):
+    def delete_vote(self, label, input_=None):
         """
         Deletes a single vote from a change.
         Note, that even when the last vote of a reviewer is removed the reviewer itself is still listed on the change.
@@ -99,12 +97,12 @@ class Reviewer(BaseModel):
             )
 
 
-class Reviewers:
+class Reviewers(object):
     def __init__(self, change, gerrit):
         self.change = change
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the reviewers of a change.
 
@@ -115,7 +113,7 @@ class Reviewers:
         result = self.gerrit.decode_response(response)
         return Reviewer.parse_list(result, change=self.change, gerrit=self.gerrit)
 
-    def get(self, query: str):
+    def get(self, query):
         """
         Retrieves a reviewer of a change.
 
@@ -128,8 +126,7 @@ class Reviewers:
         if result:
             return Reviewer.parse(result[0], change=self.change, gerrit=self.gerrit)
 
-    @check
-    def add(self, input_: dict) -> dict:
+    def add(self, input_):
         """
         Adds one user or all members of one group as reviewer to the change.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.changes.reviewers import Reviewers
 from gerrit.changes.revision import Revision
 from gerrit.changes.edit import Edit
@@ -30,8 +30,7 @@ class GerritChange(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def update(self, input_: dict):
+    def update(self, input_):
         """
         Update an existing change by using a MergePatchSetInput entity.
         Gerrit will create a merge commit based on the information of MergePatchSetInput and add a new patch set to
@@ -61,8 +60,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    @check
-    def set_commit_message(self, input_: dict) -> str:
+    def set_commit_message(self, input_):
         """
         Creates a new patch set with a new commit message.
 
@@ -88,14 +86,13 @@ class GerritChange(BaseModel):
         return result
 
     @property
-    def topic(self) -> str:
+    def topic(self):
         """
         Retrieves the topic of a change.
 
         :getter: Retrieves the topic of a change.
         :setter: Sets the topic of a change.
         :deleter: Deletes the topic of a change.
-        :type: string
 
         :return:
         """
@@ -105,7 +102,7 @@ class GerritChange(BaseModel):
         return result
 
     @topic.setter
-    def topic(self, topic: str):
+    def topic(self, topic):
         """
         Sets the topic of a change.
 
@@ -142,8 +139,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    @check
-    def set_assignee(self, input_: dict):
+    def set_assignee(self, input_):
         """
         Sets the assignee of a change.
 
@@ -168,7 +164,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    def get_past_assignees(self) -> list:
+    def get_past_assignees(self):
         """
         Returns a list of every user ever assigned to a change, in the order in which they were first assigned.
 
@@ -192,7 +188,7 @@ class GerritChange(BaseModel):
         if result:
             return self.gerrit.accounts.get(result.get("username"))
 
-    def get_pure_revert(self, commit) -> dict:
+    def get_pure_revert(self, commit):
         """
         Check if the given change is a pure revert of the change it references in revertOf.
 
@@ -227,8 +223,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    @check
-    def rebase(self, input_: dict):
+    def rebase(self, input_):
         """
         Rebases a change.
         If the change cannot be rebased, e.g. due to conflicts, the response is '409 Conflict'
@@ -255,8 +250,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    @check
-    def move(self, input_: dict):
+    def move(self, input_):
         """
         Move a change.
         If the change cannot be moved because the change state doesn't allow moving the change,
@@ -283,8 +277,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    @check
-    def revert(self, input_: dict = None):
+    def revert(self, input_=None):
         """
         Reverts a change.
         The request body does not need to include a RevertInput entity if no review comment is added.
@@ -333,8 +326,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def submit(self, input_: dict):
+    def submit(self, input_):
         """
         Submits  a change.
         Submitting a change also removes all users from the attention set.
@@ -363,7 +355,6 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    @check
     def delete(self):
         """
         Deletes a change.
@@ -373,7 +364,7 @@ class GerritChange(BaseModel):
         endpoint = "/changes/%s" % self.id
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_include_in(self) -> dict:
+    def get_include_in(self):
         """
         Retrieves the branches and tags in which a change is included.
 
@@ -393,7 +384,7 @@ class GerritChange(BaseModel):
         endpoint = "/changes/%s/index" % self.id
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
-    def list_comments(self) -> dict:
+    def list_comments(self):
         """
         Lists the published comments of all revisions of the change.
 
@@ -404,7 +395,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_robot_comments(self) -> dict:
+    def list_robot_comments(self):
         """
         Lists the robot comments of all revisions of the change.
 
@@ -415,7 +406,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def list_drafts(self) -> dict:
+    def list_drafts(self):
         """
         Lists the draft comments of all revisions of the change that belong to the calling user.
 
@@ -426,7 +417,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def consistency_check(self) -> dict:
+    def consistency_check(self):
         """
         Performs consistency checks on the change, and returns a ChangeInfo entity with the problems field set to
         a list of ProblemInfo entities.
@@ -438,7 +429,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def fix(self, input_: dict = None) -> dict:
+    def fix(self, input_=None):
         """
         Performs consistency checks on the change as with GET /check,
         and additionally fixes any problems that can be fixed automatically. The returned field values reflect any fixes.
@@ -470,8 +461,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_work_in_progress(self, input_: dict = None):
+    def set_work_in_progress(self, input_=None):
         """
         Marks the change as not ready for review yet.
         Changes may only be marked not ready by the owner, project owners or site administrators.
@@ -498,8 +488,7 @@ class GerritChange(BaseModel):
             base_url, json=input_ or {}, headers=self.gerrit.default_headers
         )
 
-    @check
-    def set_ready_for_review(self, input_: dict):
+    def set_ready_for_review(self, input_):
         """
         Marks the change as ready for review (set WIP property to false).
         Changes may only be marked ready by the owner, project owners or site administrators.
@@ -524,8 +513,7 @@ class GerritChange(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    @check
-    def mark_private(self, input_: dict):
+    def mark_private(self, input_):
         """
         Marks the change to be private. Only open changes can be marked private.
         Changes may only be marked private by the owner or site administrators.
@@ -548,8 +536,7 @@ class GerritChange(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    @check
-    def unmark_private(self, input_: dict = None):
+    def unmark_private(self, input_=None):
         """
         Marks the change to be non-private. Note users can only unmark own private changes.
         If the change was already not private, the response is '409 Conflict'.
@@ -614,7 +601,7 @@ class GerritChange(BaseModel):
         endpoint = "/changes/%s/unreviewed" % self.id
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_hashtags(self) -> list:
+    def get_hashtags(self):
         """
         Gets the hashtags associated with a change.
 
@@ -625,8 +612,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_hashtags(self, input_: dict) -> list:
+    def set_hashtags(self, input_):
         """
         Adds and/or removes hashtags from a change.
 
@@ -686,7 +672,7 @@ class GerritChange(BaseModel):
     def reviewers(self):
         return Reviewers(change=self.id, gerrit=self.gerrit)
 
-    def get_revision(self, revision_id: str):
+    def get_revision(self, revision_id):
         """
         get one revision by revision id
 
@@ -711,8 +697,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def add_to_attention_set(self, input_: dict):
+    def add_to_attention_set(self, input_):
         """
         Adds a single user to the attention set of a change.
 
@@ -740,7 +725,7 @@ class GerritChange(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def remove_from_attention_set(self, id_: str, input_: dict = None):
+    def remove_from_attention_set(self, id_, input_=None):
         """
         Deletes a single user from the attention set of a change.
 

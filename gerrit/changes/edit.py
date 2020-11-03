@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from urllib.parse import quote
-from gerrit.utils.common import check
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from gerrit.utils.models import BaseModel
 
 
@@ -18,7 +21,7 @@ class Edit(BaseModel):
             "gerrit",
         ]
 
-    def get_change_file_content(self, file: str) -> str:
+    def get_change_file_content(self, file):
         """
         Retrieves content of a file from a change edit.
         The content of the file is returned as text encoded inside base64.
@@ -31,7 +34,7 @@ class Edit(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_file_meta_data(self, file: str) -> dict:
+    def get_file_meta_data(self, file):
         """
         Retrieves meta data of a file from a change edit.
 
@@ -43,7 +46,7 @@ class Edit(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def put_change_file_content(self, file: str, file_content: str):
+    def put_change_file_content(self, file, file_content):
         """
         Put content of a file to a change edit.
 
@@ -57,7 +60,7 @@ class Edit(BaseModel):
             base_url, data=file_content, headers={"Content-Type": "plain/text"}
         )
 
-    def restore_file_content(self, file: str):
+    def restore_file_content(self, file):
         """
         restores file content
 
@@ -71,7 +74,7 @@ class Edit(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    def rename_file(self, old_path: str, new_path: str):
+    def rename_file(self, old_path, new_path):
         """
         rename file
 
@@ -86,7 +89,7 @@ class Edit(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    def delete_file(self, file: str):
+    def delete_file(self, file):
         """
         Deletes a file from a change edit.
 
@@ -96,8 +99,7 @@ class Edit(BaseModel):
         endpoint = "/changes/%s/edit/%s" % (self.change, quote(file, safe=""))
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    @check
-    def change_commit_message(self, input_: dict):
+    def change_commit_message(self, input_):
         """
         Modify commit message.
 
@@ -133,7 +135,7 @@ class Edit(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def publish(self, input_: dict):
+    def publish(self, input_):
         """
         Promotes change edit to a regular patch set.
 

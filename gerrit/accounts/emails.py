@@ -7,7 +7,13 @@ from gerrit.utils.models import BaseModel
 class Email(BaseModel):
     def __init__(self, **kwargs):
         super(Email, self).__init__(**kwargs)
-        self.attributes = ["email", "preferred", "pending_confirmation", "username", "gerrit"]
+        self.attributes = [
+            "email",
+            "preferred",
+            "pending_confirmation",
+            "username",
+            "gerrit",
+        ]
 
     def delete(self):
         """
@@ -28,12 +34,12 @@ class Email(BaseModel):
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Emails:
+class Emails(object):
     def __init__(self, username, gerrit):
         self.username = username
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Returns the email addresses that are configured for the specified user.
 
@@ -44,7 +50,7 @@ class Emails:
         result = self.gerrit.decode_response(response)
         return Email.parse_list(result, username=self.username, gerrit=self.gerrit)
 
-    def get(self, email: str) -> Email:
+    def get(self, email):
         """
         Retrieves an email address of a user.
 
@@ -55,7 +61,7 @@ class Emails:
         result = self.gerrit.decode_response(response)
         return Email.parse(result, username=self.username, gerrit=self.gerrit)
 
-    def set_preferred(self, email: str):
+    def set_preferred(self, email):
         """
         Sets an email address as preferred email address for an account.
 
@@ -65,7 +71,7 @@ class Emails:
         endpoint = "/accounts/%s/emails/%s/preferred" % (self.username, email)
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
-    def delete(self, email: str):
+    def delete(self, email):
         """
         Deletes an email address of an account.
 

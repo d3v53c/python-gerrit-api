@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -20,7 +20,7 @@ class Message(BaseModel):
             "gerrit",
         ]
 
-    def delete(self, input_: dict = None):
+    def delete(self, input_=None):
         """
         Deletes a change message.
         Note that only users with the Administrate Server global capability are permitted to delete a change message.
@@ -52,12 +52,12 @@ class Message(BaseModel):
             return change.messages.get(result.get("id"))
 
 
-class Messages:
+class Messages(object):
     def __init__(self, change, gerrit):
         self.change = change
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists all the messages of a change including detailed account information.
 
@@ -68,7 +68,7 @@ class Messages:
         result = self.gerrit.decode_response(response)
         return Message.parse_list(result, change=self.change, gerrit=self.gerrit)
 
-    def get(self, id_: str):
+    def get(self, id_):
         """
         Retrieves a change message including detailed account information.
 

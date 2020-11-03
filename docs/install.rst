@@ -2,7 +2,7 @@
 Installation
 ############
 
-``python-gerrit-api`` is compatible with Python 3.5+.
+``python-gerrit-api`` is compatible with Python 2.7 3.5+.
 
 Use :command:`pip` to install the latest stable version of ``python-gerrit-api``:
 

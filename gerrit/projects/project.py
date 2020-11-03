@@ -8,7 +8,7 @@ from gerrit.projects.dashboards import Dashboards
 from gerrit.projects.labels import Labels
 from gerrit.projects.webhooks import Webhooks
 from gerrit.changes.change import GerritChange
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -18,7 +18,7 @@ class GerritProject(BaseModel):
         self.attributes = ["id", "name", "state", "web_links", "gerrit"]
 
     @property
-    def description(self) -> str:
+    def description(self):
         """
         Retrieves the description of a project.
 
@@ -29,8 +29,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_description(self, input_: dict) -> str:
+    def set_description(self, input_):
         """
         Sets the description of a project.
 
@@ -74,7 +73,7 @@ class GerritProject(BaseModel):
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
     @property
-    def parent(self) -> str:
+    def parent(self):
         """
         Retrieves the name of a project’s parent project. For the All-Projects root project an empty string is returned.
 
@@ -85,8 +84,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_parent(self, input_: dict) -> str:
+    def set_parent(self, input_):
         """
         Sets the parent project for a project.
 
@@ -112,7 +110,7 @@ class GerritProject(BaseModel):
         return result
 
     @property
-    def HEAD(self) -> str:
+    def HEAD(self):
         """
         Retrieves for a project the name of the branch to which HEAD points.
 
@@ -123,8 +121,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_HEAD(self, input_: dict) -> str:
+    def set_HEAD(self, input_):
         """
         Sets HEAD for a project.
 
@@ -149,7 +146,7 @@ class GerritProject(BaseModel):
         return result
 
     @property
-    def config(self) -> dict:
+    def config(self):
         """
         Gets some configuration information about a project.
         Note that this config info is not simply the contents of project.config; it generally contains fields that may
@@ -162,8 +159,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_config(self, input_: dict) -> dict:
+    def set_config(self, input_):
         """
         Sets the configuration of a project.
 
@@ -198,7 +194,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_statistics(self) -> dict:
+    def get_statistics(self):
         """
         Return statistics for the repository of a project.
 
@@ -209,8 +205,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def run_garbage_collection(self, input_: dict) -> str:
+    def run_garbage_collection(self, input_):
         """
         Run the Git garbage collection for the repository of a project.
 
@@ -234,8 +229,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def ban_commits(self, input_: dict) -> dict:
+    def ban_commits(self, input_):
         """
         Marks commits as banned for the project.
 
@@ -264,7 +258,7 @@ class GerritProject(BaseModel):
         return result
 
     @property
-    def access_rights(self) -> dict:
+    def access_rights(self):
         """
         Lists the access rights for a single project.
 
@@ -275,8 +269,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_access_rights(self, input_: dict) -> dict:
+    def set_access_rights(self, input_):
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput.
         https://gerrit-review.googlesource.com/Documentation/rest-api-projects.html#set-access
@@ -293,7 +286,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def create_change(self, input_: dict):
+    def create_change(self, input_):
         """
         Create Change for review.
 
@@ -320,8 +313,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create_access_rights_change(self, input_: dict) -> dict:
+    def create_access_rights_change(self, input_):
         """
         Sets access rights for the project using the diff schema provided by ProjectAccessInput
         This takes the same input as Update Access Rights, but creates a pending change for review. Like Create Change,
@@ -340,7 +332,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
 
-    def check_access(self, options: str) -> dict:
+    def check_access(self, options):
         """
         runs access checks for other users.
 
@@ -358,8 +350,7 @@ class GerritProject(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def index(self, input_: dict):
+    def index(self, input_):
         """
         Adds or updates the current project (and children, if specified) in the secondary index.
         The indexing task is executed asynchronously in background and this command returns immediately
@@ -395,8 +386,7 @@ class GerritProject(BaseModel):
         endpoint = "/projects/%s/index.changes" % self.id
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
-    @check
-    def check_consistency(self, input_: dict) -> dict:
+    def check_consistency(self, input_):
         """
         Performs consistency checks on the project.
 
@@ -426,7 +416,7 @@ class GerritProject(BaseModel):
         return result
 
     @property
-    def branches(self) -> Branches:
+    def branches(self):
         """
         List the branches of a project. except the refs/meta/config
 
@@ -435,7 +425,7 @@ class GerritProject(BaseModel):
         return Branches(self.id, self.gerrit)
 
     @property
-    def child_projects(self) -> list:
+    def child_projects(self):
         """
         List the direct child projects of a project.
 
@@ -447,7 +437,7 @@ class GerritProject(BaseModel):
         return [self.gerrit.projects.get(item.get("id")) for item in result]
 
     @property
-    def tags(self) -> Tags:
+    def tags(self):
         """
         List the tags of a project.
 
@@ -455,7 +445,7 @@ class GerritProject(BaseModel):
         """
         return Tags(self.id, self.gerrit)
 
-    def get_commit(self, commit: str) -> Commit:
+    def get_commit(self, commit):
         """
         Retrieves a commit of a project.
 
@@ -467,7 +457,7 @@ class GerritProject(BaseModel):
         return Commit.parse(result, project=self.id, gerrit=self.gerrit)
 
     @property
-    def dashboards(self) -> Dashboards:
+    def dashboards(self):
         """
         gerrit dashboards operations
 
@@ -476,7 +466,7 @@ class GerritProject(BaseModel):
         return Dashboards(project=self.id, gerrit=self.gerrit)
 
     @property
-    def labels(self) -> Labels:
+    def labels(self):
         """
         gerrit labels operations
 
@@ -485,7 +475,7 @@ class GerritProject(BaseModel):
         return Labels(project=self.id, gerrit=self.gerrit)
 
     @property
-    def webhooks(self) -> Webhooks:
+    def webhooks(self):
         """
         gerrit webhooks operations, requires delete-project plugin
 

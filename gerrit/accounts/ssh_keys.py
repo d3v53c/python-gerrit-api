@@ -28,12 +28,12 @@ class SSHKey(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class SSHKeys:
+class SSHKeys(object):
     def __init__(self, username, gerrit):
         self.username = username
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Returns the SSH keys of an account.
 
@@ -44,7 +44,7 @@ class SSHKeys:
         result = self.gerrit.decode_response(response)
         return SSHKey.parse_list(result, username=self.username, gerrit=self.gerrit)
 
-    def get(self, seq: int) -> SSHKey:
+    def get(self, seq):
         """
         Retrieves an SSH key of a user.
 
@@ -56,7 +56,7 @@ class SSHKeys:
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
 
-    def add(self, ssh_key: str) -> SSHKey:
+    def add(self, ssh_key):
         """
         Adds an SSH key for a user.
         The SSH public key must be provided as raw content in the request body.
@@ -72,7 +72,7 @@ class SSHKeys:
         result = self.gerrit.decode_response(response)
         return SSHKey.parse(result, username=self.username, gerrit=self.gerrit)
 
-    def delete(self, seq: int):
+    def delete(self, seq):
         """
         Deletes an SSH key of a user.
 

@@ -26,11 +26,11 @@ class Cache(BaseModel):
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Caches:
+class Caches(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def list(self) -> list:
+    def list(self):
         """
         Lists the caches of the server. Caches defined by plugins are included.
 
@@ -48,7 +48,7 @@ class Caches:
 
         return Cache.parse_list(caches, gerrit=self.gerrit)
 
-    def get(self, name: str) -> Cache:
+    def get(self, name):
         """
         Retrieves information about a cache.
 
@@ -70,7 +70,7 @@ class Caches:
         endpoint = "/config/server/caches/%s/flush" % name
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
-    def operation(self, input_: dict):
+    def operation(self, input_):
         """
         Cache Operations
 

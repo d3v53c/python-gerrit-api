@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from urllib.parse import quote
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from gerrit.utils.models import BaseModel
 from gerrit.utils.exceptions import UnknownFile
 
@@ -120,7 +124,7 @@ class File(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Files:
+class Files(object):
     def __init__(self, change, revision, gerrit):
         self.change = change
         self.revision = revision
@@ -213,7 +217,7 @@ class Files:
         else:
             raise UnknownFile(path)
 
-    def get(self, path: str):
+    def get(self, path):
         """
         get a file by path
 

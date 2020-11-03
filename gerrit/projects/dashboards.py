@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -33,7 +33,7 @@ class Dashboard(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Dashboards:
+class Dashboards(object):
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
@@ -49,8 +49,7 @@ class Dashboards:
         result = self.gerrit.decode_response(response)
         return Dashboard.parse_list(result, project=self.project, gerrit=self.gerrit)
 
-    @check
-    def create(self, id_: str, input_: dict) -> Dashboard:
+    def create(self, id_, input_):
         """
         Creates a project dashboard, if a project dashboard with the given dashboard ID doesn't exist yet.
 
@@ -76,7 +75,7 @@ class Dashboards:
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def get(self, id_: str) -> Dashboard:
+    def get(self, id_):
         """
         Retrieves a project dashboard. The dashboard can be defined on that project or be inherited from a parent project.
 
@@ -88,7 +87,7 @@ class Dashboards:
         result = self.gerrit.decode_response(response)
         return Dashboard.parse(result, project=self.project, gerrit=self.gerrit)
 
-    def delete(self, id_: str):
+    def delete(self, id_):
         """
         Deletes a project dashboard.
 

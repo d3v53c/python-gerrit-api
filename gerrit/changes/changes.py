@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.changes.change import GerritChange
-from gerrit.utils.common import check
 
 
-class GerritChanges:
+class GerritChanges(object):
     def __init__(self, gerrit):
         self.gerrit = gerrit
 
-    def search(self, query: str) -> list:
+    def search(self, query):
         """
         Queries changes visible to the caller.
 
@@ -20,7 +19,7 @@ class GerritChanges:
         result = self.gerrit.decode_response(response)
         return GerritChange.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, id_: str) -> GerritChange:
+    def get(self, id_):
         """
         Retrieves a change.
 
@@ -32,8 +31,7 @@ class GerritChanges:
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create(self, input_: dict) -> GerritChange:
+    def create(self, input_):
         """
         create a change
 
@@ -60,7 +58,7 @@ class GerritChanges:
         result = self.gerrit.decode_response(response)
         return GerritChange.parse(result, gerrit=self.gerrit)
 
-    def delete(self, id_: str):
+    def delete(self, id_):
         """
         Deletes a change.
 

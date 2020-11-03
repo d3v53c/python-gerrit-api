@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from urllib.parse import quote
-from gerrit.utils.common import check
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from gerrit.utils.models import BaseModel
 
 
@@ -21,7 +24,7 @@ class Commit(BaseModel):
             "gerrit",
         ]
 
-    def get_include_in(self) -> dict:
+    def get_include_in(self):
         """
         Retrieves the branches and tags in which a change is included.
 
@@ -32,7 +35,7 @@ class Commit(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_file_content(self, file: str) -> str:
+    def get_file_content(self, file):
         """
         Gets the content of a file from a certain commit.
 
@@ -48,8 +51,7 @@ class Commit(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def cherry_pick(self, input_: dict) -> dict:
+    def cherry_pick(self, input_):
         """
         Cherry-picks a commit of a project to a destination branch.
 
@@ -73,7 +75,7 @@ class Commit(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.changes.get(result.get("id"))
 
-    def list_change_files(self) -> dict:
+    def list_change_files(self):
         """
         Lists the files that were modified, added or deleted in a commit.
 

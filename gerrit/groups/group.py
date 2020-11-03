@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.utils.models import BaseModel
-from gerrit.utils.common import check
 
 
 class GerritGroup(BaseModel):
@@ -21,8 +20,7 @@ class GerritGroup(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def rename(self, input_: dict):
+    def rename(self, input_):
         """
         Renames a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -51,8 +49,7 @@ class GerritGroup(BaseModel):
         self.name = result
         return result
 
-    @check
-    def set_description(self, input_: dict):
+    def set_description(self, input_):
         """
         Sets the description of a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -94,8 +91,7 @@ class GerritGroup(BaseModel):
         # update group model's description
         self.description = None
 
-    @check
-    def set_options(self, input_: dict):
+    def set_options(self, input_):
         """
         Sets the options of a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -125,8 +121,7 @@ class GerritGroup(BaseModel):
         self.options = result
         return result
 
-    @check
-    def set_owner(self, input_: dict):
+    def set_owner(self, input_):
         """
         Sets the owner group of a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -191,7 +186,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.accounts.get(member.get("username")) for member in result]
 
-    def get_member(self, username: str):
+    def get_member(self, username):
         """
         Retrieves a group member.
         This endpoint is only allowed for Gerrit internal groups;
@@ -206,7 +201,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    def add_member(self, username: str):
+    def add_member(self, username):
         """
         Adds a user as member to a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -220,7 +215,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.accounts.get(result.get("username"))
 
-    def remove_member(self, username: str):
+    def remove_member(self, username):
         """
         Removes a user from a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -245,7 +240,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.groups.get(item.get("id")) for item in result]
 
-    def get_subgroup(self, id_: str):
+    def get_subgroup(self, id_):
         """
         Retrieves a subgroup.
         This endpoint is only allowed for Gerrit internal groups;
@@ -259,7 +254,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.groups.get(result.get("id"))
 
-    def add_subgroup(self, id_: str):
+    def add_subgroup(self, id_):
         """
         Adds an internal or external group as subgroup to a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;
@@ -273,7 +268,7 @@ class GerritGroup(BaseModel):
         result = self.gerrit.decode_response(response)
         return self.gerrit.groups.get(result.get("id"))
 
-    def remove_subgroup(self, id_: str):
+    def remove_subgroup(self, id_):
         """
         Removes a subgroup from a Gerrit internal group.
         This endpoint is only allowed for Gerrit internal groups;

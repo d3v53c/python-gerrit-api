@@ -5,7 +5,6 @@ from gerrit.utils.models import BaseModel
 from gerrit.accounts.emails import Emails
 from gerrit.accounts.ssh_keys import SSHKeys
 from gerrit.accounts.gpg_keys import GPGKeys
-from gerrit.utils.common import check
 
 
 class GerritAccount(BaseModel):
@@ -26,8 +25,7 @@ class GerritAccount(BaseModel):
             "gerrit",
         ]
 
-    @check
-    def set_name(self, input_: dict):
+    def set_name(self, input_):
         """
         Sets the full name of an account.
         Some realms may not allow to modify the account name.
@@ -73,14 +71,13 @@ class GerritAccount(BaseModel):
         self.name = None
 
     @property
-    def status(self) -> str:
+    def status(self):
         """
         Retrieves the status of an account.
         If the account does not have a status an empty string is returned.
 
         :getter: Retrieves the status of an account.
         :setter: Sets the status of an account
-        :type: string
 
         :return:
         """
@@ -90,7 +87,7 @@ class GerritAccount(BaseModel):
         return result
 
     @status.setter
-    def status(self, status: str):
+    def status(self, status):
         """
         Sets the status of an account.
 
@@ -104,8 +101,7 @@ class GerritAccount(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    @check
-    def set_username(self, input_: dict):
+    def set_username(self, input_):
         """
         Sets the username of an account.
         Some realms may not allow to modify the account username.
@@ -135,8 +131,7 @@ class GerritAccount(BaseModel):
         self.username = result
         return result
 
-    @check
-    def set_displayname(self, input_: dict):
+    def set_displayname(self, input_):
         """
         Sets the display name of an account.
 
@@ -164,7 +159,7 @@ class GerritAccount(BaseModel):
         self.displayname = result
         return result
 
-    def get_active(self) -> str:
+    def get_active(self):
         """
         Checks if an account is active.
 
@@ -196,8 +191,7 @@ class GerritAccount(BaseModel):
         endpoint = "/accounts/%s/active" % self.username
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    @check
-    def set_http_password(self, input_: dict) -> str:
+    def set_http_password(self, input_):
         """
         Sets/Generates the HTTP password of an account.
 
@@ -232,7 +226,7 @@ class GerritAccount(BaseModel):
         endpoint = "/accounts/%s/password.http" % self.username
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_oauth_token(self) -> dict:
+    def get_oauth_token(self):
         """
         Returns a previously obtained OAuth access token.
         If there is no token available, or the token has already expired, '404 Not Found' is returned as response.
@@ -257,7 +251,7 @@ class GerritAccount(BaseModel):
     def gpg_keys(self):
         return GPGKeys(username=self.username, gerrit=self.gerrit)
 
-    def list_capabilities(self) -> dict:
+    def list_capabilities(self):
         """
         Returns the global capabilities that are enabled for the specified user.
 
@@ -268,7 +262,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def check_capability(self, capability: str) -> str:
+    def check_capability(self, capability):
         """
         Checks if a user has a certain global capability.
 
@@ -281,7 +275,7 @@ class GerritAccount(BaseModel):
         return result
 
     @property
-    def groups(self) -> list:
+    def groups(self):
         """
         Lists all groups that contain the specified user as a member.
 
@@ -292,7 +286,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.groups.get(item.get("id")) for item in result]
 
-    def get_avatar(self) -> str:
+    def get_avatar(self):
         """
         Retrieves the avatar image of the user.
         :return:
@@ -302,7 +296,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_avatar_change_url(self) -> str:
+    def get_avatar_change_url(self):
         """
         Retrieves the avatar image of the user.
         :return:
@@ -323,8 +317,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_user_preferences(self, input_: dict) -> dict:
+    def set_user_preferences(self, input_):
         """
         Sets the user’s preferences.
 
@@ -370,8 +363,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_diff_preferences(self, input_: dict) -> dict:
+    def set_diff_preferences(self, input_):
         """
         Sets the diff preferences of a user.
 
@@ -418,8 +410,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    @check
-    def set_edit_preferences(self, input_: dict) -> dict:
+    def set_edit_preferences(self, input_):
         """
         Sets the edit preferences of a user.
 
@@ -457,7 +448,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_watched_projects(self) -> list:
+    def get_watched_projects(self):
         """
         Retrieves all projects a user is watching.
 
@@ -468,7 +459,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def modify_watched_projects(self, input_: list) -> list:
+    def modify_watched_projects(self, input_):
         """
         Add new projects to watch or update existing watched projects.
         Projects that are already watched by a user will be updated with the provided configuration.
@@ -498,7 +489,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_watched_projects(self, input_: list):
+    def delete_watched_projects(self, input_):
         """
         Projects posted to this endpoint will no longer be watched.
 
@@ -523,7 +514,7 @@ class GerritAccount(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    def get_external_ids(self) -> list:
+    def get_external_ids(self):
         """
         Retrieves the external ids of a user account.
         Only external ids belonging to the caller may be requested. Users that have Modify Account can request external
@@ -536,7 +527,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_external_ids(self, input_: list):
+    def delete_external_ids(self, input_):
         """
         Delete a list of external ids for a user account.
         Only external ids belonging to the caller may be deleted. Users that have Modify Account can delete external
@@ -560,7 +551,7 @@ class GerritAccount(BaseModel):
             base_url, json=input_, headers=self.gerrit.default_headers
         )
 
-    def list_contributor_agreements(self) -> list:
+    def list_contributor_agreements(self):
         """
         Gets a list of the user’s signed contributor agreements.
 
@@ -571,7 +562,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def sign_contributor_agreement(self, input_: dict) -> str:
+    def sign_contributor_agreement(self, input_):
         """
         Signs a contributor agreement.
 
@@ -595,7 +586,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def delete_draft_comments(self, input_: dict) -> list:
+    def delete_draft_comments(self, input_):
         """
         Deletes some or all of a user’s draft comments.
 
@@ -628,7 +619,7 @@ class GerritAccount(BaseModel):
         endpoint = "/accounts/%s/index" % self.username
         self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_default_starred_changes(self) -> list:
+    def get_default_starred_changes(self):
         """
         Gets the changes that were starred with the default star by the identified user account.
 
@@ -639,7 +630,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.changes.get(item.get("id")) for item in result]
 
-    def put_default_star_on_change(self, id_: str):
+    def put_default_star_on_change(self, id_):
         """
         Star a change with the default label.
 
@@ -649,7 +640,7 @@ class GerritAccount(BaseModel):
         endpoint = "/accounts/%s/starred.changes/%s" % (self.username, id_)
         self.gerrit.requester.put(self.gerrit.get_endpoint_url(endpoint))
 
-    def remove_default_star_from_change(self, id_: str):
+    def remove_default_star_from_change(self, id_):
         """
         Remove the default star label from a change. This stops notifications.
 
@@ -659,7 +650,7 @@ class GerritAccount(BaseModel):
         endpoint = "/accounts/%s/starred.changes/%s" % (self.username, id_)
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
-    def get_starred_changes(self) -> list:
+    def get_starred_changes(self):
         """
         Gets the changes that were starred with any label by the identified user account.
 
@@ -670,7 +661,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return [self.gerrit.changes.get(item.get("id")) for item in result]
 
-    def get_star_labels_from_change(self, id_: str) -> list:
+    def get_star_labels_from_change(self, id_):
         """
         Get star labels from a change.
 
@@ -682,7 +673,7 @@ class GerritAccount(BaseModel):
         result = self.gerrit.decode_response(response)
         return result
 
-    def update_star_labels_on_change(self, id_: str, input_: dict):
+    def update_star_labels_on_change(self, id_, input_):
         """
         Update star labels on a change.
 

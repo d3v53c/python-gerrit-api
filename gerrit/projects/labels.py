@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-from gerrit.utils.common import check
+
 from gerrit.utils.models import BaseModel
 
 
@@ -27,7 +27,7 @@ class Label(BaseModel):
             "gerrit",
         ]
 
-    def set(self, input_: dict):
+    def set(self, input_):
         """
         Updates the definition of a label that is defined in this project.
         The calling user must have write access to the refs/meta/config branch of the project.
@@ -67,7 +67,7 @@ class Label(BaseModel):
         self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))
 
 
-class Labels:
+class Labels(object):
     def __init__(self, project, gerrit):
         self.project = project
         self.gerrit = gerrit
@@ -83,7 +83,7 @@ class Labels:
         result = self.gerrit.decode_response(response)
         return Label.parse_list(result, gerrit=self.gerrit)
 
-    def get(self, name: str) -> Label:
+    def get(self, name):
         """
         Retrieves the definition of a label that is defined in this project.
         The calling user must have read access to the refs/meta/config branch of the project.
@@ -96,8 +96,7 @@ class Labels:
         result = self.gerrit.decode_response(response)
         return Label.parse(result, gerrit=self.gerrit)
 
-    @check
-    def create(self, name: str, input_: dict) -> Label:
+    def create(self, name, input_):
         """
         Creates a new label definition in this project.
         The calling user must have write access to the refs/meta/config branch of the project.
@@ -130,7 +129,7 @@ class Labels:
         result = self.gerrit.decode_response(response)
         return Label.parse(result, gerrit=self.gerrit)
 
-    def delete(self, name: str):
+    def delete(self, name):
         """
         Deletes the definition of a label that is defined in this project.
         The calling user must have write access to the refs/meta/config branch of the project.
