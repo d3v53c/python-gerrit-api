@@ -153,7 +153,7 @@ class GerritAccount(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.2.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         endpoint = "/accounts/%s/displayname" % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)

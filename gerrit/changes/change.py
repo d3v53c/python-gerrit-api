@@ -326,7 +326,7 @@ class GerritChange(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.2.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         endpoint = "/changes/%s/revert_submission" % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
@@ -708,7 +708,7 @@ class GerritChange(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.3.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         endpoint = "/changes/%s/attention" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
@@ -738,7 +738,7 @@ class GerritChange(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.3.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         endpoint = "/changes/%s/attention" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
@@ -773,7 +773,7 @@ class GerritChange(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.3.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         if input_ is None:
             endpoint = "/changes/%s/attention/%s" % (self.id, id_)

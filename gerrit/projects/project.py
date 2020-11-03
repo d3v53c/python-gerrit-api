@@ -309,7 +309,7 @@ class GerritProject(BaseModel):
         """
         version = self.gerrit.version
         if parse(version) < parse("3.3.0"):
-            raise UnsupportMethod("Low version server does not support this method")
+            raise UnsupportMethod("The server does not support this method")
 
         endpoint = "/projects/%s/create.change" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)

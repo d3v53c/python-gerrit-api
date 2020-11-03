@@ -88,4 +88,7 @@ class UnknownFile(KeyError, NotFoundError):
 
 
 class UnsupportMethod(Exception):
+    """
+    This Error will be raised when program calls methods or parameters that are currently unsupported
+    """
     pass
