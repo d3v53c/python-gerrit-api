@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+from packaging.version import parse
 from gerrit.utils.models import BaseModel
 from gerrit.accounts.emails import Emails
 from gerrit.accounts.ssh_keys import SSHKeys
 from gerrit.accounts.gpg_keys import GPGKeys
+from gerrit.utils.exceptions import UnsupportMethod
 
 
 class GerritAccount(BaseModel):
@@ -134,6 +136,7 @@ class GerritAccount(BaseModel):
     def set_displayname(self, input_):
         """
         Sets the display name of an account.
+        support this method since v3.2.0
 
         .. code-block:: python
 
@@ -148,6 +151,10 @@ class GerritAccount(BaseModel):
           https://gerrit-review.googlesource.com/Documentation/rest-api-accounts.html#display-name-input
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.2.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         endpoint = "/accounts/%s/displayname" % self.username
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.put(
@@ -174,7 +181,6 @@ class GerritAccount(BaseModel):
         """
         Sets the account state to active.
 
-        :param status: account status
         :return:
         """
         endpoint = "/accounts/%s/active" % self.username
@@ -185,7 +191,6 @@ class GerritAccount(BaseModel):
         Sets the account state to inactive.
         If the account was already inactive the response is '409 Conflict'.
 
-        :param status: account status
         :return:
         """
         endpoint = "/accounts/%s/active" % self.username
@@ -288,7 +293,8 @@ class GerritAccount(BaseModel):
 
     def get_avatar(self):
         """
-        Retrieves the avatar image of the user.
+        Retrieves the avatar image of the user, requires avatars-gravatar plugin.
+
         :return:
         """
         endpoint = "/accounts/%s/avatar" % self.username
@@ -298,7 +304,8 @@ class GerritAccount(BaseModel):
 
     def get_avatar_change_url(self):
         """
-        Retrieves the avatar image of the user.
+        Retrieves the avatar image of the user, requires avatars-gravatar plugin.
+
         :return:
         """
         endpoint = "/accounts/%s/avatar.change.url" % self.username

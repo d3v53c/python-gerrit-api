@@ -211,7 +211,7 @@ class Revision(object):
         result = self.gerrit.decode_response(response)
         return result
 
-    def get_patch(self, zip=False, download=False, path=None):
+    def get_patch(self, zip_=False, download=False, path=None):
         """
         Gets the formatted patch for one revision.
         The formatted patch is returned as text encoded inside base64
@@ -225,6 +225,9 @@ class Revision(object):
 
         If the path parameter is set, the returned content is a diff of the single file that the path refers to.
 
+        :param zip_:
+        :param download:
+        :param path:
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/patch" % (self.change, self.revision)
@@ -284,6 +287,7 @@ class Revision(object):
         Tests the submit_type Prolog rule in the project, or the one given.
 
         :param input_: the Prolog code
+        :type: str
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/test.submit_type" % (
@@ -302,6 +306,7 @@ class Revision(object):
         Tests the submit_rule Prolog rule in the project, or the one given.
 
         :param input_: the Prolog code
+        :type: str
         :return:
         """
         endpoint = "/changes/%s/revisions/%s/test.submit_rule" % (

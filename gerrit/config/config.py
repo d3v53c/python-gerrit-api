@@ -93,13 +93,16 @@ class GerritConfig(object):
     def caches(self):
         return Caches(gerrit=self.gerrit)
 
-    def get_summary(self):
+    def get_summary(self, option=None):
         """
         Retrieves a summary of the current server state.
 
+        :param option: query option.such as jvm or gc
         :return:
         """
         endpoint = "/config/server/summary"
+        if option is not None:
+            endpoint += "?%s" % option
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return result

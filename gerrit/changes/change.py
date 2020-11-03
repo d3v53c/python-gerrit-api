@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
-
+from packaging.version import parse
 from gerrit.changes.reviewers import Reviewers
 from gerrit.changes.revision import Revision
 from gerrit.changes.edit import Edit
 from gerrit.changes.messages import Messages
 from gerrit.utils.models import BaseModel
+from gerrit.utils.exceptions import UnsupportMethod
 
 
 class GerritChange(BaseModel):
@@ -296,6 +297,8 @@ class GerritChange(BaseModel):
 
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             result = change.revert()
+            # or
+            result = change.revert(input_)
 
         :param input_: the RevertInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#revert-input
@@ -321,6 +324,10 @@ class GerritChange(BaseModel):
 
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.2.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         endpoint = "/changes/%s/revert_submission" % self.id
         response = self.gerrit.requester.post(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
@@ -445,6 +452,8 @@ class GerritChange(BaseModel):
 
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             result = change.fix()
+            # or
+            result = change.fix(input_)
 
         :param input_: the FixInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#fix-input
@@ -477,6 +486,8 @@ class GerritChange(BaseModel):
 
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             result = change.set_work_in_progress(input_)
+            # or
+            result = change.set_work_in_progress()
 
         :param input_: the WorkInProgressInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#work-in-progress-input
@@ -548,6 +559,8 @@ class GerritChange(BaseModel):
             }
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             change.unmark_private(input_)
+            # or
+            change.unmark_private()
 
         :param input_: the PrivateInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#private-input
@@ -689,9 +702,14 @@ class GerritChange(BaseModel):
     def get_attention_set(self):
         """
         Returns all users that are currently in the attention set.
+        support this method since v3.3.0
 
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.3.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         endpoint = "/changes/%s/attention" % self.id
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
@@ -700,6 +718,7 @@ class GerritChange(BaseModel):
     def add_to_attention_set(self, input_):
         """
         Adds a single user to the attention set of a change.
+        support this method since v3.3.0
 
         A user can only be added if they are not in the attention set.
         If a user is added while already in the attention set, the request is silently ignored.
@@ -717,6 +736,10 @@ class GerritChange(BaseModel):
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#attention-set-input
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.3.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         endpoint = "/changes/%s/attention" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.post(
@@ -728,6 +751,7 @@ class GerritChange(BaseModel):
     def remove_from_attention_set(self, id_, input_=None):
         """
         Deletes a single user from the attention set of a change.
+        support this method since v3.3.0
 
         A user can only be removed from the attention set.
         if they are currently in the attention set. Otherwise, the request is silently ignored.
@@ -739,12 +763,18 @@ class GerritChange(BaseModel):
             }
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             change.remove_from_attention_set('kevin.shi', input_)
+            # or
+            change.remove_from_attention_set('kevin.shi')
 
         :param id_: account id
         :param input_: the AttentionSetInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#attention-set-input
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.3.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         if input_ is None:
             endpoint = "/changes/%s/attention/%s" % (self.id, id_)
             self.gerrit.requester.delete(self.gerrit.get_endpoint_url(endpoint))

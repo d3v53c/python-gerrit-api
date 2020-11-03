@@ -32,6 +32,8 @@ class Reviewer(BaseModel):
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             reviewer = change.reviewers.get('john.doe')
             reviewer.delete(input_)
+            # or
+            reviewer.delete()
 
         :param input_: the DeleteReviewerInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#delete-reviewer-input
@@ -72,6 +74,8 @@ class Reviewer(BaseModel):
             change = gerrit.changes.get('myProject~stable~I10394472cbd17dd12454f229e4f6de00b143a444')
             reviewer = change.reviewers.get('john.doe')
             reviewer.delete_vote('Code-Review', input_)
+            # or
+            reviewer.delete_vote('Code-Review')
 
         :param label:
         :param input_: the DeleteVoteInput entity,

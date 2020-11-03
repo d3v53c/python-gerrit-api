@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
+from packaging.version import parse
 from gerrit.projects.branches import Branches
 from gerrit.projects.tags import Tags
 from gerrit.projects.commit import Commit
@@ -8,8 +9,8 @@ from gerrit.projects.dashboards import Dashboards
 from gerrit.projects.labels import Labels
 from gerrit.projects.webhooks import Webhooks
 from gerrit.changes.change import GerritChange
-
 from gerrit.utils.models import BaseModel
+from gerrit.utils.exceptions import UnsupportMethod
 
 
 class GerritProject(BaseModel):
@@ -289,6 +290,7 @@ class GerritProject(BaseModel):
     def create_change(self, input_):
         """
         Create Change for review.
+        support this method since v3.3.0
 
         .. code-block:: python
 
@@ -305,6 +307,10 @@ class GerritProject(BaseModel):
         :param input_:
         :return:
         """
+        version = self.gerrit.version
+        if parse(version) < parse("3.3.0"):
+            raise UnsupportMethod("Low version server does not support this method")
+
         endpoint = "/projects/%s/create.change" % self.id
         base_url = self.gerrit.get_endpoint_url(endpoint)
         response = self.gerrit.requester.post(
@@ -468,11 +474,18 @@ class GerritProject(BaseModel):
     @property
     def labels(self):
         """
-        gerrit labels operations
+        get gerrit labels
 
         :return:
         """
-        return Labels(project=self.id, gerrit=self.gerrit)
+        version = self.gerrit.version
+        if parse(version) < parse("3.2.0"):
+            endpoint = "/projects/%s" % self.id
+            response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
+            result = self.gerrit.decode_response(response)
+            return result.get("labels")
+        else:
+            return Labels(project=self.id, gerrit=self.gerrit)
 
     @property
     def webhooks(self):

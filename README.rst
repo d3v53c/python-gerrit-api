@@ -89,6 +89,7 @@ Python versions
 
 The project has been tested against Python versions:
 
+* 2.7
 * 3.5
 * 3.6
 * 3.7
@@ -97,10 +98,21 @@ The project has been tested against Python versions:
 Gerrit versions
 ---------------
 
-Project tested on latest Gerrit versions.
+Project tested on stable (LTS) and latest Gerrit versions.
+
+Important Links
+---------------
+
+Support and bug-reports: https://github.com/shijl0925/python-gerrit-api/issues?direction=desc&sort=comments&state=open
+
+Project source code: github: https://github.com/shijl0925/python-gerrit-api
+
+Project documentation: https://python-gerrit-api.readthedocs.org/en/latest/
+
+Releases: http://pypi.python.org/pypi/python-gerrit-api
 
 Installation
-============
+------------
 
 The easiest way to install the latest version is by using pip to pull it from PyPI.
 
@@ -125,14 +137,9 @@ You may also use Git to clone the repository from Github and install it manually
     cd python-gerrit-api
     python setup.py install
 
-Compatibility
-=============
-
-* This package is compatible Python versions 2.7 3.5+.
-* Tested with Gerrit Code Review (V3.3.0).
-
 Usage
-=====
+-----
+
 Example 1: setup gerrit client::
 
     from gerrit import GerritClient

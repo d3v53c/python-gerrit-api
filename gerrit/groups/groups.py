@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 # @Author: Jialiang Shi
 from gerrit.groups.group import GerritGroup
+from packaging.version import parse
 
 
 class GerritGroups(object):
@@ -33,7 +34,12 @@ class GerritGroups(object):
         :param name: group name
         :return:
         """
-        endpoint = "/groups/?query=inname:%s" % name
+        version = self.gerrit.version
+        if parse(version) < parse("3.2.0"):
+            endpoint = "/groups/?query2=inname:%s" % name
+        else:
+            endpoint = "/groups/?query=inname:%s" % name
+
         response = self.gerrit.requester.get(self.gerrit.get_endpoint_url(endpoint))
         result = self.gerrit.decode_response(response)
         return GerritGroup.parse_list(result, gerrit=self.gerrit)

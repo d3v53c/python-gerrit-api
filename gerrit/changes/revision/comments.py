@@ -37,6 +37,8 @@ class Comment(BaseModel):
             revision = change.get_revision('3848807f587dbd3a7e61723bbfbf1ad13ad5a00a')
             comment = revision.comments.get("e167e775_e069567a")
             result = comment.delete(input_)
+            # or
+            result = comment.delete()
 
         :param input_: the DeleteCommentInput entity,
           https://gerrit-review.googlesource.com/Documentation/rest-api-changes.html#delete-comment-input

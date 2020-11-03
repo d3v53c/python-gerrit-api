@@ -85,3 +85,7 @@ class UnknownFile(KeyError, NotFoundError):
     """
 
     pass
+
+
+class UnsupportMethod(Exception):
+    pass
