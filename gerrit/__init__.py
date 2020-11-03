@@ -26,7 +26,7 @@ class GerritClient(object):
         base_url,
         username,
         password,
-        ssl_verify = True,
+        ssl_verify=True,
         cert=None,
         timeout=60,
         max_retries=None,
