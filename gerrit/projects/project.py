@@ -474,7 +474,7 @@ class GerritProject(BaseModel):
     @property
     def labels(self):
         """
-        get gerrit labels
+        gerrit labels or gerrit labels operations
 
         :return:
         """
@@ -490,7 +490,7 @@ class GerritProject(BaseModel):
     @property
     def webhooks(self):
         """
-        gerrit webhooks operations, requires delete-project plugin
+        gerrit webhooks operations, requires webhooks plugin
 
         :return:
         """
